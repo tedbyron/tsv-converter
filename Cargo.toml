@@ -16,11 +16,16 @@ default = []
 [dependencies]
 anyhow = "1.0.53"
 lazy_static = "1.4.0"
+native-dialog = "0.6.3"
 
 [dependencies.iced]
 git = "https://github.com/iced-rs/iced"
 branch = "master"
 features = ["tokio"]
+
+[dependencies.iced_native]
+git = "https://github.com/iced-rs/iced"
+branch = "master"
 
 [dependencies.tokio]
 version = "1.16.1"
