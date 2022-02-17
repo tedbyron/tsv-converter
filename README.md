@@ -3,10 +3,6 @@
   <p><strong>TinyCircuits TinyScreen Video (TSV) converter.</strong></p>
 </div>
 
-# Install
+# Build
 
-Must have `ffmpeg` 4 installed.
-
-```sh
-cargo install tsv-converter
-```
+https://github.com/zmwangx/rust-ffmpeg/wiki/Notes-on-building

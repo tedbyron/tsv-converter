@@ -14,6 +14,7 @@ use iced::{window, Application, Settings};
 
 mod app;
 mod interaction;
+mod load_vid;
 mod style;
 mod view;
 
