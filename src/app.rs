@@ -2,7 +2,6 @@
 
 use std::path::PathBuf;
 
-use anyhow::Error;
 use iced::keyboard::KeyCode;
 use iced::{
     executor, keyboard, Alignment, Application, Column, Command, Container, Element, Length, Row,
@@ -16,7 +15,7 @@ use crate::view::{notification, select_file};
 use crate::{interaction, style};
 use crate::{TITLE, VERSION};
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 enum ViewState {
     Initial,
     EditFile,
@@ -33,10 +32,24 @@ pub enum Message {
     SelectFileDialog,
     CloseNotification,
     LoadFile(PathBuf),
+    SelectCrop(Crop),
 
     // Keystroke handlers.
     EscPress,
     CmdQPress,
+}
+
+#[derive(Debug, Clone, Copy)]
+pub enum Crop {
+    Letterbox,
+    Zoom,
+    Stretch,
+}
+
+impl Default for Crop {
+    fn default() -> Self {
+        Self::Letterbox
+    }
 }
 
 #[derive(Debug, Default)]
@@ -44,6 +57,8 @@ pub struct TSVConverter {
     view_state: ViewState,
     notification_state: Option<notification::State>,
     select_file_state: select_file::State,
+    file_path: Option<PathBuf>,
+    crop: Crop,
     should_exit: bool,
 }
 
@@ -68,14 +83,7 @@ impl Application for TSVConverter {
                 match interaction::select_file() {
                     Ok(opt) => match opt {
                         Some(path) => Command::perform(async move { path }, Message::LoadFile),
-                        None => {
-                            self.select_file_state.window_open = false;
-                            self.notification_state = Some(notification::State::new(
-                                notification::Type::SelectFile,
-                                Error::msg("Test test test"),
-                            ));
-                            Command::none()
-                        }
+                        None => Command::none(),
                     },
                     Err(err) => {
                         self.select_file_state.window_open = false;
@@ -99,6 +107,15 @@ impl Application for TSVConverter {
                     }
                 }
 
+                self.file_path = Some(path);
+                if self.view_state == ViewState::Initial {
+                    self.view_state = ViewState::EditFile;
+                }
+
+                Command::none()
+            }
+            Message::SelectCrop(aspect) => {
+                self.crop = aspect;
                 Command::none()
             }
 
