@@ -15,9 +15,9 @@ lazy_static::lazy_static! {
     pub static ref GRAY_PURPLE: Color = Color::from_rgb8(0x45, 0x41, 0x58);
     pub static ref PURPLE_GRAY: Color = Color::from_rgb8(0x79, 0x70, 0xA9);
 
-    pub static ref GREEN:       Color = Color::from_rgb8(0x8A, 0xFF, 0x80);
+    // pub static ref GREEN:       Color = Color::from_rgb8(0x8A, 0xFF, 0x80);
     pub static ref ORANGE:      Color = Color::from_rgb8(0xFF, 0xCA, 0x80);
-    pub static ref PINK:        Color = Color::from_rgb8(0xFF, 0x80, 0xBF);
+    // pub static ref PINK:        Color = Color::from_rgb8(0xFF, 0x80, 0xBF);
     pub static ref PURPLE:      Color = Color::from_rgb8(0x95, 0x80, 0xFF);
     pub static ref RED:         Color = Color::from_rgb8(0xFF, 0x95, 0x80);
 }
