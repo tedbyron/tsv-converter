@@ -5,4 +5,4 @@
 
 # Build
 
-https://github.com/zmwangx/rust-ffmpeg/wiki/Notes-on-building
+[https://github.com/zmwangx/rust-ffmpeg/wiki/Notes-on-building](https://github.com/zmwangx/rust-ffmpeg/wiki/Notes-on-building)
