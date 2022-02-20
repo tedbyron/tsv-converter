@@ -1,6 +1,6 @@
 [package]
 name = "tsv-converter"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
 description = "TinyCircuits TinyScreen Video (TSV) converter."
 authors = ["Teddy Byron <ted@tedbyron.com>"]
@@ -14,16 +14,17 @@ publish = false
 default = []
 
 [dependencies]
-anyhow = "1.0.53"
-ffmpeg-next = "4.4.0"
+anyhow = "1.0.54"
+ffmpeg-next = "5.0.2"
 lazy_static = "1.4.0"
 native-dialog = "0.6.3"
-thumbnailer = { version = "0.3.0", features = ["ffmpeg-next"] }
+image = "0.24.0"
+open = "2.0.3"
 
 [dependencies.iced]
 git = "https://github.com/iced-rs/iced"
 branch = "master"
-features = ["tokio"]
+features = ["tokio", "image"]
 
 [dependencies.iced_native]
 git = "https://github.com/iced-rs/iced"
