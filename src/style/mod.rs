@@ -63,6 +63,23 @@ style!(Main, button,
     }
 );
 
+pub struct TextButton;
+
+style!(TextButton, button,
+    active: {
+        text_color: *FG,
+        ..button::Style::default()
+    },
+    hovered: {
+        text_color: *PURPLE,
+        ..button::Style::default()
+    },
+    pressed: {
+        text_color: *PURPLE,
+        ..button::Style::default()
+    }
+);
+
 pub struct Menu;
 
 style!(Menu, container, {
