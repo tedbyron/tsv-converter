@@ -3,13 +3,13 @@
 use anyhow::Error;
 use iced::{button, Alignment, Button, Container, Length, Row, Text};
 
-use crate::app::Message;
+use crate::model::Message;
 use crate::style;
 use crate::style::font::IOSEVKA;
 
 #[derive(Debug, PartialEq)]
 pub enum Type {
-    SelectFile,
+    Error,
 }
 
 #[derive(Debug)]
@@ -26,6 +26,10 @@ impl State {
             type_,
             error,
         }
+    }
+
+    pub fn error(error: Error) -> Self {
+        Self::new(Type::Error, error)
     }
 }
 

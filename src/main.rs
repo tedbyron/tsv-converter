@@ -12,18 +12,21 @@
 use anyhow::{Error, Result};
 use iced::{window, Application, Settings};
 
-mod app;
-mod interaction;
-mod load_vid;
+mod controller;
+mod model;
 mod style;
 mod view;
 
 const NAME: &str = env!("CARGO_PKG_NAME");
 const VERSION: &str = env!("CARGO_PKG_VERSION");
+const AUTHORS: &str = env!("CARGO_PKG_AUTHORS");
+const REPO: &str = env!("CARGO_PKG_REPOSITORY");
 const TITLE: &str = "TSV Converter";
 
 fn main() -> Result<()> {
-    let settings: Settings<()> = Settings {
+    ffmpeg_next::init()?;
+
+    let settings = Settings {
         id: Some(NAME.to_owned()),
         window: window::Settings {
             // size: (1024, 768), // TODO: window size
@@ -38,5 +41,5 @@ fn main() -> Result<()> {
         ..Settings::default()
     };
 
-    app::TSVConverter::run(settings).map_err(Error::new)
+    model::TSVConverter::run(settings).map_err(Error::new)
 }

@@ -1,19 +1,22 @@
 //! Main application logic.
 
+use std::fs::File;
 use std::path::PathBuf;
 
+use anyhow::Error;
 use iced::keyboard::KeyCode;
 use iced::{
     executor, keyboard, Alignment, Application, Column, Command, Container, Element, Length, Row,
     Rule, Subscription, Text,
 };
-use iced_native::{event, subscription, Event};
+use iced_native::event::Status;
+use iced_native::{subscription, Event};
 
-use crate::style::color::ORANGE;
-use crate::style::font::IOSEVKA_HEAVY_ITALIC;
-use crate::view::{notification, select_file};
-use crate::{interaction, style};
-use crate::{TITLE, VERSION};
+use crate::style::color::{FG, ORANGE};
+use crate::style::font::{IOSEVKA, IOSEVKA_HEAVY_ITALIC};
+use crate::view::{notification, repo_button, select_file_button};
+use crate::{controller, style, AUTHORS, REPO, TITLE};
+use crate::{NAME, VERSION};
 
 #[derive(Debug, PartialEq)]
 enum ViewState {
@@ -29,6 +32,7 @@ impl Default for ViewState {
 
 #[derive(Debug, Clone)]
 pub enum Message {
+    OpenRepo,
     SelectFileDialog,
     CloseNotification,
     LoadFile(PathBuf),
@@ -55,11 +59,19 @@ impl Default for Crop {
 #[derive(Debug, Default)]
 pub struct TSVConverter {
     view_state: ViewState,
-    notification_state: Option<notification::State>,
-    select_file_state: select_file::State,
+    notification: Option<notification::State>,
+    repo_button: repo_button::State,
+    select_file_button: select_file_button::State,
     file_path: Option<PathBuf>,
+    file: Option<File>,
     crop: Crop,
     should_exit: bool,
+}
+
+impl TSVConverter {
+    fn error(&mut self, error: Error) {
+        self.notification = Some(notification::State::error(error));
+    }
 }
 
 impl Application for TSVConverter {
@@ -72,57 +84,74 @@ impl Application for TSVConverter {
     }
 
     fn title(&self) -> String {
-        format!("{TITLE} {VERSION}")
+        format!("{NAME} {VERSION}")
     }
 
     fn update(&mut self, message: Self::Message) -> Command<Self::Message> {
         match message {
+            Message::OpenRepo => {
+                if let Err(err) = open::that(REPO) {
+                    self.error(Error::new(err));
+                };
+                Command::none()
+            }
             Message::SelectFileDialog => {
-                self.select_file_state.window_open = true;
+                self.select_file_button.window_open = true;
 
-                match interaction::select_file() {
-                    Ok(opt) => match opt {
-                        Some(path) => Command::perform(async move { path }, Message::LoadFile),
-                        None => Command::none(),
-                    },
+                match controller::select_file() {
+                    Ok(opt) => {
+                        if let Some(path) = opt {
+                            Command::perform(async move { path }, Message::LoadFile)
+                        } else {
+                            self.select_file_button.window_open = false;
+                            Command::none()
+                        }
+                    }
                     Err(err) => {
-                        self.select_file_state.window_open = false;
-                        self.notification_state = Some(notification::State::new(
-                            notification::Type::SelectFile,
-                            err,
-                        ));
+                        self.select_file_button.window_open = false;
+                        self.error(err);
                         Command::none()
                     }
                 }
             }
             Message::CloseNotification => {
-                self.notification_state = None;
+                self.notification = None;
                 Command::none()
             }
             Message::LoadFile(path) => {
-                self.select_file_state.window_open = false;
-                if let Some(state) = &self.notification_state {
-                    if state.type_ == notification::Type::SelectFile {
-                        self.notification_state = None;
-                    }
+                self.file_path = Some(path);
+                self.select_file_button.window_open = false;
+                if self.notification.is_some() {
+                    self.notification = None;
                 }
 
-                self.file_path = Some(path);
+                // Attempt to open the file.
+                match File::open(self.file_path.as_ref().unwrap()) {
+                    Ok(file) => self.file = Some(file),
+                    Err(err) => {
+                        self.notification = Some(notification::State::new(
+                            notification::Type::Error,
+                            Error::new(err),
+                        ));
+                        return Command::none();
+                    }
+                };
+
                 if self.view_state == ViewState::Initial {
                     self.view_state = ViewState::EditFile;
                 }
 
                 Command::none()
             }
-            Message::SelectCrop(aspect) => {
-                self.crop = aspect;
+            Message::SelectCrop(crop) => {
+                self.crop = crop;
                 Command::none()
             }
 
             // Keystroke handlers.
             Message::EscPress => {
-                if self.notification_state.is_some() {
-                    self.notification_state = None;
+                if self.notification.is_some() {
+                    self.notification = None;
                 }
                 Command::none()
             }
@@ -135,7 +164,7 @@ impl Application for TSVConverter {
 
     fn subscription(&self) -> Subscription<Self::Message> {
         subscription::events_with(|event, status| {
-            if status == event::Status::Captured {
+            if status == Status::Captured {
                 return None;
             }
 
@@ -149,6 +178,12 @@ impl Application for TSVConverter {
                     key_code,
                     modifiers,
                 }) if modifiers.command() && key_code == KeyCode::Q => Some(Message::CmdQPress),
+                Event::Keyboard(keyboard::Event::KeyPressed {
+                    key_code,
+                    modifiers,
+                }) if modifiers.command() && key_code == KeyCode::O => {
+                    Some(Message::SelectFileDialog)
+                }
                 _ => None,
             }
         })
@@ -156,11 +191,11 @@ impl Application for TSVConverter {
 
     fn view(&mut self) -> Element<'_, Self::Message> {
         // Select file button - in the content view in the `Initial` state, or else in the menu.
-        let select_file_button = select_file::view(&mut self.select_file_state);
+        let select_file_button = select_file_button::view(&mut self.select_file_button);
 
         // Menu bar.
         let menu = {
-            let title = Text::new(TITLE.to_uppercase())
+            let title = Text::new(TITLE)
                 .font(IOSEVKA_HEAVY_ITALIC)
                 .color(*ORANGE)
                 .size(40);
@@ -179,13 +214,33 @@ impl Application for TSVConverter {
         };
 
         let mut all = Column::new().push(menu);
-        if let Some(state) = &mut self.notification_state {
+        if let Some(state) = &mut self.notification {
             all = all.push(notification::view(state));
         }
-        all = all.push(match self.view_state {
-            ViewState::Initial => select_file_button,
+
+        // Content view.
+        match self.view_state {
+            ViewState::Initial => {
+                all = all
+                    .push(
+                        Container::new(select_file_button)
+                            .width(Length::Fill)
+                            .height(Length::Fill)
+                            .center_x()
+                            .center_y(),
+                    )
+                    .push(
+                        Column::new()
+                            .width(Length::Fill)
+                            .spacing(0)
+                            .padding(20)
+                            .align_items(Alignment::Center)
+                            .push(Text::new(AUTHORS).font(IOSEVKA).size(16).color(*FG))
+                            .push(repo_button::view(&mut self.repo_button)),
+                    );
+            }
             ViewState::EditFile => todo!(),
-        });
+        };
 
         Container::new(all)
             .width(Length::Fill)
