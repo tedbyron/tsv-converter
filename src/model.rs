@@ -145,7 +145,8 @@ impl Application for TSVConverter {
             }
             Message::SelectCrop(crop) => {
                 self.crop = crop;
-                Command::none()
+                todo!("Message::SelectCrop handler");
+                // Command::none()
             }
 
             // Keystroke handlers.

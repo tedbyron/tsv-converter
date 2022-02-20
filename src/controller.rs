@@ -23,7 +23,7 @@ pub fn select_file() -> Result<Option<PathBuf>> {
         .map_err(Error::new)
 }
 
-/// Load a video from a `PathBuf`, returning a thumbnail image.
-pub fn thumbnail(file: File) -> Result<()> {
+/// Load a preview frame of the video with the current settings applied.
+pub fn preview_frame(file: File) -> Result<()> {
     Ok(())
 }
