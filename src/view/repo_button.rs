@@ -1,8 +1,8 @@
-//! Repo name text button.
+//! Open repo text button.
 
 use iced::{button, Button, Text};
 
-use crate::model::Message;
+use crate::app::Message;
 use crate::style::font::IOSEVKA;
 use crate::{style, REPO};
 

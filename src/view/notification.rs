@@ -3,7 +3,7 @@
 use anyhow::Error;
 use iced::{button, Alignment, Button, Container, Length, Row, Text};
 
-use crate::model::Message;
+use crate::app::Message;
 use crate::style;
 use crate::style::font::IOSEVKA;
 

@@ -1,4 +1,4 @@
-//! Style for UI elements.
+//! UI element style.
 
 use iced::{button, container, rule};
 
@@ -9,6 +9,7 @@ use self::color::{
     BG, BG_DARK, BG_DARKER, BG_LIGHT, BG_LIGHTER, FG, GRAY, GRAY_PURPLE, PURPLE, PURPLE_GRAY, RED,
 };
 
+/// Implement the `Stylesheet` trait for a specific element and style.
 macro_rules! style {
     ($ty:ty, $ele:ident, $style:tt) => {
         impl $ele::StyleSheet for $ty {
