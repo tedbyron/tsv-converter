@@ -606,6 +606,7 @@ checksum = "70a1fc87054b079ade0b081b023c5fef309cd4bbcb569c09eed2aa39b25a0a11"
 dependencies = [
  "bitflags",
  "ffmpeg-sys-next",
+ "image 0.23.14",
  "libc",
 ]
 
@@ -1070,13 +1071,15 @@ dependencies = [
  "num-rational 0.3.2",
  "num-traits",
  "png 0.16.8",
+ "scoped_threadpool",
+ "tiff 0.6.1",
 ]
 
 [[package]]
 name = "image"
-version = "0.24.0"
+version = "0.24.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e94ac3d41f882c624a82d7945952032388488681f45f9d4077999a6c85688d61"
+checksum = "db207d030ae38f1eb6f240d5a1c1c88ff422aa005d10f8c6c6fc5e75286ab30e"
 dependencies = [
  "bytemuck",
  "byteorder",
@@ -1089,7 +1092,7 @@ dependencies = [
  "num-traits",
  "png 0.17.3",
  "scoped_threadpool",
- "tiff",
+ "tiff 0.7.1",
 ]
 
 [[package]]
@@ -2094,6 +2097,17 @@ dependencies = [
 
 [[package]]
 name = "tiff"
+version = "0.6.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9a53f4706d65497df0c4349241deddf35f84cee19c87ed86ea8ca590f4464437"
+dependencies = [
+ "jpeg-decoder 0.1.22",
+ "miniz_oxide 0.4.4",
+ "weezl",
+]
+
+[[package]]
+name = "tiff"
 version = "0.7.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0247608e998cb6ce39dfc8f4a16c50361ce71e5b52e6d24ea1227ea8ea8ee0b2"
@@ -2130,7 +2144,7 @@ dependencies = [
  "ffmpeg-next",
  "iced",
  "iced_native",
- "image 0.24.0",
+ "image 0.24.1",
  "lazy_static",
  "native-dialog",
  "open",

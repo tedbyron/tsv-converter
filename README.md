@@ -5,21 +5,17 @@
 
 # Build
 
-## *nix
+## macOS
 
-- `clang`, `pkg-config`, and `ffmpeg` are required.
+```sh
+brew install ffmpeg pkg-config
+```
 
-  - macOS
+## Linux (Debian-based)
 
-    ```sh
-    brew install pkg-config ffmpeg
-    ```
-
-  - Debian-based
-
-    ```sh
-    apt install clang pkg-config ffmpeg libavcodec-dev libavformat-dev libavutil-dev
-    ```
+```sh
+apt install -y clang libavcodec-dev libavformat-dev libavutil-dev pkg-config
+```
 
 ## Windows
 

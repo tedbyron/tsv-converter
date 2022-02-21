@@ -15,11 +15,11 @@ default = []
 
 [dependencies]
 anyhow = "1.0.54"
-ffmpeg-next = "5.0.2"
 lazy_static = "1.4.0"
 native-dialog = "0.6.3"
-image = "0.24.0"
+image = "0.24.1"
 open = "2.0.3"
+ffmpeg-next = { version = "5.0.2", features = ["image"] }
 
 [dependencies.iced]
 git = "https://github.com/iced-rs/iced"
@@ -41,5 +41,4 @@ debug = 0
 [profile.release]
 lto = "fat"
 codegen-units = 1
-panic = "abort"
 # strip = "symbols"
