@@ -1,6 +1,5 @@
 //! Main application logic.
 
-use std::fs::File;
 use std::path::PathBuf;
 
 use anyhow::Error;
@@ -15,10 +14,9 @@ use iced_native::{subscription, Event};
 use crate::style::color::{FG, ORANGE};
 use crate::style::font::{IOSEVKA, IOSEVKA_HEAVY_ITALIC};
 use crate::view::{notification, repo_button, select_file_button};
-use crate::{controller, style, AUTHORS, REPO, TITLE};
-use crate::{NAME, VERSION};
+use crate::{style, util, AUTHORS, REPO, TITLE, VERSION};
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Eq)]
 enum ViewState {
     Initial,
     EditFile,
@@ -63,7 +61,6 @@ pub struct TSVConverter {
     repo_button: repo_button::State,
     select_file_button: select_file_button::State,
     file_path: Option<PathBuf>,
-    file: Option<File>,
     crop: Crop,
     should_exit: bool,
 }
@@ -84,7 +81,7 @@ impl Application for TSVConverter {
     }
 
     fn title(&self) -> String {
-        format!("{NAME} {VERSION}")
+        format!("{TITLE} {VERSION}")
     }
 
     fn update(&mut self, message: Self::Message) -> Command<Self::Message> {
@@ -98,7 +95,7 @@ impl Application for TSVConverter {
             Message::SelectFileDialog => {
                 self.select_file_button.window_open = true;
 
-                match controller::select_file() {
+                match util::select_file() {
                     Ok(opt) => {
                         if let Some(path) = opt {
                             Command::perform(async move { path }, Message::LoadFile)
@@ -125,16 +122,10 @@ impl Application for TSVConverter {
                     self.notification = None;
                 }
 
-                // Attempt to open the file.
-                match File::open(self.file_path.as_ref().unwrap()) {
-                    Ok(file) => self.file = Some(file),
-                    Err(err) => {
-                        self.notification = Some(notification::State::new(
-                            notification::Type::Error,
-                            Error::new(err),
-                        ));
-                        return Command::none();
-                    }
+                // UNWRAP: `self.file_path` has just been set.
+                match util::preview_frame(self.file_path.as_ref().unwrap().as_path(), self.crop) {
+                    Ok(_) => (), // TODO
+                    Err(err) => self.error(err),
                 };
 
                 if self.view_state == ViewState::Initial {
@@ -145,8 +136,8 @@ impl Application for TSVConverter {
             }
             Message::SelectCrop(crop) => {
                 self.crop = crop;
-                todo!("Message::SelectCrop handler");
-                // Command::none()
+                // TODO: Message::SelectCrop handler
+                Command::none()
             }
 
             // Keystroke handlers.
@@ -240,7 +231,7 @@ impl Application for TSVConverter {
                             .push(repo_button::view(&mut self.repo_button)),
                     );
             }
-            ViewState::EditFile => todo!(),
+            ViewState::EditFile => (), // TODO,
         };
 
         Container::new(all)

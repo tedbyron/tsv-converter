@@ -2,7 +2,7 @@
 
 use iced::{button, Button, Container, Text};
 
-use crate::model::Message;
+use crate::app::Message;
 use crate::style;
 use crate::style::font::IOSEVKA_BOLD;
 

@@ -12,9 +12,9 @@
 use anyhow::{Error, Result};
 use iced::{window, Application, Settings};
 
-mod controller;
-mod model;
+mod app;
 mod style;
+mod util;
 mod view;
 
 const NAME: &str = env!("CARGO_PKG_NAME");
@@ -22,6 +22,8 @@ const VERSION: &str = env!("CARGO_PKG_VERSION");
 const AUTHORS: &str = env!("CARGO_PKG_AUTHORS");
 const REPO: &str = env!("CARGO_PKG_REPOSITORY");
 const TITLE: &str = "TSV Converter";
+
+const SUPPORTED_EXTS: &[&str] = &["mp4", "mov", "mpg", "mpeg", "avi", "gif"];
 
 fn main() -> Result<()> {
     ffmpeg_next::init()?;
@@ -41,5 +43,5 @@ fn main() -> Result<()> {
         ..Settings::default()
     };
 
-    model::TSVConverter::run(settings).map_err(Error::new)
+    app::TSVConverter::run(settings).map_err(Error::new)
 }
