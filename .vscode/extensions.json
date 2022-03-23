@@ -1,6 +1,8 @@
 {
   "recommendations": [
-    "matklad.rust-analyzer",
-    "tamasfe.even-better-toml"
+    "bradlc.vscode-tailwindcss",
+    "svelte.svelte-vscode",
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint"
   ]
 }

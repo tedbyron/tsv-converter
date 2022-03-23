@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    @apply bg-stone-900 text-white;
+  }
+
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible {
+    @apply outline-none;
+  }
+}
+
+@layer utilities {
+  .hover-focus {
+    @apply hover:text-sky-300 focus-visible:text-sky-300 hover:bg-stone-700/50 focus-visible:bg-stone-700/50;
+  }
+}
