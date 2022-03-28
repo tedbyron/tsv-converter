@@ -23,6 +23,7 @@
       <a
         href="https://github.com/tedbyron/tsv-converter"
         title="View on GitHub"
+        aria-label="View on GitHub"
         class="hover-focus flex items-center gap-2 rounded-lg p-3"
       >
         {@html markGithubIcon}

@@ -58,17 +58,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fontsource/poppins@npm:^4.5.3":
-  version: 4.5.3
-  resolution: "@fontsource/poppins@npm:4.5.3"
-  checksum: c674de4cd123a5fa52e2e73d6f5190a320a48d8608c2d4053bee92b252033a3d7f805523d2759b351870901217c4a3b0d1087a837b2be22741ba90fcbb102a1b
+"@fontsource/poppins@npm:^4.5.5":
+  version: 4.5.5
+  resolution: "@fontsource/poppins@npm:4.5.5"
+  checksum: 221f2cd88180245a5e76cb591bbc2a58d84c3a67283e44defc6e419f0a2b9ab6f9b334515c08e6e221f05dce0cf0681179c239c4820b39e09210280faf8b8a36
   languageName: node
   linkType: hard
 
-"@fontsource/press-start-2p@npm:^4.5.3":
-  version: 4.5.3
-  resolution: "@fontsource/press-start-2p@npm:4.5.3"
-  checksum: 5815509d959a2407bbf99e352ef9991d74546c8d4b20621bc694260741bb09699f1969e0696bb61d89d099f14575153ca1d581a4c62ed71019d298a928fd8619
+"@fontsource/press-start-2p@npm:^4.5.5":
+  version: 4.5.5
+  resolution: "@fontsource/press-start-2p@npm:4.5.5"
+  checksum: bfbb01bec18ff07f9d5f9fe4c3cda72bf6431ac2938cfaba68bfb10935693f623d91e14d76550a7e23a95e98b553e92090311dbb080c67d3df8a5aa434fc14c4
   languageName: node
   linkType: hard
 
@@ -249,8 +249,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@tedbyron/tsv-converter@workspace:."
   dependencies:
-    "@fontsource/poppins": ^4.5.3
-    "@fontsource/press-start-2p": ^4.5.3
+    "@fontsource/poppins": ^4.5.5
+    "@fontsource/press-start-2p": ^4.5.5
     "@primer/octicons": ^17.0.0
     "@sveltejs/adapter-auto": next
     "@sveltejs/kit": next
@@ -258,21 +258,21 @@ __metadata:
     "@typescript-eslint/parser": ^4.33.0
     autoprefixer: ^10.4.4
     eslint: ^7.32.0
-    eslint-config-prettier: ^8.3.0
+    eslint-config-prettier: ^8.5.0
     eslint-config-standard-with-typescript: ^21.0.1
     eslint-plugin-import: ^2.25.4
     eslint-plugin-node: ^11.1.0
     eslint-plugin-promise: ^5.2.0
-    eslint-plugin-svelte3: ^3.2.1
+    eslint-plugin-svelte3: ^3.4.1
     postcss: ^8.4.12
-    prettier: ^2.5.1
-    prettier-plugin-svelte: ^2.5.0
-    svelte: ^3.44.0
-    svelte-check: ^2.2.6
-    svelte-preprocess: ^4.10.1
+    prettier: ^2.6.1
+    prettier-plugin-svelte: ^2.6.0
+    svelte: ^3.46.4
+    svelte-check: ^2.4.6
+    svelte-preprocess: ^4.10.4
     tailwindcss: ^3.0.23
     tslib: ^2.3.1
-    typescript: ~4.6.2
+    typescript: ~4.6.3
   languageName: unknown
   linkType: soft
 
@@ -1370,7 +1370,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-config-prettier@npm:^8.3.0":
+"eslint-config-prettier@npm:^8.5.0":
   version: 8.5.0
   resolution: "eslint-config-prettier@npm:8.5.0"
   peerDependencies:
@@ -1490,7 +1490,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-svelte3@npm:^3.2.1":
+"eslint-plugin-svelte3@npm:^3.4.1":
   version: 3.4.1
   resolution: "eslint-plugin-svelte3@npm:3.4.1"
   peerDependencies:
@@ -2926,7 +2926,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier-plugin-svelte@npm:^2.5.0":
+"prettier-plugin-svelte@npm:^2.6.0":
   version: 2.6.0
   resolution: "prettier-plugin-svelte@npm:2.6.0"
   peerDependencies:
@@ -2936,12 +2936,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:^2.5.1":
-  version: 2.6.0
-  resolution: "prettier@npm:2.6.0"
+"prettier@npm:^2.6.1":
+  version: 2.6.1
+  resolution: "prettier@npm:2.6.1"
   bin:
     prettier: bin-prettier.js
-  checksum: 3e527ad62279676778a8404d18174d7ca2365ada4caba6eebbcdd9907d1187afd3bc6ade5b4e5f5d4549bb9fb71e45ca8930d71500017635524f8fc05bc52e93
+  checksum: 78be1f8a3ddfad7c3d8a854b6c8941a3bb1ddfca4225c38d778e0fe1029a55368f71b3bbefff82c689015fbb4d391ec44add957f01308ad2725e01a7c1f37cb6
   languageName: node
   linkType: hard
 
@@ -3406,7 +3406,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"svelte-check@npm:^2.2.6":
+"svelte-check@npm:^2.4.6":
   version: 2.4.6
   resolution: "svelte-check@npm:2.4.6"
   dependencies:
@@ -3436,7 +3436,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"svelte-preprocess@npm:^4.0.0, svelte-preprocess@npm:^4.10.1":
+"svelte-preprocess@npm:^4.0.0, svelte-preprocess@npm:^4.10.4":
   version: 4.10.4
   resolution: "svelte-preprocess@npm:4.10.4"
   dependencies:
@@ -3485,7 +3485,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"svelte@npm:^3.44.0":
+"svelte@npm:^3.46.4":
   version: 3.46.4
   resolution: "svelte@npm:3.46.4"
   checksum: 929e6790cdd6d94c123b4b8a7b5a541164dbea6d4f4ed311f4e65cde60caa1c704e531bbf2e63519d1a96163cd3f812c6e5be5b2fd05f72d0177af5fd8ca8637
@@ -3633,23 +3633,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:*, typescript@npm:~4.6.2":
-  version: 4.6.2
-  resolution: "typescript@npm:4.6.2"
+"typescript@npm:*, typescript@npm:~4.6.3":
+  version: 4.6.3
+  resolution: "typescript@npm:4.6.3"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 8a44ed7e6f6c4cb1ebe8cf236ecda2fb119d84dcf0fbd77e707b2dfea1bbcfc4e366493a143513ce7f57203c75da9d4e20af6fe46de89749366351046be7577c
+  checksum: 255bb26c8cb846ca689dd1c3a56587af4f69055907aa2c154796ea28ee0dea871535b1c78f85a6212c77f2657843a269c3a742d09d81495b97b914bf7920415b
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@*#~builtin<compat/typescript>, typescript@patch:typescript@~4.6.2#~builtin<compat/typescript>":
-  version: 4.6.2
-  resolution: "typescript@patch:typescript@npm%3A4.6.2#~builtin<compat/typescript>::version=4.6.2&hash=bda367"
+"typescript@patch:typescript@*#~builtin<compat/typescript>, typescript@patch:typescript@~4.6.3#~builtin<compat/typescript>":
+  version: 4.6.3
+  resolution: "typescript@patch:typescript@npm%3A4.6.3#~builtin<compat/typescript>::version=4.6.3&hash=bda367"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 40b493a71747fb89fa70df104e2c4a5e284b43750af5bea024090a5261cefa387f7a9372411b13030f7bf5555cee4275443d08805642ae5c74ef76740854a4c7
+  checksum: 6bf45caf847062420592e711bc9c28bf5f9a9a7fa8245343b81493e4ededae33f1774009d1234d911422d1646a2c839f44e1a23ecb111b40a60ac2ea4c1482a8
   languageName: node
   linkType: hard
 

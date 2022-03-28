@@ -1,7 +1,7 @@
 module.exports = {
   root: true,
   parser: '@typescript-eslint/parser',
-  extends: ['prettier', 'standard-with-typescript'],
+  extends: ['standard-with-typescript', 'prettier'],
   plugins: ['svelte3', '@typescript-eslint'],
   ignorePatterns: ['*.cjs', '.yarn/**/*', 'svelte.config.js'],
   overrides: [{ files: ['*.svelte'], processor: 'svelte3/svelte3' }],
