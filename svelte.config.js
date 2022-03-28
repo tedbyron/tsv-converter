@@ -15,7 +15,7 @@ const config = {
       }
     },
     vite: {
-      envPrefix: 'TSV_',
+      envPrefix: 'TSV_CONVERTER_',
       resolve: {
         alias: {
           $routes: path.resolve('src', 'routes'),
