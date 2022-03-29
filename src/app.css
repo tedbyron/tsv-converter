@@ -12,10 +12,40 @@
   input:focus-visible {
     @apply outline-none;
   }
+
+  thead th {
+    @apply p-2;
+  }
+
+  tbody th,
+  tbody td {
+    @apply px-3 py-1;
+  }
+
+  tbody tr:first-child th,
+  tbody tr:first-child td {
+    @apply pt-3;
+  }
+
+  tbody tr:last-child th {
+    @apply pb-3 rounded-bl-lg;
+  }
+
+  tbody tr:last-child td {
+    @apply pb-3 rounded-br-lg;
+  }
+
+  [type='radio'] {
+    @apply accent-sky-300;
+  }
 }
 
 @layer utilities {
+  .button {
+    @apply p-3 border-2 border-white hover:border-sky-300 focus-visible:border-sky-300 rounded-lg;
+  }
+
   .hover-focus {
-    @apply hover:text-sky-300 focus-visible:text-sky-300 hover:bg-stone-700/50 focus-visible:bg-stone-700/50;
+    @apply transition-colors hover:text-sky-300 focus-visible:text-sky-300 hover:bg-stone-700/50 focus-visible:bg-stone-700/50;
   }
 }

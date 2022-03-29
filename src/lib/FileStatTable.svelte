@@ -7,25 +7,27 @@
 </script>
 
 <script lang="ts">
+  import { fade } from 'svelte/transition'
   import { browser } from '$app/env'
   import { fileSize } from '$lib/util'
 
   export let file: File
-  export let metadata: VideoMetadata
-
-  const { duration, videoWidth, videoHeight } = metadata
+  export let metadata: VideoMetadata | undefined
 </script>
 
-<table class="table-auto border-collapse rounded-lg text-left">
+<table
+  transition:fade={{ delay: 100, duration: 300 }}
+  class="table-auto border-collapse rounded-lg text-left"
+>
   <thead>
     <tr>
-      <th aria-label="File Name" colspan="2" class="bg-stone-900 rounded-t-lg">
-        <code>{file.name}</code>code
+      <th aria-label="File Name" colspan="2" class="bg-stone-700 rounded-t-lg text-center">
+        <code>{file.name}</code>
       </th>
     </tr>
   </thead>
 
-  <tbody class="bg-stone-800">
+  <tbody class="bg-stone-800 rounded-b-lg">
     <tr>
       <th scope="row">Type</th>
       <td>
@@ -33,18 +35,20 @@
       </td>
     </tr>
 
-    {#if duration && !isNaN(duration)}
-      <tr>
-        <th scope="row">Duration</th>
-        <td>{duration.toFixed(2)}s</td>
-      </tr>
-    {/if}
+    {#if metadata}
+      {#if metadata.duration && !isNaN(metadata.duration)}
+        <tr>
+          <th scope="row">Duration</th>
+          <td>{metadata.duration.toFixed(2)}s</td>
+        </tr>
+      {/if}
 
-    {#if videoWidth && videoHeight}
-      <tr>
-        <th scope="row">Dimensions</th>
-        <td>{`${videoWidth}x${videoHeight}`}</td>
-      </tr>
+      {#if metadata.videoWidth && metadata.videoHeight}
+        <tr>
+          <th scope="row">Dimensions</th>
+          <td>{`${metadata.videoWidth}x${metadata.videoHeight}`}</td>
+        </tr>
+      {/if}
     {/if}
 
     <tr>

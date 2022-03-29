@@ -3,7 +3,6 @@
   import '@fontsource/press-start-2p'
   import { page } from '$app/stores'
   import Header from '$lib/Header.svelte'
-  import '../app.css'
 </script>
 
 <svelte:head>
@@ -18,3 +17,7 @@
 
 <Header />
 <slot />
+
+<style global>
+  @import '../app.css';
+</style>
