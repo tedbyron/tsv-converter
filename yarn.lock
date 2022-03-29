@@ -58,6 +58,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@ffmpeg/core@npm:^0.10.0":
+  version: 0.10.0
+  resolution: "@ffmpeg/core@npm:0.10.0"
+  checksum: e93aa8dea8853d4aca9702dcca64dc1ceef750146fb7384dc6d16175c4927de9e1262f788e2f647b9b94ae5df86ae250415649e928e57e73e4c022709268e959
+  languageName: node
+  linkType: hard
+
+"@ffmpeg/ffmpeg@npm:^0.10.1":
+  version: 0.10.1
+  resolution: "@ffmpeg/ffmpeg@npm:0.10.1"
+  dependencies:
+    is-url: ^1.2.4
+    node-fetch: ^2.6.1
+    regenerator-runtime: ^0.13.7
+    resolve-url: ^0.2.1
+  checksum: 8072aef7468febdeea346801e9fe957c0022093eafd6e9f3baa4e6d2d2d0ea780ff0503759c5d9d837c5d013f8cbbb8d76b760e1b36e4f6c5d317f7e324b3a29
+  languageName: node
+  linkType: hard
+
 "@fontsource/poppins@npm:^4.5.5":
   version: 4.5.5
   resolution: "@fontsource/poppins@npm:4.5.5"
@@ -249,6 +268,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@tedbyron/tsv-converter@workspace:."
   dependencies:
+    "@ffmpeg/core": ^0.10.0
+    "@ffmpeg/ffmpeg": ^0.10.1
     "@fontsource/poppins": ^4.5.5
     "@fontsource/press-start-2p": ^4.5.5
     "@primer/octicons": ^17.0.0
@@ -2244,6 +2265,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"is-url@npm:^1.2.4":
+  version: 1.2.4
+  resolution: "is-url@npm:1.2.4"
+  checksum: 100e74b3b1feab87a43ef7653736e88d997eb7bd32e71fd3ebc413e58c1cbe56269699c776aaea84244b0567f2a7d68dfaa512a062293ed2f9fdecb394148432
+  languageName: node
+  linkType: hard
+
 "is-weakref@npm:^1.0.1":
   version: 1.0.2
   resolution: "is-weakref@npm:1.0.2"
@@ -2609,6 +2637,20 @@ __metadata:
   version: 0.6.3
   resolution: "negotiator@npm:0.6.3"
   checksum: b8ffeb1e262eff7968fc90a2b6767b04cfd9842582a9d0ece0af7049537266e7b2506dfb1d107a32f06dd849ab2aea834d5830f7f4d0e5cb7d36e1ae55d021d9
+  languageName: node
+  linkType: hard
+
+"node-fetch@npm:^2.6.1":
+  version: 2.6.7
+  resolution: "node-fetch@npm:2.6.7"
+  dependencies:
+    whatwg-url: ^5.0.0
+  peerDependencies:
+    encoding: ^0.1.0
+  peerDependenciesMeta:
+    encoding:
+      optional: true
+  checksum: 8d816ffd1ee22cab8301c7756ef04f3437f18dace86a1dae22cf81db8ef29c0bf6655f3215cb0cdb22b420b6fe141e64b26905e7f33f9377a7fa59135ea3e10b
   languageName: node
   linkType: hard
 
@@ -3010,6 +3052,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"regenerator-runtime@npm:^0.13.7":
+  version: 0.13.9
+  resolution: "regenerator-runtime@npm:0.13.9"
+  checksum: 65ed455fe5afd799e2897baf691ca21c2772e1a969d19bb0c4695757c2d96249eb74ee3553ea34a91062b2a676beedf630b4c1551cc6299afb937be1426ec55e
+  languageName: node
+  linkType: hard
+
 "regexpp@npm:^3.0.0, regexpp@npm:^3.1.0":
   version: 3.2.0
   resolution: "regexpp@npm:3.2.0"
@@ -3028,6 +3077,13 @@ __metadata:
   version: 4.0.0
   resolution: "resolve-from@npm:4.0.0"
   checksum: f4ba0b8494846a5066328ad33ef8ac173801a51739eb4d63408c847da9a2e1c1de1e6cbbf72699211f3d13f8fc1325648b169bd15eb7da35688e30a5fb0e4a7f
+  languageName: node
+  linkType: hard
+
+"resolve-url@npm:^0.2.1":
+  version: 0.2.1
+  resolution: "resolve-url@npm:0.2.1"
+  checksum: 7b7035b9ed6e7bc7d289e90aef1eab5a43834539695dac6416ca6e91f1a94132ae4796bbd173cdacfdc2ade90b5f38a3fb6186bebc1b221cd157777a23b9ad14
   languageName: node
   linkType: hard
 
@@ -3580,6 +3636,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"tr46@npm:~0.0.3":
+  version: 0.0.3
+  resolution: "tr46@npm:0.0.3"
+  checksum: 726321c5eaf41b5002e17ffbd1fb7245999a073e8979085dacd47c4b4e8068ff5777142fc6726d6ca1fd2ff16921b48788b87225cbc57c72636f6efa8efbffe3
+  languageName: node
+  linkType: hard
+
 "tsconfig-paths@npm:^3.12.0":
   version: 3.14.1
   resolution: "tsconfig-paths@npm:3.14.1"
@@ -3732,6 +3795,23 @@ __metadata:
   bin:
     vite: bin/vite.js
   checksum: 4b02d133892c98362c10214b7ad518d74b59745889197a2ba0b63260ed083fcef75a447e8fb58dbd2af8747386274b36017983d93031254df6ead38701950dcc
+  languageName: node
+  linkType: hard
+
+"webidl-conversions@npm:^3.0.0":
+  version: 3.0.1
+  resolution: "webidl-conversions@npm:3.0.1"
+  checksum: c92a0a6ab95314bde9c32e1d0a6dfac83b578f8fa5f21e675bc2706ed6981bc26b7eb7e6a1fab158e5ce4adf9caa4a0aee49a52505d4d13c7be545f15021b17c
+  languageName: node
+  linkType: hard
+
+"whatwg-url@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "whatwg-url@npm:5.0.0"
+  dependencies:
+    tr46: ~0.0.3
+    webidl-conversions: ^3.0.0
+  checksum: b8daed4ad3356cc4899048a15b2c143a9aed0dfae1f611ebd55073310c7b910f522ad75d727346ad64203d7e6c79ef25eafd465f4d12775ca44b90fa82ed9e2c
   languageName: node
   linkType: hard
 

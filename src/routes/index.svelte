@@ -1,8 +1,10 @@
 <script lang="ts">
   import { onMount } from 'svelte'
-  import { video } from '$stores/video'
+  import { fade } from 'svelte/transition'
+  import { video } from '$stores'
   import FileInput from '$lib/FileInput.svelte'
   import FileStatTable, { type VideoMetadata } from '$lib/FileStatTable.svelte'
+  import EditForm from '$lib/EditForm.svelte'
 
   let videoElement: HTMLVideoElement | undefined
   let src: string | undefined
@@ -45,10 +47,10 @@
   <meta property="og:title" content="TSV Converter" />
 </svelte:head>
 
-<section class="container relative flex flex-col items-center">
+<section class="container relative flex flex-col items-center gap-6">
   <FileInput />
 
-  {#if $video !== undefined}
+  {#if $video}
     <!-- svelte-ignore component-name-lowercase a11y-media-has-caption -->
     <video
       {src}
@@ -58,13 +60,15 @@
       controls
       on:loadedmetadata={setDuration}
       bind:this={videoElement}
-      class="max-w-md max-h-md"
+      transition:fade={{ delay: 100, duration: 300 }}
+      class="max-w-md max-h-64"
     >
       Your browser doesn't support embedded videos.
     </video>
 
-    {#if metadata}
+    <div class="flex gap-6">
       <FileStatTable file={$video} {metadata} />
-    {/if}
+      <EditForm />
+    </div>
   {/if}
 </section>

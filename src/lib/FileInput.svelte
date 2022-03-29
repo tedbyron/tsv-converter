@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { video } from '$stores/video'
+  import { video } from '$stores'
 
   let videoInput: HTMLInputElement
   let files: FileList | undefined
@@ -12,10 +12,7 @@
   export { className as class }
 </script>
 
-<button
-  on:click={() => videoInput.click()}
-  class="hover-focus p-3 border-2 border-white hover:border-sky-300 focus-visible:border-sky-300 rounded-lg {className}"
->
+<button on:click={() => videoInput.click()} class="button hover-focus {className}">
   Select a video
   <input
     type="file"
