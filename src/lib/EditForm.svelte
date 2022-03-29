@@ -8,7 +8,7 @@
 <form
   on:submit|preventDefault={convert}
   transition:fade={{ delay: 100, duration: 300 }}
-  class="space-y-3"
+  class="space-y-6"
 >
   <fieldset class="p-3 border-2 border-white rounded-lg">
     <legend class="ml-3 px-2 py-1 border-2 border-white rounded-md">Crop</legend>
