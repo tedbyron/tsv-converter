@@ -13,13 +13,25 @@
     @apply outline-none;
   }
 
+  table {
+    border-spacing: 0;
+  }
+
   thead th {
     @apply p-2;
   }
 
   tbody th,
   tbody td {
-    @apply px-3 py-1;
+    @apply px-3 py-1 border-white;
+  }
+
+  tbody th {
+    @apply border-l-2;
+  }
+
+  tbody td {
+    @apply border-r-2;
   }
 
   tbody tr:first-child th,
@@ -28,11 +40,11 @@
   }
 
   tbody tr:last-child th {
-    @apply pb-3 rounded-bl-lg;
+    @apply pb-3 border-b-2 rounded-bl-lg;
   }
 
   tbody tr:last-child td {
-    @apply pb-3 rounded-br-lg;
+    @apply pb-3 border-b-2 rounded-br-lg;
   }
 
   [type='radio'] {

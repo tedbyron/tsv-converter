@@ -15,19 +15,20 @@
   export let metadata: VideoMetadata | undefined
 </script>
 
-<table
-  transition:fade={{ delay: 100, duration: 300 }}
-  class="table-auto border-collapse rounded-lg text-left"
->
+<table transition:fade={{ delay: 100, duration: 300 }} class="table-auto border-separate text-left">
   <thead>
     <tr>
-      <th aria-label="File Name" colspan="2" class="bg-stone-700 rounded-t-lg text-center">
+      <th
+        aria-label="File Name"
+        colspan="2"
+        class="bg-stone-700 border-2 border-b-0 border-white rounded-t-lg text-center"
+      >
         <code>{file.name}</code>
       </th>
     </tr>
   </thead>
 
-  <tbody class="bg-stone-800 rounded-b-lg">
+  <tbody>
     <tr>
       <th scope="row">Type</th>
       <td>
