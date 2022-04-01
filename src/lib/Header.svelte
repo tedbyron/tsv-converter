@@ -1,5 +1,14 @@
 <script lang="ts">
+  import { open } from '@tauri-apps/api/shell'
   import octicons from '@primer/octicons'
+
+  const openGithub = async (): Promise<void> => {
+    try {
+      await open('https://github.com/tedbyron/tsv-converter')
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   const markGithubIcon = octicons['mark-github'].toSVG({
     'aria-label': 'View on GitHub',
@@ -20,15 +29,14 @@
 
     <!-- Links -->
     <div class="lg:justify-self-end flex justify-center items-center gap-3">
-      <a
-        href="https://github.com/tedbyron/tsv-converter"
+      <button
         title="View on GitHub"
-        aria-label="View on GitHub"
+        on:click={openGithub}
         class="hover-focus flex items-center gap-2 rounded-lg p-3"
       >
         {@html markGithubIcon}
         tedbyron/tsv-converter
-      </a>
+      </button>
     </div>
   </nav>
 </header>

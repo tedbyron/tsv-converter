@@ -8,11 +8,10 @@
 
 <script lang="ts">
   import { fade } from 'svelte/transition'
-  import { browser } from '$app/env'
   import { fileSize } from '$lib/util'
 
   export let file: File
-  export let metadata: VideoMetadata | undefined
+  export let videoMetadata: VideoMetadata | undefined
 </script>
 
 <table transition:fade={{ delay: 100, duration: 300 }} class="table-auto border-separate text-left">
@@ -36,18 +35,18 @@
       </td>
     </tr>
 
-    {#if metadata}
-      {#if metadata.duration && !isNaN(metadata.duration)}
+    {#if videoMetadata}
+      {#if videoMetadata.duration && !isNaN(videoMetadata.duration)}
         <tr>
           <th scope="row">Duration</th>
-          <td>{metadata.duration.toFixed(2)}s</td>
+          <td>{videoMetadata.duration.toFixed(2)}s</td>
         </tr>
       {/if}
 
-      {#if metadata.videoWidth && metadata.videoHeight}
+      {#if videoMetadata.videoWidth && videoMetadata.videoHeight}
         <tr>
           <th scope="row">Dimensions</th>
-          <td>{`${metadata.videoWidth}x${metadata.videoHeight}`}</td>
+          <td>{`${videoMetadata.videoWidth}x${videoMetadata.videoHeight}`}</td>
         </tr>
       {/if}
     {/if}
@@ -57,11 +56,9 @@
       <td>{fileSize(file.size)}</td>
     </tr>
 
-    {#if browser}
-      <tr>
-        <th scope="row">Modified</th>
-        <td>{new Date(file.lastModified).toLocaleString()}</td>
-      </tr>
-    {/if}
+    <tr>
+      <th scope="row">Modified</th>
+      <td>{new Date(file.lastModified).toLocaleString()}</td>
+    </tr>
   </tbody>
 </table>

@@ -58,25 +58,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ffmpeg/core@npm:^0.10.0":
-  version: 0.10.0
-  resolution: "@ffmpeg/core@npm:0.10.0"
-  checksum: e93aa8dea8853d4aca9702dcca64dc1ceef750146fb7384dc6d16175c4927de9e1262f788e2f647b9b94ae5df86ae250415649e928e57e73e4c022709268e959
-  languageName: node
-  linkType: hard
-
-"@ffmpeg/ffmpeg@npm:^0.10.1":
-  version: 0.10.1
-  resolution: "@ffmpeg/ffmpeg@npm:0.10.1"
-  dependencies:
-    is-url: ^1.2.4
-    node-fetch: ^2.6.1
-    regenerator-runtime: ^0.13.7
-    resolve-url: ^0.2.1
-  checksum: 8072aef7468febdeea346801e9fe957c0022093eafd6e9f3baa4e6d2d2d0ea780ff0503759c5d9d837c5d013f8cbbb8d76b760e1b36e4f6c5d317f7e324b3a29
-  languageName: node
-  linkType: hard
-
 "@fontsource/poppins@npm:^4.5.5":
   version: 4.5.5
   resolution: "@fontsource/poppins@npm:4.5.5"
@@ -113,13 +94,6 @@ __metadata:
   version: 1.2.1
   resolution: "@humanwhocodes/object-schema@npm:1.2.1"
   checksum: a824a1ec31591231e4bad5787641f59e9633827d0a2eaae131a288d33c9ef0290bd16fda8da6f7c0fcb014147865d12118df10db57f27f41e20da92369fcb3f1
-  languageName: node
-  linkType: hard
-
-"@iarna/toml@npm:^2.2.5":
-  version: 2.2.5
-  resolution: "@iarna/toml@npm:2.2.5"
-  checksum: b63b2b2c4fd67969a6291543ada0303d45593801ee744b60f5390f183c03d9192bc67a217abb24be945158f1935f02840d9ffff40c0142aa171b5d3b6b6a3ea5
   languageName: node
   linkType: hard
 
@@ -189,43 +163,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sveltejs/adapter-auto@npm:next":
-  version: 1.0.0-next.33
-  resolution: "@sveltejs/adapter-auto@npm:1.0.0-next.33"
+"@sveltejs/adapter-static@npm:^1.0.0-next.0":
+  version: 1.0.0-next.29
+  resolution: "@sveltejs/adapter-static@npm:1.0.0-next.29"
   dependencies:
-    "@sveltejs/adapter-cloudflare": 1.0.0-next.16
-    "@sveltejs/adapter-netlify": 1.0.0-next.51
-    "@sveltejs/adapter-vercel": 1.0.0-next.47
-  checksum: 1a045e4ae6b3ca0b998a75c54d31f52b0b2fae9b8ddd5c23ed8ef632957ad418ba2d52d6dceac603743d35a1d5a626256c97de31825048a641410dc8dae3aa8c
-  languageName: node
-  linkType: hard
-
-"@sveltejs/adapter-cloudflare@npm:1.0.0-next.16":
-  version: 1.0.0-next.16
-  resolution: "@sveltejs/adapter-cloudflare@npm:1.0.0-next.16"
-  dependencies:
-    esbuild: ^0.14.21
-  checksum: 7650a8ea0aaeb4cae3f8a7dcda2045e8bf586c54dd7c10827d7680009f923655df4faf70fdea0fd8af1c0399ac46e4a3d7479419478c38d25085735e2ad6d181
-  languageName: node
-  linkType: hard
-
-"@sveltejs/adapter-netlify@npm:1.0.0-next.51":
-  version: 1.0.0-next.51
-  resolution: "@sveltejs/adapter-netlify@npm:1.0.0-next.51"
-  dependencies:
-    "@iarna/toml": ^2.2.5
-    esbuild: ^0.14.21
     tiny-glob: ^0.2.9
-  checksum: abb995958a888eb20a3deb92e787c2b51647ba5d6d57cdbebbb0eb5e5e200913755a5518c1e1e4ec08e9764e0b91da9afd60a4518cf032c3c238f4348917dbf4
-  languageName: node
-  linkType: hard
-
-"@sveltejs/adapter-vercel@npm:1.0.0-next.47":
-  version: 1.0.0-next.47
-  resolution: "@sveltejs/adapter-vercel@npm:1.0.0-next.47"
-  dependencies:
-    esbuild: ^0.14.21
-  checksum: 754ab47d5fca2474ec8503b70956457aaf18fb0e3566fc77463ca58188b7b4fe5199424742af64bc294c834b64ca4c668af20864f5bac3ae17a5d24418341895
+  checksum: 4cd130ff79fc7db5449eedc730aecdf103d93ed09a03e8c949a0613953434cd62a3ad147e43600af0894795d540a2f4fd2d0957ea118e33d3caeded186e1e93f
   languageName: node
   linkType: hard
 
@@ -264,38 +207,115 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tedbyron/tsv-converter@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "@tedbyron/tsv-converter@workspace:."
+"@tauri-apps/api@npm:^1.0.0-rc.3":
+  version: 1.0.0-rc.3
+  resolution: "@tauri-apps/api@npm:1.0.0-rc.3"
   dependencies:
-    "@ffmpeg/core": ^0.10.0
-    "@ffmpeg/ffmpeg": ^0.10.1
-    "@fontsource/poppins": ^4.5.5
-    "@fontsource/press-start-2p": ^4.5.5
-    "@primer/octicons": ^17.0.0
-    "@sveltejs/adapter-auto": next
-    "@sveltejs/kit": next
-    "@typescript-eslint/eslint-plugin": ^4.33.0
-    "@typescript-eslint/parser": ^4.33.0
-    autoprefixer: ^10.4.4
-    eslint: ^7.32.0
-    eslint-config-prettier: ^8.5.0
-    eslint-config-standard-with-typescript: ^21.0.1
-    eslint-plugin-import: ^2.25.4
-    eslint-plugin-node: ^11.1.0
-    eslint-plugin-promise: ^5.2.0
-    eslint-plugin-svelte3: ^3.4.1
-    postcss: ^8.4.12
-    prettier: ^2.6.1
-    prettier-plugin-svelte: ^2.6.0
-    svelte: ^3.46.4
-    svelte-check: ^2.4.6
-    svelte-preprocess: ^4.10.4
-    tailwindcss: ^3.0.23
-    tslib: ^2.3.1
-    typescript: ~4.6.3
-  languageName: unknown
-  linkType: soft
+    type-fest: 2.12.1
+  checksum: 7c47269c4028993ad0a9776c3d8e97b854182710c153272bc45cc33ea2aea7ed276d48d2029a7951fdb8bfd8daba9f45a0b2f27c94037a93932103dc26e74c74
+  languageName: node
+  linkType: hard
+
+"@tauri-apps/cli-darwin-arm64@npm:1.0.0-rc.8":
+  version: 1.0.0-rc.8
+  resolution: "@tauri-apps/cli-darwin-arm64@npm:1.0.0-rc.8"
+  conditions: os=darwin & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@tauri-apps/cli-darwin-x64@npm:1.0.0-rc.8":
+  version: 1.0.0-rc.8
+  resolution: "@tauri-apps/cli-darwin-x64@npm:1.0.0-rc.8"
+  conditions: os=darwin & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@tauri-apps/cli-linux-arm-gnueabihf@npm:1.0.0-rc.8":
+  version: 1.0.0-rc.8
+  resolution: "@tauri-apps/cli-linux-arm-gnueabihf@npm:1.0.0-rc.8"
+  conditions: os=linux & cpu=arm
+  languageName: node
+  linkType: hard
+
+"@tauri-apps/cli-linux-arm64-gnu@npm:1.0.0-rc.8":
+  version: 1.0.0-rc.8
+  resolution: "@tauri-apps/cli-linux-arm64-gnu@npm:1.0.0-rc.8"
+  conditions: os=linux & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@tauri-apps/cli-linux-arm64-musl@npm:1.0.0-rc.8":
+  version: 1.0.0-rc.8
+  resolution: "@tauri-apps/cli-linux-arm64-musl@npm:1.0.0-rc.8"
+  conditions: os=linux & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@tauri-apps/cli-linux-x64-gnu@npm:1.0.0-rc.8":
+  version: 1.0.0-rc.8
+  resolution: "@tauri-apps/cli-linux-x64-gnu@npm:1.0.0-rc.8"
+  conditions: os=linux & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@tauri-apps/cli-linux-x64-musl@npm:1.0.0-rc.8":
+  version: 1.0.0-rc.8
+  resolution: "@tauri-apps/cli-linux-x64-musl@npm:1.0.0-rc.8"
+  conditions: os=linux & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@tauri-apps/cli-win32-ia32-msvc@npm:1.0.0-rc.8":
+  version: 1.0.0-rc.8
+  resolution: "@tauri-apps/cli-win32-ia32-msvc@npm:1.0.0-rc.8"
+  conditions: os=win32 & cpu=ia32
+  languageName: node
+  linkType: hard
+
+"@tauri-apps/cli-win32-x64-msvc@npm:1.0.0-rc.8":
+  version: 1.0.0-rc.8
+  resolution: "@tauri-apps/cli-win32-x64-msvc@npm:1.0.0-rc.8"
+  conditions: os=win32 & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@tauri-apps/cli@npm:^1.0.0-rc.8":
+  version: 1.0.0-rc.8
+  resolution: "@tauri-apps/cli@npm:1.0.0-rc.8"
+  dependencies:
+    "@tauri-apps/cli-darwin-arm64": 1.0.0-rc.8
+    "@tauri-apps/cli-darwin-x64": 1.0.0-rc.8
+    "@tauri-apps/cli-linux-arm-gnueabihf": 1.0.0-rc.8
+    "@tauri-apps/cli-linux-arm64-gnu": 1.0.0-rc.8
+    "@tauri-apps/cli-linux-arm64-musl": 1.0.0-rc.8
+    "@tauri-apps/cli-linux-x64-gnu": 1.0.0-rc.8
+    "@tauri-apps/cli-linux-x64-musl": 1.0.0-rc.8
+    "@tauri-apps/cli-win32-ia32-msvc": 1.0.0-rc.8
+    "@tauri-apps/cli-win32-x64-msvc": 1.0.0-rc.8
+  dependenciesMeta:
+    "@tauri-apps/cli-darwin-arm64":
+      optional: true
+    "@tauri-apps/cli-darwin-x64":
+      optional: true
+    "@tauri-apps/cli-linux-arm-gnueabihf":
+      optional: true
+    "@tauri-apps/cli-linux-arm64-gnu":
+      optional: true
+    "@tauri-apps/cli-linux-arm64-musl":
+      optional: true
+    "@tauri-apps/cli-linux-x64-gnu":
+      optional: true
+    "@tauri-apps/cli-linux-x64-musl":
+      optional: true
+    "@tauri-apps/cli-win32-ia32-msvc":
+      optional: true
+    "@tauri-apps/cli-win32-x64-msvc":
+      optional: true
+  bin:
+    tauri: tauri.js
+  checksum: 1c9a867f15991207d4d10fceeabc8b5b823ebed387d698d085fd2db55fc4ff9f3ad41fad6b7e591c649ed8e485858a1bcb7666cce6de92d9251ca9f6d16e697d
+  languageName: node
+  linkType: hard
 
 "@tootallnate/once@npm:2":
   version: 2.0.0
@@ -1299,7 +1319,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"esbuild@npm:^0.14.14, esbuild@npm:^0.14.21":
+"esbuild@npm:^0.14.14":
   version: 0.14.27
   resolution: "esbuild@npm:0.14.27"
   dependencies:
@@ -2265,13 +2285,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"is-url@npm:^1.2.4":
-  version: 1.2.4
-  resolution: "is-url@npm:1.2.4"
-  checksum: 100e74b3b1feab87a43ef7653736e88d997eb7bd32e71fd3ebc413e58c1cbe56269699c776aaea84244b0567f2a7d68dfaa512a062293ed2f9fdecb394148432
-  languageName: node
-  linkType: hard
-
 "is-weakref@npm:^1.0.1":
   version: 1.0.2
   resolution: "is-weakref@npm:1.0.2"
@@ -2637,20 +2650,6 @@ __metadata:
   version: 0.6.3
   resolution: "negotiator@npm:0.6.3"
   checksum: b8ffeb1e262eff7968fc90a2b6767b04cfd9842582a9d0ece0af7049537266e7b2506dfb1d107a32f06dd849ab2aea834d5830f7f4d0e5cb7d36e1ae55d021d9
-  languageName: node
-  linkType: hard
-
-"node-fetch@npm:^2.6.1":
-  version: 2.6.7
-  resolution: "node-fetch@npm:2.6.7"
-  dependencies:
-    whatwg-url: ^5.0.0
-  peerDependencies:
-    encoding: ^0.1.0
-  peerDependenciesMeta:
-    encoding:
-      optional: true
-  checksum: 8d816ffd1ee22cab8301c7756ef04f3437f18dace86a1dae22cf81db8ef29c0bf6655f3215cb0cdb22b420b6fe141e64b26905e7f33f9377a7fa59135ea3e10b
   languageName: node
   linkType: hard
 
@@ -3052,13 +3051,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"regenerator-runtime@npm:^0.13.7":
-  version: 0.13.9
-  resolution: "regenerator-runtime@npm:0.13.9"
-  checksum: 65ed455fe5afd799e2897baf691ca21c2772e1a969d19bb0c4695757c2d96249eb74ee3553ea34a91062b2a676beedf630b4c1551cc6299afb937be1426ec55e
-  languageName: node
-  linkType: hard
-
 "regexpp@npm:^3.0.0, regexpp@npm:^3.1.0":
   version: 3.2.0
   resolution: "regexpp@npm:3.2.0"
@@ -3077,13 +3069,6 @@ __metadata:
   version: 4.0.0
   resolution: "resolve-from@npm:4.0.0"
   checksum: f4ba0b8494846a5066328ad33ef8ac173801a51739eb4d63408c847da9a2e1c1de1e6cbbf72699211f3d13f8fc1325648b169bd15eb7da35688e30a5fb0e4a7f
-  languageName: node
-  linkType: hard
-
-"resolve-url@npm:^0.2.1":
-  version: 0.2.1
-  resolution: "resolve-url@npm:0.2.1"
-  checksum: 7b7035b9ed6e7bc7d289e90aef1eab5a43834539695dac6416ca6e91f1a94132ae4796bbd173cdacfdc2ade90b5f38a3fb6186bebc1b221cd157777a23b9ad14
   languageName: node
   linkType: hard
 
@@ -3541,10 +3526,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"svelte@npm:^3.46.4":
-  version: 3.46.4
-  resolution: "svelte@npm:3.46.4"
-  checksum: 929e6790cdd6d94c123b4b8a7b5a541164dbea6d4f4ed311f4e65cde60caa1c704e531bbf2e63519d1a96163cd3f812c6e5be5b2fd05f72d0177af5fd8ca8637
+"svelte@npm:^3.46.6":
+  version: 3.46.6
+  resolution: "svelte@npm:3.46.6"
+  checksum: 0a502f16097010dfe028ee93df3714add39cb608e4c23b2d9cc2190b305838c9020d42c57ad8a285b9c003e43c0dd23e8d24dacc0034678dcba2df5879992efa
   languageName: node
   linkType: hard
 
@@ -3636,13 +3621,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tr46@npm:~0.0.3":
-  version: 0.0.3
-  resolution: "tr46@npm:0.0.3"
-  checksum: 726321c5eaf41b5002e17ffbd1fb7245999a073e8979085dacd47c4b4e8068ff5777142fc6726d6ca1fd2ff16921b48788b87225cbc57c72636f6efa8efbffe3
-  languageName: node
-  linkType: hard
-
 "tsconfig-paths@npm:^3.12.0":
   version: 3.14.1
   resolution: "tsconfig-paths@npm:3.14.1"
@@ -3680,12 +3658,52 @@ __metadata:
   languageName: node
   linkType: hard
 
+"tsv-converter@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "tsv-converter@workspace:."
+  dependencies:
+    "@fontsource/poppins": ^4.5.5
+    "@fontsource/press-start-2p": ^4.5.5
+    "@primer/octicons": ^17.0.0
+    "@sveltejs/adapter-static": ^1.0.0-next.0
+    "@sveltejs/kit": next
+    "@tauri-apps/api": ^1.0.0-rc.3
+    "@tauri-apps/cli": ^1.0.0-rc.8
+    "@typescript-eslint/eslint-plugin": ^4.33.0
+    "@typescript-eslint/parser": ^4.33.0
+    autoprefixer: ^10.4.4
+    eslint: ^7.32.0
+    eslint-config-prettier: ^8.5.0
+    eslint-config-standard-with-typescript: ^21.0.1
+    eslint-plugin-import: ^2.25.4
+    eslint-plugin-node: ^11.1.0
+    eslint-plugin-promise: ^5.2.0
+    eslint-plugin-svelte3: ^3.4.1
+    postcss: ^8.4.12
+    prettier: ^2.6.1
+    prettier-plugin-svelte: ^2.6.0
+    svelte: ^3.46.6
+    svelte-check: ^2.4.6
+    svelte-preprocess: ^4.10.4
+    tailwindcss: ^3.0.23
+    tslib: ^2.3.1
+    typescript: ~4.6.3
+  languageName: unknown
+  linkType: soft
+
 "type-check@npm:^0.4.0, type-check@npm:~0.4.0":
   version: 0.4.0
   resolution: "type-check@npm:0.4.0"
   dependencies:
     prelude-ls: ^1.2.1
   checksum: ec688ebfc9c45d0c30412e41ca9c0cdbd704580eb3a9ccf07b9b576094d7b86a012baebc95681999dd38f4f444afd28504cb3a89f2ef16b31d4ab61a0739025a
+  languageName: node
+  linkType: hard
+
+"type-fest@npm:2.12.1":
+  version: 2.12.1
+  resolution: "type-fest@npm:2.12.1"
+  checksum: faac07668190b7709c16ba4696e42b6cc83b702fa11e8936ce94d9ed1415eb9034b157ae25bba23e222d755e031787f7b92552710704d55e39aadcc27f0ee1da
   languageName: node
   linkType: hard
 
@@ -3795,23 +3813,6 @@ __metadata:
   bin:
     vite: bin/vite.js
   checksum: 4b02d133892c98362c10214b7ad518d74b59745889197a2ba0b63260ed083fcef75a447e8fb58dbd2af8747386274b36017983d93031254df6ead38701950dcc
-  languageName: node
-  linkType: hard
-
-"webidl-conversions@npm:^3.0.0":
-  version: 3.0.1
-  resolution: "webidl-conversions@npm:3.0.1"
-  checksum: c92a0a6ab95314bde9c32e1d0a6dfac83b578f8fa5f21e675bc2706ed6981bc26b7eb7e6a1fab158e5ce4adf9caa4a0aee49a52505d4d13c7be545f15021b17c
-  languageName: node
-  linkType: hard
-
-"whatwg-url@npm:^5.0.0":
-  version: 5.0.0
-  resolution: "whatwg-url@npm:5.0.0"
-  dependencies:
-    tr46: ~0.0.3
-    webidl-conversions: ^3.0.0
-  checksum: b8daed4ad3356cc4899048a15b2c143a9aed0dfae1f611ebd55073310c7b910f522ad75d727346ad64203d7e6c79ef25eafd465f4d12775ca44b90fa82ed9e2c
   languageName: node
   linkType: hard
 

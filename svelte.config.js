@@ -1,19 +1,12 @@
 import path from 'path'
-import adapter from '@sveltejs/adapter-auto'
+import adapter from '@sveltejs/adapter-static'
 import preprocess from 'svelte-preprocess'
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
   preprocess: preprocess(),
   kit: {
-    adapter: adapter(),
-    csp: {
-      directives: {
-        'base-uri': ['self'],
-        'object-src': ['none'],
-        'script-src': ['self']
-      }
-    },
+    adapter: adapter({ fallback: path.resolve('src', 'fallback.html') }),
     vite: {
       envPrefix: 'TSV_CONVERTER_',
       resolve: {

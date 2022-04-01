@@ -1,6 +1,9 @@
-<script lang="ts">
+<script lang="ts" context="module">
   import '@fontsource/poppins'
   import '@fontsource/press-start-2p'
+</script>
+
+<script lang="ts">
   import { page } from '$app/stores'
   import Header from '$lib/Header.svelte'
 </script>
@@ -19,5 +22,5 @@
 <slot />
 
 <style global>
-  @import '../app.css';
+  @import url('../app.css');
 </style>
