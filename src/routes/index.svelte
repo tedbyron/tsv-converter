@@ -42,7 +42,7 @@
     />
 
     <div class="flex gap-6">
-      <FileStatTable file={$video} {videoMetadata} />
+      <FileStatTable path={$video} {videoMetadata} />
       <EditForm />
     </div>
   {/if}
