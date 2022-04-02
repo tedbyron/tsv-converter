@@ -1,4 +1,3 @@
-#![forbid(unsafe_code)]
 #![warn(
     clippy::all,
     clippy::cargo,
@@ -8,15 +7,16 @@
 )]
 #![windows_subsystem = "windows"]
 
-use std::fs;
-use std::io;
+use std::ffi::OsString;
 use std::path::Path;
 use std::time::SystemTime;
 
 #[derive(serde::Serialize)]
 struct VideoMetadata {
-    name: String,
-    size: u64,
+    name: OsString,
+    mimes: Vec<String>,
+    len: u64,
+    created: Option<SystemTime>,
     modified: Option<SystemTime>,
 }
 
@@ -27,15 +27,25 @@ fn main() {
 }
 
 #[tauri::command]
-async fn file_metadata<P>(path: P) -> io::Result<VideoMetadata>
-where
-    P: AsRef<Path>,
-{
-    let meta = fs::metadata(path)?;
+async fn file_metadata(path: String) -> Result<VideoMetadata, String> {
+    let path = Path::new(&path);
+    let mimes = mime_guess::from_path(path)
+        .iter_raw()
+        .map(String::from)
+        .collect();
+    let name = path
+        .file_name()
+        .ok_or_else(|| "Failed to get file name.")?
+        .to_os_string();
+    let meta = path
+        .metadata()
+        .map_err(|_| "Failed to get file metadata.")?;
 
     Ok(VideoMetadata {
-        name: todo!(),
-        size: meta.len(),
+        name,
+        mimes,
+        len: meta.len(),
+        created: meta.created().ok(),
         modified: meta.modified().ok(),
     })
 }
