@@ -1,7 +1,8 @@
 <script lang="ts">
+  import { convertFileSrc } from '@tauri-apps/api/tauri'
   import { fade } from 'svelte/transition'
   import { Crop, crop } from '$stores/options'
-  import { videoAssetUrl, videoPath } from '$stores/video'
+  import { videoPath } from '$stores/video'
   import FileInput from '$lib/FileInput.svelte'
   import FileStatTable, { type VideoMetadata } from '$lib/FileStatTable.svelte'
   import EditForm from '$lib/EditForm.svelte'
@@ -36,7 +37,7 @@
 </svelte:head>
 
 <section class="relative h-full p-2">
-  {#if $videoAssetUrl === undefined || $videoPath === undefined}
+  {#if $videoPath === undefined}
     <FileInput class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
   {:else}
     <div class="h-full grid grid-cols-2 gap-2">
@@ -45,7 +46,7 @@
         class="flex justify-center items-center w-[calc(50vw-.75rem)] h-[calc((50vw-.75rem)*2/3)] bg-black rounded-lg border border-transparent"
       >
         <video
-          src={$videoAssetUrl}
+          src={convertFileSrc($videoPath)}
           controls
           on:loadedmetadata={getVideoMetadata}
           bind:this={videoElement}

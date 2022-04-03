@@ -13,9 +13,8 @@
 
 <script lang="ts">
   import { open } from '@tauri-apps/api/dialog'
-  import { convertFileSrc } from '@tauri-apps/api/tauri'
   import { fade } from 'svelte/transition'
-  import { videoAssetUrl, videoPath } from '$stores/video'
+  import { videoPath } from '$stores/video'
 
   let className = ''
   export { className as class }
@@ -28,7 +27,6 @@
       if (Array.isArray(selection)) throw new Error('Only one video file may be selected.')
 
       videoPath.set(selection)
-      videoAssetUrl.set(convertFileSrc(selection))
     } catch (error: unknown) {
       console.error(error)
     }

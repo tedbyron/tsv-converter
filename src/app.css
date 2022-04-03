@@ -41,7 +41,7 @@
 
   tbody th,
   tbody td {
-    @apply px-3 py-1 border-white;
+    @apply px-3 py-1 border-stone-500;
   }
 
   tbody th {

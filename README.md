@@ -46,6 +46,5 @@ TODO:
 # Build
 
 ```sh
-yarn build
 yarn tauri build
 ```
