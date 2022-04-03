@@ -14,9 +14,11 @@
 <script lang="ts">
   import { open } from '@tauri-apps/api/dialog'
   import { convertFileSrc } from '@tauri-apps/api/tauri'
-  import { video } from '$stores'
+  import { fade } from 'svelte/transition'
+  import { videoAssetUrl, videoPath } from '$stores/video'
 
   let className = ''
+  export { className as class }
 
   const openDialog = async (): Promise<void> => {
     try {
@@ -25,13 +27,16 @@
       if (selection === null || selection === undefined) return
       if (Array.isArray(selection)) throw new Error('Only one video file may be selected.')
 
-      video.set(convertFileSrc(selection))
+      videoPath.set(selection)
+      videoAssetUrl.set(convertFileSrc(selection))
     } catch (error: unknown) {
       console.error(error)
     }
   }
-
-  export { className as class }
 </script>
 
-<button on:click={openDialog} class="button hover-focus {className}"> Select a video </button>
+<button
+  on:click={openDialog}
+  in:fade={{ delay: 100, duration: 300 }}
+  class="button hover-focus {className}">Select a video</button
+>

@@ -1,10 +1,10 @@
 <script lang="ts" context="module">
   type Metadata = Readonly<{
-    name: string
+    name?: string
     mimes: string[]
-    len: number
-    created?: string | number | Date
-    modified?: string | number | Date
+    len?: number
+    created?: number
+    modified?: number
   }>
 
   export type VideoMetadata = Readonly<{
@@ -15,20 +15,28 @@
 </script>
 
 <script lang="ts">
+  import { onMount } from 'svelte'
   import { invoke } from '@tauri-apps/api/tauri'
   import { fade } from 'svelte/transition'
-  import { fileSize } from '$lib/util'
+  import { fileSize, secondsToHHMMSS } from '$lib/util'
 
+  let className = ''
+  export { className as class }
   export let path: string
   export let videoMetadata: VideoMetadata | undefined
+
+  let metadata: Metadata | undefined
+
+  // Invoke the `file_metadata` rust command.
+  onMount(async () => {
+    metadata = await invoke('file_metadata', { path })
+  })
 </script>
 
-{#await invoke('file_metadata', { path })}
-  <span>Loading</span>
-{:then metadata}
+{#if metadata}
   <table
     transition:fade={{ delay: 100, duration: 300 }}
-    class="table-auto border-separate text-left"
+    class="table-auto border-separate text-left {className}"
   >
     <thead>
       <tr>
@@ -37,28 +45,34 @@
           colspan="2"
           class="bg-stone-700 border-2 border-b-0 border-white rounded-t-lg text-center"
         >
-          <code>{metadata.name}</code>
+          {#if metadata.name !== undefined}
+            <code>{metadata.name}</code>
+          {:else}
+            <code>Video</code>
+          {/if}
         </th>
       </tr>
     </thead>
 
     <tbody>
-      <tr>
-        <th scope="row">Type</th>
-        <td>
-          <code class="p-1 bg-stone-700 rounded-md">{JSON.stringify(metadata.mimes)}</code>
-        </td>
-      </tr>
+      {#if metadata.mimes.length > 0}
+        <tr>
+          <th scope="row">Type</th>
+          <td>
+            <code class="p-1 bg-stone-700 rounded-md">{metadata.mimes.join(', ')}</code>
+          </td>
+        </tr>
+      {/if}
 
-      {#if videoMetadata}
+      {#if videoMetadata !== undefined}
         {#if videoMetadata.duration && !isNaN(videoMetadata.duration)}
           <tr>
             <th scope="row">Duration</th>
-            <td>{videoMetadata.duration.toFixed(2)}s</td>
+            <td>{secondsToHHMMSS(videoMetadata.duration)}</td>
           </tr>
         {/if}
 
-        {#if videoMetadata.videoWidth && videoMetadata.videoHeight}
+        {#if videoMetadata.videoWidth !== undefined && videoMetadata.videoHeight !== undefined}
           <tr>
             <th scope="row">Dimensions</th>
             <td>{`${videoMetadata.videoWidth}x${videoMetadata.videoHeight}`}</td>
@@ -66,26 +80,26 @@
         {/if}
       {/if}
 
-      <tr>
-        <th scope="row">Size</th>
-        <td>{fileSize(metadata.len)}</td>
-      </tr>
-
-      {#if metadata.created}
+      {#if metadata.len !== undefined}
         <tr>
-          <th scope="row">Created</th>
-          <td>{new Date(metadata.created).toLocaleString()}</td>
+          <th scope="row">Size</th>
+          <td>{fileSize(metadata.len)}</td>
         </tr>
       {/if}
 
-      {#if metadata.modified}
+      {#if metadata.modified !== undefined}
         <tr>
           <th scope="row">Modified</th>
-          <td>{new Date(metadata.modified).toLocaleString()}</td>
+          <td>{new Date(metadata.modified * 1000).toLocaleString()}</td>
+        </tr>
+      {/if}
+
+      {#if metadata.created !== undefined}
+        <tr>
+          <th scope="row">Created</th>
+          <td>{new Date(metadata.created * 1000).toLocaleString()}</td>
         </tr>
       {/if}
     </tbody>
   </table>
-{:catch err}
-  <span>{err}</span>
-{/await}
+{/if}

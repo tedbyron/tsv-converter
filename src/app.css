@@ -3,14 +3,32 @@
 @tailwind utilities;
 
 @layer base {
+  :root,
+  body,
+  main {
+    @apply h-full;
+  }
+
   :root {
-    @apply bg-stone-900 text-white;
+    @apply overflow-hidden bg-stone-900 text-white;
   }
 
   a:focus-visible,
   button:focus-visible,
   input:focus-visible {
     @apply outline-none;
+  }
+
+  [type='text'] {
+    @apply bg-stone-900;
+  }
+
+  [type='radio'] {
+    @apply accent-sky-300;
+  }
+
+  code {
+    @apply font-mono;
   }
 
   table {
@@ -46,17 +64,15 @@
   tbody tr:last-child td {
     @apply pb-3 border-b-2 rounded-br-lg;
   }
+}
 
-  [type='radio'] {
-    @apply accent-sky-300;
+@layer components {
+  .button {
+    @apply p-3 border-2 border-white hover:border-sky-300 focus-visible:border-sky-300 rounded-lg;
   }
 }
 
 @layer utilities {
-  .button {
-    @apply p-3 border-2 border-white hover:border-sky-300 focus-visible:border-sky-300 rounded-lg;
-  }
-
   .hover-focus {
     @apply transition-colors hover:text-sky-300 focus-visible:text-sky-300 hover:bg-stone-700/50 focus-visible:bg-stone-700/50;
   }

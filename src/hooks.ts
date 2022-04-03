@@ -1,9 +1,6 @@
 import type { Handle } from '@sveltejs/kit'
 
+// Disable SSR for all pages.
 export const handle: Handle = async ({ event, resolve }) => {
-  const response = await resolve(event, {
-    ssr: false
-  })
-
-  return response
+  return await resolve(event, { ssr: false })
 }

@@ -1,13 +1,13 @@
 {
   "package": {
-    "productName": "tsv-converter",
+    "productName": "TSV Converter",
     "version": "0.1.0"
   },
   "build": {
-    "distDir": "../public",
+    "distDir": "../build",
     "devPath": "http://localhost:3000",
     "beforeDevCommand": "",
-    "beforeBuildCommand": ""
+    "beforeBuildCommand": "yarn build"
   },
   "tauri": {
     "bundle": {
@@ -25,15 +25,13 @@
       "externalBin": [],
       "copyright": "",
       "category": "DeveloperTool",
-      "shortDescription": "",
-      "longDescription": "",
+      "shortDescription": "TinyCircuits TinyScreen Video (TSV) converter.",
+      "longDescription": "TinyCircuits TinyScreen Video (TSV) converter.",
       "deb": {
-        "depends": [],
-        "useBootstrapper": false
+        "depends": []
       },
       "macOS": {
         "frameworks": [],
-        "useBootstrapper": false,
         "exceptionDomain": "",
         "signingIdentity": null,
         "providerShortName": null,
@@ -53,6 +51,9 @@
         "open": true,
         "save": true
       },
+      "globalShortcut": {
+        "all": true
+      },
       "protocol": {
         "asset": true
       },
@@ -63,15 +64,15 @@
     },
     "windows": [
       {
-        "title": "TSV Converter",
+        "title": "TSV Converter 0.1.0",
         "width": 800,
         "height": 600,
-        "resizable": true,
+        "resizable": false,
         "fullscreen": false
       }
     ],
     "security": {
-      "csp": "default-src: 'self'; media-src 'self' asset:"
+      "csp": "default-src: 'self'; media-src 'self' asset: https://asset.localhost"
     }
   }
 }
