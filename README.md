@@ -5,7 +5,10 @@
 
 TODO:
 
-- https://github.com/tauri-apps/tauri/issues/3725
+- webkit2gtk video issue: https://github.com/tauri-apps/tauri/issues/3725
+- `asset://` protocol does not release memory:
+  - https://github.com/tauri-apps/tauri/issues/2952
+  - https://github.com/MicrosoftEdge/WebView2Feedback/issues/2171
 
 # Dev
 
@@ -39,3 +42,10 @@ TODO:
    # new terminal tab/window
    yarn tauri dev
    ```
+
+# Build
+
+```sh
+yarn build
+yarn tauri build
+```

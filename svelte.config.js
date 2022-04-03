@@ -1,4 +1,5 @@
 import path from 'path'
+
 import adapter from '@sveltejs/adapter-static'
 import preprocess from 'svelte-preprocess'
 
@@ -6,7 +7,12 @@ import preprocess from 'svelte-preprocess'
 const config = {
   preprocess: preprocess(),
   kit: {
-    adapter: adapter({ fallback: path.resolve('src', 'fallback.html') }),
+    adapter: adapter({
+      fallback: path.resolve('src', 'routes', 'index.html')
+    }),
+    prerender: {
+      default: false
+    },
     vite: {
       envPrefix: 'TSV_CONVERTER_',
       resolve: {

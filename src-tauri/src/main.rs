@@ -7,45 +7,51 @@
 )]
 #![windows_subsystem = "windows"]
 
-use std::ffi::OsString;
 use std::path::Path;
-use std::time::SystemTime;
 
-#[derive(serde::Serialize)]
-struct VideoMetadata {
-    name: OsString,
-    mimes: Vec<String>,
-    len: u64,
-    created: Option<SystemTime>,
-    modified: Option<SystemTime>,
-}
+use time::OffsetDateTime;
 
 fn main() {
     tauri::Builder::default()
+        .invoke_handler(tauri::generate_handler![file_metadata])
         .run(tauri::generate_context!())
-        .expect("error while running tauri application");
+        .expect("Error while running the application");
 }
 
+/// Serializable struct to pass file metadata to JavaScript.
+#[derive(serde::Serialize)]
+struct Metadata {
+    name: Option<String>,
+    mimes: Vec<String>,
+    len: Option<u64>,
+    #[serde(with = "time::serde::timestamp::option")]
+    created: Option<OffsetDateTime>,
+    #[serde(with = "time::serde::timestamp::option")]
+    modified: Option<OffsetDateTime>,
+}
+
+/// Retrieve file metadata from a path.
 #[tauri::command]
-async fn file_metadata(path: String) -> Result<VideoMetadata, String> {
+fn file_metadata(path: String) -> Metadata {
     let path = Path::new(&path);
     let mimes = mime_guess::from_path(path)
         .iter_raw()
         .map(String::from)
         .collect();
-    let name = path
-        .file_name()
-        .ok_or_else(|| "Failed to get file name.")?
-        .to_os_string();
-    let meta = path
-        .metadata()
-        .map_err(|_| "Failed to get file metadata.")?;
+    let name = path.file_name().map(|s| s.to_string_lossy().to_string());
 
-    Ok(VideoMetadata {
+    let (mut len, mut created, mut modified) = (None, None, None);
+    if let Ok(meta) = path.metadata() {
+        len = Some(meta.len());
+        created = meta.created().ok().map(OffsetDateTime::from);
+        modified = meta.modified().ok().map(OffsetDateTime::from);
+    }
+
+    Metadata {
         name,
         mimes,
-        len: meta.len(),
-        created: meta.created().ok(),
-        modified: meta.modified().ok(),
-    })
+        len,
+        created,
+        modified,
+    }
 }

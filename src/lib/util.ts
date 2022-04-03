@@ -14,7 +14,20 @@ export const fileSize = (size: number): string => {
     sizeIec /= 1024
   }
 
-  return `${sizeSi.toFixed(1)} ${unitsSi[i] as string} (${sizeIec.toFixed(1)} ${
-    unitsIec[j] as string
-  })`
+  return (
+    `${sizeSi.toFixed(1)} ${unitsSi[i] as string}` +
+    ` (${sizeIec.toFixed(1)} ${unitsIec[j] as string})`
+  )
+}
+
+export const secondsToHHMMSS = (seconds: number): string => {
+  const h = Math.floor(seconds / 3600)
+  const m = Math.floor((seconds - h * 3600) / 60)
+  const s = (seconds - h * 3600 - m * 60).toFixed()
+
+  return (
+    `${h < 10 ? h.toString().padStart(2, '0') : h}` +
+    `:${m.toString().padStart(2, '0')}` +
+    `:${s.toString().padStart(2, '0')}`
+  )
 }
