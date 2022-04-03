@@ -22,7 +22,7 @@
         "icons/icon.ico"
       ],
       "resources": [],
-      "externalBin": [],
+      "externalBin": ["bin/ffmpeg"],
       "copyright": "",
       "category": "DeveloperTool",
       "shortDescription": "TinyCircuits TinyScreen Video (TSV) converter.",
@@ -59,7 +59,13 @@
       },
       "shell": {
         "open": true,
-        "sidecar": true
+        "sidecar": true,
+        "scope": [
+          {
+            "name": "bin/ffmpeg",
+            "sidecar": true
+          }
+        ]
       }
     },
     "windows": [

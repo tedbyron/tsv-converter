@@ -1,8 +1,15 @@
 <script lang="ts">
+  import { Command } from '@tauri-apps/api/shell'
   import { fade } from 'svelte/transition'
   import { Crop, crop } from '$stores/options'
 
-  const convert = (_event: Event): void => {}
+  const cmd = Command.sidecar('bin/ffmpeg', '-version')
+
+  let output: string | undefined
+
+  const convert = async (): Promise<void> => {
+    output = (await cmd.execute()).stdout
+  }
 </script>
 
 <form
@@ -41,3 +48,7 @@
 
   <button class="button hover-focus">Convert</button>
 </form>
+
+{#if output}
+  <span>{output}</span>
+{/if}
