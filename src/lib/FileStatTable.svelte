@@ -43,7 +43,7 @@
         <th
           aria-label="File Name"
           colspan="2"
-          class="bg-stone-700 border-2 border-b-0 border-white rounded-t-lg text-center"
+          class="bg-stone-700 border-2 border-b-0 border-stone-600 rounded-t-lg text-center"
         >
           {#if metadata.name !== undefined}
             <code>{metadata.name}</code>

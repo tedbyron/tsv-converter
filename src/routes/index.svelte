@@ -9,7 +9,7 @@
 
   let videoElement: HTMLVideoElement
   let videoMetadata: VideoMetadata | undefined
-  let objectFit: 'object-contain' | 'object-cover' | 'object-fill'
+  let objectFit: 'object-contain' | 'object-cover' | 'object-fill' = 'object-contain'
 
   $: switch ($crop) {
     case Crop.Letterbox:
@@ -40,27 +40,29 @@
   {#if $videoPath === undefined}
     <FileInput class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
   {:else}
-    <div class="h-full grid grid-cols-2 gap-2">
-      <!-- svelte-ignore component-name-lowercase a11y-media-has-caption -->
-      <div
-        class="flex justify-center items-center w-[calc(50vw-.75rem)] h-[calc((50vw-.75rem)*2/3)] bg-black rounded-lg border border-transparent"
-      >
-        <video
-          src={convertFileSrc($videoPath)}
-          controls
-          on:loadedmetadata={getVideoMetadata}
-          bind:this={videoElement}
-          transition:fade={{ delay: 100, duration: 300 }}
-          class="block w-full h-full rounded-md {objectFit}"
-        />
+    <div class="h-full flex space-x-2">
+      <div class="space-y-2">
+        <!-- svelte-ignore component-name-lowercase a11y-media-has-caption -->
+        <div
+          class="flex justify-center items-center w-[calc(50vw-.75rem)] h-[calc((50vw-.75rem)*2/3)] bg-black rounded-lg border border-transparent"
+        >
+          <video
+            src={convertFileSrc($videoPath)}
+            controls
+            on:loadedmetadata={getVideoMetadata}
+            bind:this={videoElement}
+            transition:fade={{ delay: 100, duration: 300 }}
+            class="block w-full h-full rounded-md {objectFit}"
+          />
+        </div>
+
+        <FileStatTable path={$videoPath} {videoMetadata} class="place-self-start" />
       </div>
 
-      <div class="row-start-[span_2] space-y-2">
+      <div class="space-y-2">
         <FileInput />
         <EditForm />
       </div>
-
-      <FileStatTable path={$videoPath} {videoMetadata} class="self-start" />
     </div>
   {/if}
 </section>

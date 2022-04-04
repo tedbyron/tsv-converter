@@ -23,7 +23,7 @@ export const fileSize = (size: number): string => {
 export const secondsToHHMMSS = (seconds: number): string => {
   const h = Math.floor(seconds / 3600)
   const m = Math.floor((seconds - h * 3600) / 60)
-  const s = (seconds - h * 3600 - m * 60).toFixed()
+  const s = Math.round(seconds - h * 3600 - m * 60)
 
   return (
     `${h < 10 ? h.toString().padStart(2, '0') : h}` +
