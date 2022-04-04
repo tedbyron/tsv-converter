@@ -27,20 +27,13 @@ TODO:
    corepack enable
    ```
 
-2. Install dependencies and generate the `.svelte-kit` dir with the `dev` script.
+2. Install dependencies.
 
    ```sh
    yarn
-   yarn dev
    ```
 
-3. Verify setup.
-
-   ```sh
-   yarn tauri info
-   ```
-
-4. Run the svelte frontend and the app in dev mode.
+3. Run the frontend and the app in dev mode.
 
    ```sh
    yarn dev

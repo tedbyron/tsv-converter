@@ -34,72 +34,50 @@
 </script>
 
 {#if metadata}
-  <table
+  <div
     transition:fade={{ delay: 100, duration: 300 }}
-    class="table-auto border-separate text-left {className}"
+    class="h-[var(--h-metadata)] border-2 border-stone-600 rounded-lg {className}"
   >
-    <thead>
-      <tr>
-        <th
-          aria-label="File Name"
-          colspan="2"
-          class="bg-stone-700 border-2 border-b-0 border-stone-600 rounded-t-lg text-center"
-        >
-          {#if metadata.name !== undefined}
-            <code>{metadata.name}</code>
-          {:else}
-            <code>Video</code>
-          {/if}
-        </th>
-      </tr>
-    </thead>
+    <div class="bg-stone-700 rounded-t-md text-center">
+      {#if metadata.name !== undefined}
+        <code aria-label="File Name">{metadata.name}</code>
+      {:else}
+        <code>Video</code>
+      {/if}
+    </div>
 
-    <tbody>
+    <div class="grid grid-cols-[auto_1fr] justify-items-start px-2 py-1 gap-3">
       {#if metadata.mimes.length > 0}
-        <tr>
-          <th scope="row">Type</th>
-          <td>
-            <code class="p-1 bg-stone-700 rounded-md">{metadata.mimes.join(', ')}</code>
-          </td>
-        </tr>
+        <span>Type</span>
+        <code class="px-1 bg-stone-700 rounded-md">{metadata.mimes.join(', ')}</code>
       {/if}
 
       {#if videoMetadata !== undefined}
         {#if videoMetadata.duration && !isNaN(videoMetadata.duration)}
-          <tr>
-            <th scope="row">Duration</th>
-            <td>{secondsToHHMMSS(videoMetadata.duration)}</td>
-          </tr>
+          <span>Duration</span>
+          <span>{secondsToHHMMSS(videoMetadata.duration)}</span>
         {/if}
 
         {#if videoMetadata.videoWidth !== undefined && videoMetadata.videoHeight !== undefined}
-          <tr>
-            <th scope="row">Dimensions</th>
-            <td>{`${videoMetadata.videoWidth}x${videoMetadata.videoHeight}`}</td>
-          </tr>
+          <span>Dimensions</span>
+          <span>{`${videoMetadata.videoWidth}x${videoMetadata.videoHeight}`}</span>
         {/if}
       {/if}
 
       {#if metadata.len !== undefined}
-        <tr>
-          <th scope="row">Size</th>
-          <td>{fileSize(metadata.len)}</td>
-        </tr>
+        <span>Size</span>
+        <span>{fileSize(metadata.len)}</span>
       {/if}
 
       {#if metadata.modified !== undefined}
-        <tr>
-          <th scope="row">Modified</th>
-          <td>{new Date(metadata.modified * 1000).toLocaleString()}</td>
-        </tr>
+        <span>Modified</span>
+        <span>{new Date(metadata.modified * 1000).toLocaleString()}</span>
       {/if}
 
       {#if metadata.created !== undefined}
-        <tr>
-          <th scope="row">Created</th>
-          <td>{new Date(metadata.created * 1000).toLocaleString()}</td>
-        </tr>
+        <span>Created</span>
+        <span>{new Date(metadata.created * 1000).toLocaleString()}</span>
       {/if}
-    </tbody>
-  </table>
+    </div>
+  </div>
 {/if}
