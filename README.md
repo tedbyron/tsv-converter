@@ -3,12 +3,17 @@
   <p><strong>TinyCircuits TinyScreen Video (TSV) converter.</strong></p>
 </div>
 
-TODO:
+FIXME:
 
 - webkit2gtk video issue: https://github.com/tauri-apps/tauri/issues/3725
 - `asset://` protocol does not release memory:
   - https://github.com/tauri-apps/tauri/issues/2952
   - https://github.com/MicrosoftEdge/WebView2Feedback/issues/2171
+
+TODO:
+
+- Crop zoom gravity (and extent?)
+- Crop letterbox background color
 
 # Dev
 

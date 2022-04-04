@@ -10,7 +10,7 @@
   }
 
   :root {
-    @apply overflow-hidden bg-stone-900 text-white;
+    @apply /*overflow-hidden*/ bg-stone-900 text-white;
   }
 
   a:focus-visible,
@@ -41,7 +41,7 @@
 
   tbody th,
   tbody td {
-    @apply px-3 py-1 border-stone-500;
+    @apply px-3 py-1 border-stone-600;
   }
 
   tbody th {
@@ -68,12 +68,12 @@
 
 @layer components {
   .button {
-    @apply p-3 border-2 border-white hover:border-sky-300 focus-visible:border-sky-300 rounded-lg;
+    @apply p-3 border-2 border-stone-600 hover:border-sky-300 focus-visible:border-sky-300 rounded-lg;
   }
 }
 
 @layer utilities {
   .hover-focus {
-    @apply transition-colors hover:text-sky-300 focus-visible:text-sky-300 hover:bg-stone-700/50 focus-visible:bg-stone-700/50;
+    @apply transition-colors hover:text-sky-300 focus-visible:text-sky-300 hover:bg-stone-800 focus-visible:bg-stone-800;
   }
 }

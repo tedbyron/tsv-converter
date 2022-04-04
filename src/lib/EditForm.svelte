@@ -8,7 +8,7 @@
   let output: string | undefined
 
   const convert = async (): Promise<void> => {
-    output = (await cmd.execute()).stdout
+    output = (await cmd.execute()).stderr
   }
 </script>
 
@@ -17,14 +17,19 @@
   transition:fade={{ delay: 100, duration: 300 }}
   class="space-y-2"
 >
-  <fieldset class="p-2 pt-1 border-2 border-white rounded-lg">
-    <legend class="ml-3 px-2 py-1 border-2 border-white rounded-md">Crop</legend>
+  <fieldset
+    class="group p-2 pt-1 border-2 border-stone-600 focus-within:border-sky-300 focus-within:bg-stone-800 rounded-lg"
+  >
+    <legend
+      class="ml-3 px-2 py-1 border-2 border-stone-600 group-focus-within:border-sky-300 group-focus-within:bg-stone-800 rounded-md"
+      >Crop</legend
+    >
 
     <ul class="">
       {#each Object.values(Crop) as opt}
         <li>
           <label
-            class="transition-colors px-3 py-1 rounded-md hover:bg-stone-700/50 focus-visible:bg-stone-700/50"
+            class="transition-colors px-3 py-1 rounded-md hover:bg-stone-800 focus-visible:bg-stone-800"
           >
             <input
               type="radio"
@@ -40,11 +45,11 @@
     </ul>
   </fieldset>
 
-  <fieldset>
+  <!-- <fieldset>
     <legend>Background Color</legend>
 
     <input type="text" value="#000000" maxlength="7" />
-  </fieldset>
+  </fieldset> -->
 
   <button class="button hover-focus">Convert</button>
 </form>
