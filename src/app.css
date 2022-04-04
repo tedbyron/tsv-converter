@@ -3,14 +3,18 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --w-video: calc(50vw - 0.75rem); /* Subtract padding. */
+    --h-video: calc(var(--w-video) * 2 / 3); /* TSV aspect ratio. */
+    --h-metadata: calc(100vh - var(--h-video) - 1.5rem); /* Remaining space minus padding. */
+    --h-edit: calc(100vh - 1.5rem); /* Subtract padding. */
+    @apply overflow-hidden bg-stone-900 text-white;
+  }
+
   :root,
   body,
   main {
     @apply h-full;
-  }
-
-  :root {
-    @apply /*overflow-hidden*/ bg-stone-900 text-white;
   }
 
   a:focus-visible,
@@ -29,40 +33,6 @@
 
   code {
     @apply font-mono;
-  }
-
-  table {
-    border-spacing: 0;
-  }
-
-  thead th {
-    @apply p-2;
-  }
-
-  tbody th,
-  tbody td {
-    @apply px-3 py-1 border-stone-600;
-  }
-
-  tbody th {
-    @apply border-l-2;
-  }
-
-  tbody td {
-    @apply border-r-2;
-  }
-
-  tbody tr:first-child th,
-  tbody tr:first-child td {
-    @apply pt-3;
-  }
-
-  tbody tr:last-child th {
-    @apply pb-3 border-b-2 rounded-bl-lg;
-  }
-
-  tbody tr:last-child td {
-    @apply pb-3 border-b-2 rounded-br-lg;
   }
 }
 

@@ -44,7 +44,7 @@
       <div class="space-y-2">
         <!-- svelte-ignore component-name-lowercase a11y-media-has-caption -->
         <div
-          class="flex justify-center items-center w-[calc(50vw-.75rem)] h-[calc((50vw-.75rem)*2/3)] bg-black rounded-lg border border-transparent"
+          class="flex justify-center items-center w-[var(--w-video)] h-[var(--h-video)] bg-black rounded-lg border border-transparent"
         >
           <video
             src={convertFileSrc($videoPath)}
@@ -56,10 +56,10 @@
           />
         </div>
 
-        <FileStatTable path={$videoPath} {videoMetadata} class="place-self-start" />
+        <FileStatTable path={$videoPath} {videoMetadata} class="w-full" />
       </div>
 
-      <div class="space-y-2">
+      <div class="space-y-2 max-h-[var(--h-edit)] overflow-y-scroll">
         <FileInput />
         <EditForm />
       </div>
