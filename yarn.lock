@@ -58,10 +58,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fontsource/poppins@npm:^4.5.5":
-  version: 4.5.5
-  resolution: "@fontsource/poppins@npm:4.5.5"
-  checksum: 221f2cd88180245a5e76cb591bbc2a58d84c3a67283e44defc6e419f0a2b9ab6f9b334515c08e6e221f05dce0cf0681179c239c4820b39e09210280faf8b8a36
+"@fontsource/inter@npm:^4.5.7":
+  version: 4.5.7
+  resolution: "@fontsource/inter@npm:4.5.7"
+  checksum: 8bbacdeee06fe5979202582251f3cbb7ab36c468992be1145e888d3d658cb07ea503339cbc3fbb8d3ee0635fb1c5e27035ed4c447e5a1b9fc765ece43643842f
   languageName: node
   linkType: hard
 
@@ -3477,9 +3477,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"svelte-preprocess@npm:^4.0.0, svelte-preprocess@npm:^4.10.4":
-  version: 4.10.4
-  resolution: "svelte-preprocess@npm:4.10.4"
+"svelte-preprocess@npm:^4.0.0, svelte-preprocess@npm:^4.10.5":
+  version: 4.10.5
+  resolution: "svelte-preprocess@npm:4.10.5"
   dependencies:
     "@types/pug": ^2.0.4
     "@types/sass": ^1.16.0
@@ -3522,7 +3522,7 @@ __metadata:
       optional: true
     typescript:
       optional: true
-  checksum: 323eca0fe691875b2b32a6c421aeb0aeee9e76050116e2d4de1bc027d8991ff150af3667b2880e5d3e19c80ff3fedaa70ff9c5e7b495a50acd5a268659578894
+  checksum: c65f72fe58ce882380583dc14037c6ac89d4e4130113e579e3c237cf632016a9c617da91f49f92fc9c313545a177103b50250c2687a1747486cc8b526c725ffb
   languageName: node
   linkType: hard
 
@@ -3662,7 +3662,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "tsv-converter@workspace:."
   dependencies:
-    "@fontsource/poppins": ^4.5.5
+    "@fontsource/inter": ^4.5.7
     "@fontsource/press-start-2p": ^4.5.5
     "@primer/octicons": ^17.0.0
     "@sveltejs/adapter-static": ^1.0.0-next.0
@@ -3684,7 +3684,7 @@ __metadata:
     prettier-plugin-svelte: ^2.6.0
     svelte: ^3.46.6
     svelte-check: ^2.4.6
-    svelte-preprocess: ^4.10.4
+    svelte-preprocess: ^4.10.5
     tailwindcss: ^3.0.23
     tslib: ^2.3.1
     typescript: ~4.6.3

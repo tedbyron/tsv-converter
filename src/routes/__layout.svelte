@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-  import '@fontsource/poppins'
+  import '@fontsource/inter'
   import '@fontsource/press-start-2p'
 </script>
 

@@ -3,6 +3,10 @@
   <p><strong>TinyCircuits TinyScreen Video (TSV) converter.</strong></p>
 </div>
 
+# Features
+
+- Video preview (source resolution, TinyScreen aspect ratio)
+
 FIXME:
 
 - webkit2gtk video issue: https://github.com/tauri-apps/tauri/issues/3725
@@ -14,6 +18,8 @@ TODO:
 
 - Crop zoom gravity (and extent?)
 - Crop letterbox background color
+- Drag and drop file
+- ffmpeg log
 
 # Dev
 
@@ -37,7 +43,7 @@ TODO:
 
    ```sh
    yarn dev
-   # new terminal tab/window
+   # open a new terminal tab/window, and:
    yarn tauri dev
    ```
 

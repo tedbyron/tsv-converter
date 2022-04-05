@@ -19,6 +19,7 @@ mime_guess = "2.0.4"
 serde_json = "1.0.79"
 serde = { version = "1.0.136", features = ["derive"] }
 time = { version = "0.3.9", features = ["serde"] }
+notify = { version = "5.0.0-pre.14", features = ["serde"] }
 
 [dependencies.tauri]
 version = "1.0.0-rc.6"
