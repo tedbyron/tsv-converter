@@ -1,12 +1,4 @@
 <script lang="ts" context="module">
-  type Metadata = Readonly<{
-    name?: string
-    mimes: string[]
-    len?: number
-    created?: number
-    modified?: number
-  }>
-
   export type VideoMetadata = Readonly<{
     duration?: number
     videoWidth?: number
@@ -15,28 +7,20 @@
 </script>
 
 <script lang="ts">
-  import { onMount } from 'svelte'
-  import { invoke } from '@tauri-apps/api/tauri'
   import { fade } from 'svelte/transition'
   import { fileSize, secondsToHHMMSS } from '$lib/util'
+  import type { Metadata } from '$stores/video'
 
   let className = ''
   export { className as class }
-  export let path: string
   export let videoMetadata: VideoMetadata | undefined
-
-  let metadata: Metadata | undefined
-
-  // Invoke the `file_metadata` rust command.
-  onMount(async () => {
-    metadata = await invoke('file_metadata', { path })
-  })
+  export let metadata: Metadata | undefined
 </script>
 
 {#if metadata}
   <div
-    transition:fade={{ delay: 100, duration: 300 }}
-    class="h-[var(--h-metadata)] border-2 border-stone-600 rounded-lg {className}"
+    transition:fade={{ duration: 1000 }}
+    class="border-2 border-stone-600 rounded-lg {className}"
   >
     <div class="bg-stone-700 rounded-t-md text-center">
       {#if metadata.name !== undefined}
@@ -46,7 +30,7 @@
       {/if}
     </div>
 
-    <div class="grid grid-cols-[auto_1fr] justify-items-start px-2 py-1 gap-3">
+    <div class="grid grid-cols-[auto_1fr] justify-items-start px-3 py-2 gap-x-3 gap-y-1">
       {#if metadata.mimes.length > 0}
         <span>Type</span>
         <code class="px-1 bg-stone-700 rounded-md">{metadata.mimes.join(', ')}</code>

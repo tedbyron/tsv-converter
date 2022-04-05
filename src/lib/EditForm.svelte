@@ -1,6 +1,5 @@
 <script lang="ts">
   import { Command } from '@tauri-apps/api/shell'
-  import { fade } from 'svelte/transition'
   import { Crop, crop } from '$stores/options'
 
   const cmd = Command.sidecar('bin/ffmpeg', '-version')
@@ -12,20 +11,18 @@
   }
 </script>
 
-<form
-  on:submit|preventDefault={convert}
-  transition:fade={{ delay: 100, duration: 300 }}
-  class="space-y-2"
->
+<form on:submit|preventDefault={convert} class="space-y-2">
+  <!-- Crop radio group -->
   <fieldset
     class="group p-2 pt-1 border-2 border-stone-600 focus-within:border-sky-300 focus-within:bg-stone-800 rounded-lg"
   >
     <legend
       class="ml-3 px-2 py-1 border-2 border-stone-600 group-focus-within:border-sky-300 group-focus-within:bg-stone-800 rounded-md"
-      >Crop</legend
     >
+      Crop
+    </legend>
 
-    <ul class="">
+    <ul>
       {#each Object.values(Crop) as opt}
         <li>
           <label
@@ -55,5 +52,9 @@
 </form>
 
 {#if output}
-  <span>{output}</span>
+  <span
+    on:click={() => {
+      output = ''
+    }}>{output}</span
+  >
 {/if}

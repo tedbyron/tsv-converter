@@ -13,7 +13,6 @@
 
 <script lang="ts">
   import { open } from '@tauri-apps/api/dialog'
-  import { fade } from 'svelte/transition'
   import { videoPath } from '$stores/video'
 
   let className = ''
@@ -33,9 +32,6 @@
   }
 </script>
 
-<button
-  type="button"
-  on:click={openDialog}
-  in:fade={{ delay: 100, duration: 300 }}
-  class="button hover-focus {className}">Select a video</button
->
+<button type="button" on:click={openDialog} class="button hover-focus {className}">
+  Select a video
+</button>

@@ -4,10 +4,10 @@
 
 @layer base {
   :root {
-    --w-video: calc(50vw - 0.75rem); /* Subtract padding. */
-    --h-video: calc(var(--w-video) * 2 / 3); /* TSV aspect ratio. */
-    --h-metadata: calc(100vh - var(--h-video) - 1.5rem); /* Remaining space minus padding. */
-    --h-edit: calc(100vh - 1.5rem); /* Subtract padding. */
+    --w-video: calc(50vw - 0.75rem);
+    --h-video: calc(var(--w-video) * 2 / 3);
+    --h-metadata: calc(100vh - var(--h-video) - 1.5rem);
+    --h-edit: calc(100vh - 1.5rem);
     @apply overflow-hidden bg-stone-900 text-white;
   }
 
