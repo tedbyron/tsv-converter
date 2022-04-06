@@ -33,7 +33,9 @@
               name="crop"
               class="mr-1"
               checked={$crop === opt}
-              on:change={() => crop.set(opt)}
+              on:change={() => {
+                $crop = opt
+              }}
             />
             {opt}
           </label>

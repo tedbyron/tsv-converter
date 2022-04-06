@@ -2,7 +2,7 @@
   import { convertFileSrc } from '@tauri-apps/api/tauri'
   import { fade } from 'svelte/transition'
   import { Crop, crop } from '$stores/options'
-  import { videoPath, metadata } from '$stores/video'
+  import { videoPath } from '$stores/video'
   import FileInput from '$lib/FileInput.svelte'
   import FileStatTable, { type VideoMetadata } from '$lib/FileStatTable.svelte'
   import EditForm from '$lib/EditForm.svelte'
@@ -57,7 +57,7 @@
 
         <FileStatTable
           {videoMetadata}
-          metadata={$metadata}
+          path={$videoPath}
           class="w-[var(--w-video)] h-[var(--h-metadata)]"
         />
       </div>
