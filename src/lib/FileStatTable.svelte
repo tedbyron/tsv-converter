@@ -4,17 +4,33 @@
     videoWidth?: number
     videoHeight?: number
   }>
+
+  // Corresponds to the `Metadata` struct in `src-tauri/src/command.rs`.
+  type Metadata = Readonly<{
+    name?: string
+    mimes: string[]
+    len?: number
+    created?: number
+    modified?: number
+  }>
 </script>
 
 <script lang="ts">
+  import { invoke } from '@tauri-apps/api'
   import { fade } from 'svelte/transition'
   import { fileSize, secondsToHHMMSS } from '$lib/util'
-  import type { Metadata } from '$stores/video'
 
   let className = ''
   export { className as class }
+  export let path: string
   export let videoMetadata: VideoMetadata | undefined
-  export let metadata: Metadata | undefined
+
+  let metadata: Metadata | undefined
+  $: invoke('metadata', { path })
+    .then((res) => {
+      metadata = res as Metadata
+    })
+    .catch(console.error)
 </script>
 
 {#if metadata}

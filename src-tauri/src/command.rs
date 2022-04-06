@@ -1,11 +1,12 @@
 //! Tauri commands.
 
 use std::path::Path;
+use std::sync::{Arc, Mutex};
 
 use time::OffsetDateTime;
 
-/// Serializable struct to pass file metadata to JS.
-#[derive(Debug, Clone, serde::Serialize)]
+// Corresponds to the `Metadata` type in `src/lib/FileStatTable.svelte`.
+#[derive(serde::Serialize)]
 pub struct Metadata {
     name: Option<String>,
     mimes: Vec<String>,
@@ -16,8 +17,9 @@ pub struct Metadata {
     modified: Option<OffsetDateTime>,
 }
 
-/// Tauri command to retrieve file metadata from a path.
-pub fn get(path: &Path) -> Metadata {
+#[tauri::command]
+pub async fn metadata(path: String) -> Metadata {
+    let path = Path::new(&path);
     let mimes = mime_guess::from_path(path)
         .iter_raw()
         .map(String::from)
@@ -38,4 +40,13 @@ pub fn get(path: &Path) -> Metadata {
         created,
         modified,
     }
+}
+
+#[tauri::command]
+pub async fn watch<R: tauri::Runtime>(app: tauri::AppHandle<R>) -> Result<(), String> {
+    let (tx, rx) = tauri::async_runtime::channel(4);
+    let watcher = notify::recommended_watcher(todo!()).map_err(|e| e.to_string())?;
+    let watcher = Arc::new(Mutex::new(watcher));
+
+    Ok(())
 }

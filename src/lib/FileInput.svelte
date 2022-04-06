@@ -25,7 +25,7 @@
       if (selection === null || selection === undefined) return
       if (Array.isArray(selection)) throw new Error('Only one video file may be selected.')
 
-      videoPath.set(selection)
+      $videoPath = selection
     } catch (error: unknown) {
       console.error(error)
     }
