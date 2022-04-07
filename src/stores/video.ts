@@ -1,5 +1,14 @@
+import { invoke } from '@tauri-apps/api'
+import { listen } from '@tauri-apps/api/event'
 import { writable } from 'svelte/store'
 
 export const videoPath = writable<string | undefined>()
 
-videoPath.subscribe(() => {})
+listen('path-change', () => {
+  videoPath.set(undefined)
+}).catch(console.error)
+
+videoPath.subscribe((self) => {
+  if (self === undefined) return
+  invoke('watch', { path: self }).catch(console.error)
+})

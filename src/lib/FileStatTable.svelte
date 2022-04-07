@@ -35,7 +35,8 @@
 
 {#if metadata}
   <div
-    transition:fade={{ duration: 1000 }}
+    in:fade={{ duration: 1000 }}
+    out:fade={{ duration: 300 }}
     class="border-2 border-stone-600 rounded-lg {className}"
   >
     <div class="bg-stone-700 rounded-t-md text-center">

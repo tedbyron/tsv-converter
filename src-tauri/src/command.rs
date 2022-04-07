@@ -1,8 +1,8 @@
 //! Tauri commands.
 
-use std::path::Path;
-use std::sync::{Arc, Mutex};
+use std::path::{Path, PathBuf};
 
+use notify::{Config, EventKind, RecursiveMode, Watcher};
 use time::OffsetDateTime;
 
 // Corresponds to the `Metadata` type in `src/lib/FileStatTable.svelte`.
@@ -43,10 +43,29 @@ pub async fn metadata(path: String) -> Metadata {
 }
 
 #[tauri::command]
-pub async fn watch<R: tauri::Runtime>(app: tauri::AppHandle<R>) -> Result<(), String> {
-    let (tx, rx) = tauri::async_runtime::channel(4);
-    let watcher = notify::recommended_watcher(todo!()).map_err(|e| e.to_string())?;
-    let watcher = Arc::new(Mutex::new(watcher));
+pub async fn watch(path: String, window: tauri::Window) {
+    let path = PathBuf::from(path);
+    let (tx, mut rx) = tauri::async_runtime::channel(1);
 
-    Ok(())
+    let mut watcher =
+        notify::recommended_watcher(move |res: Result<notify::Event, notify::Error>| {
+            match res {
+                Ok(event) => match event.kind {
+                    EventKind::Modify(_) | EventKind::Remove(_) => {
+                        tx.blocking_send("path-change").unwrap()
+                    }
+                    _ => (),
+                },
+                Err(err) => eprintln!("Path watch error: {err:?}"),
+            };
+        })
+        .unwrap();
+    watcher.configure(Config::PreciseEvents(true)).unwrap();
+    watcher.watch(&path, RecursiveMode::NonRecursive).unwrap();
+
+    while let Some(msg) = rx.recv().await {
+        window.emit(msg, ()).unwrap();
+        watcher.unwatch(&path).unwrap();
+        break;
+    }
 }
