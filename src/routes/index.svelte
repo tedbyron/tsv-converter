@@ -40,7 +40,7 @@
   {#if $videoPath === undefined}
     <FileInput class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
   {:else}
-    <div transition:fade={{ duration: 1000 }} class="h-full flex space-x-2">
+    <div in:fade={{ duration: 1000 }} out:fade={{ duration: 300 }} class="h-full flex space-x-2">
       <div class="space-y-2">
         <!-- svelte-ignore component-name-lowercase a11y-media-has-caption -->
         <div

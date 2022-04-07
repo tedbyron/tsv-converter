@@ -11,7 +11,7 @@ mod command;
 
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![command::metadata])
+        .invoke_handler(tauri::generate_handler![command::metadata, command::watch])
         .run(tauri::generate_context!())
         .expect("Error while running the application");
 }
