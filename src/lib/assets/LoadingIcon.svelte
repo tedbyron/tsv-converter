@@ -1,10 +1,14 @@
 <script lang="ts">
-  let className: string
+  let className = ''
   export { className as class }
-  export let fill = 'none'
 </script>
 
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" {fill} class={className}>
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 24 24"
+  fill="none"
+  class="animate-spin {className}"
+>
   <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
   <path
     class="opacity-75"
