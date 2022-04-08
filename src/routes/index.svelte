@@ -57,7 +57,7 @@
 
       <div class="flex flex-col space-y-2 items-start max-h-[var(--h-edit)] overflow-y-scroll">
         <FileInput />
-        <EditForm path={$videoPath} />
+        <EditForm />
       </div>
     </div>
   {/if}

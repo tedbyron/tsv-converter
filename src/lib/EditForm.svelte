@@ -1,7 +1,5 @@
 <script lang="ts">
   import { Crop, crop } from '$stores/options'
-
-  export let path: string
 </script>
 
 <form on:submit|preventDefault={() => {}} class="space-y-2">
