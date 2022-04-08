@@ -1,17 +1,10 @@
 <script lang="ts">
-  import { Command } from '@tauri-apps/api/shell'
   import { Crop, crop } from '$stores/options'
 
-  const cmd = Command.sidecar('bin/ffmpeg', '-version')
-
-  let output: string | undefined
-
-  const convert = async (): Promise<void> => {
-    output = (await cmd.execute()).stderr
-  }
+  export let path: string
 </script>
 
-<form on:submit|preventDefault={convert} class="space-y-2">
+<form on:submit|preventDefault={() => {}} class="space-y-2">
   <!-- Crop radio group -->
   <fieldset
     class="group p-2 pt-1 border-2 border-stone-600 focus-within:border-sky-300 focus-within:bg-stone-800 rounded-lg"
@@ -44,19 +37,13 @@
     </ul>
   </fieldset>
 
-  <!-- <fieldset>
-    <legend>Background Color</legend>
+  <!-- TODO: background color for letterbox crop
+    <fieldset>
+      <legend>Background Color</legend>
 
-    <input type="text" value="#000000" maxlength="7" />
-  </fieldset> -->
+      <input type="text" value="#000000" maxlength="7" />
+    </fieldset>
+  -->
 
   <button class="button hover-focus">Convert</button>
 </form>
-
-{#if output}
-  <span
-    on:click={() => {
-      output = ''
-    }}>{output}</span
-  >
-{/if}

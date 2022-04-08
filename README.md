@@ -20,6 +20,7 @@ TODO:
 - Crop letterbox background color
 - Drag and drop file
 - ffmpeg log
+- hotkeys
 
 # Dev
 

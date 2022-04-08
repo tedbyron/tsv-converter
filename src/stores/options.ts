@@ -1,4 +1,4 @@
-import { derived, readable, writable } from 'svelte/store'
+import { derived, writable } from 'svelte/store'
 
 export enum Crop {
   Letterbox = 'Letterbox (Contain)',
@@ -13,9 +13,6 @@ export const audioSampleBitDepth = writable(10)
 export const audioSampleCountPerFrame = writable(2 * 512)
 export const audioSampleRate = writable(30 * 2 * 512)
 export const crop = writable(Crop.Letterbox)
-
-export const vCodec = readable('rawvideo')
-export const pixFmt = readable('bgr565be')
 
 export const scale = derived([width, height, crop], ([$width, $height, $crop]) => {
   switch ($crop) {
