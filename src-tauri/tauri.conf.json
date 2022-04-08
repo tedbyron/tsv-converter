@@ -22,7 +22,7 @@
         "icons/icon.ico"
       ],
       "resources": [],
-      "externalBin": ["bin/ffmpeg"],
+      "externalBin": ["bin/ffmpeg", "bin/ffprobe"],
       "copyright": "",
       "category": "DeveloperTool",
       "shortDescription": "TinyCircuits TinyScreen Video (TSV) converter.",
@@ -64,7 +64,14 @@
           {
             "name": "bin/ffmpeg",
             "cmd": "bin/ffmpeg",
-            "sidecar": true
+            "sidecar": true,
+            "args": true
+          },
+          {
+            "name": "bin/ffprobe",
+            "cmd": "bin/ffprobe",
+            "sidecar": true,
+            "args": true
           }
         ]
       }

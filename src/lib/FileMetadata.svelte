@@ -20,8 +20,6 @@
   import { fade } from 'svelte/transition'
   import { fileSize, secondsToHHMMSS } from '$lib/util'
 
-  let className = ''
-  export { className as class }
   export let path: string
   export let videoMetadata: VideoMetadata | undefined
 
@@ -37,7 +35,7 @@
   <div
     in:fade={{ duration: 1000 }}
     out:fade={{ duration: 300 }}
-    class="border-2 border-stone-600 rounded-lg {className}"
+    class="w-[var(--w-video)] h-[var(--h-metadata)] border-2 border-stone-600 rounded-lg"
   >
     <div class="bg-stone-700 rounded-t-md text-center">
       {#if metadata.name !== undefined}

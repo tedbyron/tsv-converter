@@ -1,27 +1,24 @@
+<script lang="ts" context="module">
+  import { Crop } from '$stores/options'
+
+  const objectFit = {
+    [Crop.Letterbox]: 'object-contain',
+    [Crop.Zoom]: 'object-cover',
+    [Crop.Fill]: 'object-fill'
+  }
+</script>
+
 <script lang="ts">
   import { convertFileSrc } from '@tauri-apps/api/tauri'
   import { fade } from 'svelte/transition'
-  import { Crop, crop } from '$stores/options'
+  import { crop } from '$stores/options'
   import { videoPath } from '$stores/video'
   import FileInput from '$lib/FileInput.svelte'
-  import FileStatTable, { type VideoMetadata } from '$lib/FileStatTable.svelte'
+  import FileStatTable, { type VideoMetadata } from '$lib/FileMetadata.svelte'
   import EditForm from '$lib/EditForm.svelte'
 
   let videoElement: HTMLVideoElement
   let videoMetadata: VideoMetadata | undefined
-  let objectFit: 'object-contain' | 'object-cover' | 'object-fill' = 'object-contain'
-
-  $: switch ($crop) {
-    case Crop.Letterbox:
-      objectFit = 'object-contain'
-      break
-    case Crop.Zoom:
-      objectFit = 'object-cover'
-      break
-    case Crop.Fill:
-      objectFit = 'object-fill'
-      break
-  }
 
   const getVideoMetadata = (): void => {
     videoMetadata = {
@@ -42,29 +39,25 @@
   {:else}
     <div in:fade={{ duration: 1000 }} out:fade={{ duration: 300 }} class="h-full flex space-x-2">
       <div class="space-y-2">
-        <!-- svelte-ignore component-name-lowercase a11y-media-has-caption -->
         <div
           class="flex justify-center items-center w-[var(--w-video)] h-[var(--h-video)] bg-black rounded-lg border border-transparent"
         >
+          <!-- svelte-ignore a11y-media-has-caption -->
           <video
             src={convertFileSrc($videoPath)}
             controls
             on:loadedmetadata={getVideoMetadata}
             bind:this={videoElement}
-            class="block w-full h-full rounded-md {objectFit}"
+            class="block w-full h-full rounded-md {objectFit[$crop]}"
           />
         </div>
 
-        <FileStatTable
-          {videoMetadata}
-          path={$videoPath}
-          class="w-[var(--w-video)] h-[var(--h-metadata)]"
-        />
+        <FileStatTable {videoMetadata} path={$videoPath} />
       </div>
 
       <div class="flex flex-col space-y-2 items-start max-h-[var(--h-edit)] overflow-y-scroll">
         <FileInput />
-        <EditForm />
+        <EditForm path={$videoPath} />
       </div>
     </div>
   {/if}
