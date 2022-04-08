@@ -38,7 +38,10 @@
 
 @layer components {
   .button {
-    @apply p-3 border-2 border-stone-600 hover:border-sky-300 focus-visible:border-sky-300 rounded-lg;
+    @apply p-3 border-2 border-stone-600 rounded-lg hover:border-sky-300
+    hover:disabled:border-stone-600 focus-visible:border-sky-300 disabled:cursor-default
+    disabled:border-stone-600 hover:disabled:bg-stone-900 disabled:text-stone-600
+    hover:disabled:text-stone-600;
   }
 }
 
