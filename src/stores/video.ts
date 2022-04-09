@@ -3,6 +3,7 @@ import { listen } from '@tauri-apps/api/event'
 import { writable } from 'svelte/store'
 
 export const videoPath = writable<string | undefined>()
+export const ffprobeError = writable<string | undefined>()
 
 listen('path-change', () => {
   videoPath.set(undefined)

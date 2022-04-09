@@ -13,17 +13,18 @@
 
 <script lang="ts">
   import { open } from '@tauri-apps/api/dialog'
-  import { videoPath } from '$stores/video'
+  import { videoPath, ffprobeError } from '$stores/video'
   import { isVideo } from '$lib/ffmpeg'
   import LoadingIcon from '$lib/assets/LoadingIcon.svelte'
 
   let className = ''
   export { className as class }
 
-  let videoOk: boolean
-  let loading = true
+  let loading = false
 
   const openDialog = async (): Promise<void> => {
+    const ogVideoPath = $videoPath
+
     try {
       loading = true
       let selection = await open(openDialogOptions)
@@ -31,16 +32,24 @@
       if (selection === null || selection === undefined) return
       if (Array.isArray(selection)) throw new Error('Only one video file may be selected.')
 
-      videoOk = await isVideo(selection)
-      if (videoOk) {
+      let ffprobeOk = await isVideo(selection)
+      if (ffprobeOk) {
+        $ffprobeError = undefined
         $videoPath = selection
       } else {
         $videoPath = undefined
+        $ffprobeError = "Couldn't read the file metadata \u{1f626}"
       }
     } catch (error: unknown) {
       console.error(error)
     } finally {
-      loading = false
+      // Keep loading icon when transitioning views.
+      if (
+        (ogVideoPath !== undefined && $videoPath !== undefined) ||
+        (ogVideoPath === undefined && $videoPath === undefined)
+      ) {
+        loading = false
+      }
     }
   }
 </script>
@@ -49,14 +58,13 @@
   type="button"
   disabled={loading}
   on:click={openDialog}
-  class="button hover-focus {className}"
+  class="relative button hover-focus min-w-[135px] min-h-[52px] {className}"
 >
-  <span>Select a video</span>
   {#if loading}
-    <LoadingIcon class="inline w-5 h-5" />
+    <LoadingIcon
+      class="absolute top-[var(--loading-offset)] left-[var(--loading-offset)] w-5 h-5"
+    />
+  {:else}
+    <span>Select a video</span>
   {/if}
 </button>
-
-{#if videoOk === false}
-  <span>Hello</span>
-{/if}
