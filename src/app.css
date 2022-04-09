@@ -8,6 +8,7 @@
     --h-video: calc(var(--w-video) * 2 / 3);
     --h-metadata: calc(100vh - var(--h-video) - 1.5rem);
     --h-edit: calc(100vh - 1.5rem);
+    --loading-offset: calc(50% - 0.625rem);
     @apply overflow-hidden bg-stone-900 text-white;
   }
 

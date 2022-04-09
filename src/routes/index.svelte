@@ -12,7 +12,7 @@
   import { convertFileSrc } from '@tauri-apps/api/tauri'
   import { fade } from 'svelte/transition'
   import { crop } from '$stores/options'
-  import { videoPath } from '$stores/video'
+  import { videoPath, ffprobeError } from '$stores/video'
   import FileInput from '$lib/FileInput.svelte'
   import FileStatTable, { type VideoMetadata } from '$lib/FileMetadata.svelte'
   import EditForm from '$lib/EditForm.svelte'
@@ -33,11 +33,26 @@
   <title>TSV Converter</title>
 </svelte:head>
 
-<section class="relative h-full p-2">
+<section class="h-full p-2">
   {#if $videoPath === undefined}
-    <FileInput class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+    <div
+      in:fade={{ delay: 300, duration: 300 }}
+      out:fade={{ duration: 300 }}
+      class="relative h-full"
+    >
+      <FileInput class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+      {#if $ffprobeError !== undefined}
+        <p class="absolute top-[60%] left-1/2 -translate-x-1/2 -translate-y-1/2">
+          {$ffprobeError}
+        </p>
+      {/if}
+    </div>
   {:else}
-    <div in:fade={{ duration: 1000 }} out:fade={{ duration: 300 }} class="h-full flex space-x-2">
+    <div
+      in:fade={{ delay: 300, duration: 300 }}
+      out:fade={{ duration: 300 }}
+      class="h-full flex space-x-2"
+    >
       <div class="space-y-2">
         <div
           class="flex justify-center items-center w-[var(--w-video)] h-[var(--h-video)] bg-black rounded-lg border border-transparent"
