@@ -7,8 +7,10 @@ use time::OffsetDateTime;
 
 // Corresponds to the `Metadata` type in `src/lib/FileStatTable.svelte`.
 #[derive(serde::Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct Metadata {
     name: Option<String>,
+    file_stem: Option<String>,
     mimes: Vec<String>,
     len: Option<u64>,
     #[serde(with = "time::serde::timestamp::option")]
@@ -20,11 +22,19 @@ pub struct Metadata {
 #[tauri::command]
 pub async fn metadata(path: String) -> Metadata {
     let path = Path::new(&path);
+
+    let name = path.file_name().map(|s| s.to_string_lossy().to_string());
+
+    // The file stem will be used to name the converted video, so we don't want invalid UTF-8.
+    let file_stem = path
+        .file_stem()
+        .map(|s| s.to_str().map(|s| s.to_string()))
+        .flatten();
+
     let mimes = mime_guess::from_path(path)
         .iter_raw()
         .map(String::from)
         .collect();
-    let name = path.file_name().map(|s| s.to_string_lossy().to_string());
 
     let (mut len, mut created, mut modified) = (None, None, None);
     if let Ok(meta) = path.metadata() {
@@ -35,6 +45,7 @@ pub async fn metadata(path: String) -> Metadata {
 
     Metadata {
         name,
+        file_stem,
         mimes,
         len,
         created,
@@ -52,7 +63,7 @@ pub async fn watch(path: String, window: tauri::Window) {
             match res {
                 Ok(event) => match event.kind {
                     EventKind::Modify(_) | EventKind::Remove(_) => {
-                        tx.blocking_send("path-change").unwrap()
+                        tx.blocking_send("fs-change").unwrap()
                     }
                     _ => (),
                 },

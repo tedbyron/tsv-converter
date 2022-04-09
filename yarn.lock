@@ -2967,13 +2967,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier-plugin-svelte@npm:^2.6.0":
-  version: 2.6.0
-  resolution: "prettier-plugin-svelte@npm:2.6.0"
+"prettier-plugin-svelte@npm:^2.7.0":
+  version: 2.7.0
+  resolution: "prettier-plugin-svelte@npm:2.7.0"
   peerDependencies:
     prettier: ^1.16.4 || ^2.0.0
     svelte: ^3.2.0
-  checksum: 1ee680cba9c9918a0d831e2161b774ac588bcd8ba8e87a27b33f0382873d2d8f4397bbf24968f777b48c281c97eba573c64087a8ed28eaaf17d083fa9fe6474d
+  checksum: 4b38d0d856f5d9099ce64cbfaeffc941f4b408285eb8bb6c0624ba484b2cad99c90e82da00bd8ab55eeaa54caf8d0bd89af602cdf63f5b6e1f0b7e0a53672503
   languageName: node
   linkType: hard
 
@@ -3525,10 +3525,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"svelte@npm:^3.46.6":
-  version: 3.46.6
-  resolution: "svelte@npm:3.46.6"
-  checksum: 0a502f16097010dfe028ee93df3714add39cb608e4c23b2d9cc2190b305838c9020d42c57ad8a285b9c003e43c0dd23e8d24dacc0034678dcba2df5879992efa
+"svelte@npm:^3.47.0":
+  version: 3.47.0
+  resolution: "svelte@npm:3.47.0"
+  checksum: 247892585543ab0fc4781e36d5469ad0ce8afd4c6c440639cb0c99564a0b435ee0838482443665a905e11b7f500a1cf68475bec6a938b668e1e73c2e0badfc4e
   languageName: node
   linkType: hard
 
@@ -3680,8 +3680,8 @@ __metadata:
     eslint-plugin-svelte3: ^3.4.1
     postcss: ^8.4.12
     prettier: ^2.6.2
-    prettier-plugin-svelte: ^2.6.0
-    svelte: ^3.46.6
+    prettier-plugin-svelte: ^2.7.0
+    svelte: ^3.47.0
     svelte-check: ^2.5.0
     svelte-preprocess: ^4.10.5
     tailwindcss: ^3.0.23

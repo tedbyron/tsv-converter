@@ -13,7 +13,7 @@
 
 <script lang="ts">
   import { open } from '@tauri-apps/api/dialog'
-  import { videoPath, ffprobeError } from '$stores/video'
+  import { filePath, ffprobeError } from '$stores'
   import { isVideo } from '$lib/ffmpeg'
   import LoadingIcon from '$lib/assets/LoadingIcon.svelte'
 
@@ -23,7 +23,7 @@
   let loading = false
 
   const openDialog = async (): Promise<void> => {
-    const ogVideoPath = $videoPath
+    const ogFilePath = $filePath
 
     try {
       loading = true
@@ -35,9 +35,9 @@
       let ffprobeOk = await isVideo(selection)
       if (ffprobeOk) {
         $ffprobeError = undefined
-        $videoPath = selection
+        $filePath = selection
       } else {
-        $videoPath = undefined
+        $filePath = undefined
         $ffprobeError = "Couldn't read the file metadata \u{1f626}"
       }
     } catch (error: unknown) {
@@ -45,8 +45,8 @@
     } finally {
       // Keep loading icon when transitioning views.
       if (
-        (ogVideoPath !== undefined && $videoPath !== undefined) ||
-        (ogVideoPath === undefined && $videoPath === undefined)
+        (ogFilePath !== undefined && $filePath !== undefined) ||
+        (ogFilePath === undefined && $filePath === undefined)
       ) {
         loading = false
       }

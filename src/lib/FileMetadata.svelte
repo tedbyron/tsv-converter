@@ -8,6 +8,7 @@
   // Corresponds to the `Metadata` struct in `src-tauri/src/command.rs`.
   type Metadata = Readonly<{
     name?: string
+    fileStem?: string
     mimes: string[]
     len?: number
     created?: number
@@ -18,22 +19,28 @@
 <script lang="ts">
   import { invoke } from '@tauri-apps/api'
   import { fade } from 'svelte/transition'
+  import { fileStem } from '$stores'
   import { fileSize, secondsToHHMMSS } from '$lib/util'
 
   export let path: string
   export let videoMetadata: VideoMetadata | undefined
 
   let metadata: Metadata | undefined
+
   $: invoke('metadata', { path })
     .then((res) => {
       metadata = res as Metadata
     })
     .catch(console.error)
+
+  $: if (metadata?.fileStem !== undefined) {
+    $fileStem = metadata.fileStem
+  }
 </script>
 
 {#if metadata}
   <div
-    in:fade={{ duration: 1000 }}
+    in:fade={{ duration: 300 }}
     out:fade={{ duration: 300 }}
     class="w-[var(--w-video)] h-[var(--h-metadata)] border-2 border-stone-600 rounded-lg"
   >
