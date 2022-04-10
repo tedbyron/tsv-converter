@@ -3,7 +3,6 @@ import { listen } from '@tauri-apps/api/event'
 import { writable } from 'svelte/store'
 
 export const filePath = writable<string | undefined>()
-export const fileStem = writable<string | undefined>()
 export const ffprobeError = writable<string | undefined>()
 
 // Watch the filePath for filesystem events; see the `watch` function in `src-tauri/src/command.rs`.
