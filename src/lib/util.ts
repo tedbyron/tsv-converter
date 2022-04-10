@@ -1,3 +1,6 @@
+import { Command } from '@tauri-apps/api/shell'
+
+/** Convert byte length to human readable size. */
 export const fileSize = (size: number): string => {
   const unitsSi = ['B', 'KB', 'MB', 'GB', 'TB']
   const unitsIec = ['B', 'KiB', 'MiB', 'GiB', 'TiB']
@@ -20,6 +23,7 @@ export const fileSize = (size: number): string => {
   )
 }
 
+/** Convert seconds to `HH:MM:SS`. */
 export const secondsToHHMMSS = (seconds: number): string => {
   const h = Math.floor(seconds / 3600)
   const m = Math.floor((seconds - h * 3600) / 60)
@@ -30,4 +34,10 @@ export const secondsToHHMMSS = (seconds: number): string => {
     `:${m.toString().padStart(2, '0')}` +
     `:${s.toString().padStart(2, '0')}`
   )
+}
+
+/** Whether or not `ffprobe` can read the file's metadata. */
+export const ffprobe = async (path: string): Promise<boolean> => {
+  const { code } = await Command.sidecar('bin/ffprobe', path).execute()
+  return code === 0
 }
