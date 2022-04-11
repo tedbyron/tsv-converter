@@ -12,23 +12,13 @@
   import { convertFileSrc } from '@tauri-apps/api/tauri'
   import { fade } from 'svelte/transition'
   import { crop, duration } from '$stores/options'
-  import { filePath, ffprobeError } from '$stores'
+  import { filePath, fileError } from '$stores'
   import FileInput from '$lib/FileInput.svelte'
-  import FileStatTable, { type VideoMetadata } from '$lib/FileMetadata.svelte'
+  import FileStatTable from '$lib/FileMetadata.svelte'
   import EditForm from '$lib/EditForm.svelte'
 
-  let videoElement: HTMLVideoElement
-  let videoMetadata: VideoMetadata | undefined
-
-  const getVideoMetadata = (): void => {
-    $duration = videoElement.duration
-
-    videoMetadata = {
-      duration: videoElement.duration,
-      videoWidth: videoElement.videoWidth,
-      videoHeight: videoElement.videoHeight
-    }
-  }
+  let videoWidth = NaN
+  let videoHeight = NaN
 </script>
 
 <svelte:head>
@@ -43,9 +33,9 @@
       class="relative h-full"
     >
       <FileInput class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
-      {#if $ffprobeError !== undefined}
+      {#if $fileError !== undefined}
         <p class="absolute top-[60%] left-1/2 -translate-x-1/2 -translate-y-1/2">
-          {$ffprobeError}
+          {$fileError}
         </p>
       {/if}
     </div>
@@ -63,13 +53,14 @@
           <video
             src={convertFileSrc($filePath)}
             controls
-            on:loadedmetadata={getVideoMetadata}
-            bind:this={videoElement}
+            bind:duration={$duration}
+            bind:videoWidth
+            bind:videoHeight
             class="block w-full h-full rounded-md {objectFit[$crop]}"
           />
         </div>
 
-        <FileStatTable {videoMetadata} path={$filePath} />
+        <FileStatTable {videoWidth} {videoHeight} path={$filePath} />
       </div>
 
       <div class="flex flex-col space-y-2 items-start max-h-[var(--h-edit)] overflow-y-scroll">

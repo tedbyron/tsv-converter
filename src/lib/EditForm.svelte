@@ -22,11 +22,11 @@
             <input
               type="radio"
               name="crop"
-              class="mr-1"
               checked={$crop === opt}
               on:change={() => {
                 $crop = opt
               }}
+              class="mr-1"
             />
             {opt}
           </label>

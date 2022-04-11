@@ -9,14 +9,13 @@ export enum Crop {
 // Corresponds to the `Options` type in `src-tauri/src/command.rs`.
 export interface Options {
   path: string
-  duration: number
-  totalFrames: number
   scale: string
 
-  frameRate: number
+  frameRate: string
   videoFrameBytes: number
 
-  sampleRate: number
+  sampleBitDepth: number
+  sampleRate: string
   audioFrameBytes: number
 }
 
