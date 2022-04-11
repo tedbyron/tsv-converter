@@ -1,10 +1,4 @@
 <script lang="ts" context="module">
-  export type VideoMetadata = Readonly<{
-    duration?: number
-    videoWidth?: number
-    videoHeight?: number
-  }>
-
   // Corresponds to the `Metadata` struct in `src-tauri/src/command.rs`.
   type Metadata = Readonly<{
     name?: string
@@ -17,11 +11,12 @@
 
 <script lang="ts">
   import { invoke } from '@tauri-apps/api'
-  import { fade } from 'svelte/transition'
+  import { duration } from '$stores/options'
   import { fileSize, secondsToHHMMSS } from '$lib/util'
 
   export let path: string
-  export let videoMetadata: VideoMetadata | undefined
+  export let videoWidth: number
+  export let videoHeight: number
 
   let metadata: Metadata | undefined
 
@@ -33,11 +28,7 @@
 </script>
 
 {#if metadata}
-  <div
-    in:fade={{ duration: 300 }}
-    out:fade={{ duration: 300 }}
-    class="w-[var(--w-video)] h-[var(--h-metadata)] border-2 border-stone-600 rounded-lg"
-  >
+  <div class="w-[var(--w-video)] h-[var(--h-metadata)] border-2 border-stone-600 rounded-lg">
     <div class="bg-stone-700 rounded-t-md text-center">
       {#if metadata.name !== undefined}
         <code aria-label="File Name">{metadata.name}</code>
@@ -52,16 +43,14 @@
         <code class="px-1 bg-stone-700 rounded-md">{metadata.mimes.join(', ')}</code>
       {/if}
 
-      {#if videoMetadata !== undefined}
-        {#if videoMetadata.duration && !isNaN(videoMetadata.duration)}
-          <span>Duration</span>
-          <span>{secondsToHHMMSS(videoMetadata.duration)}</span>
-        {/if}
+      {#if $duration}
+        <span>Duration</span>
+        <span>{secondsToHHMMSS($duration)}</span>
+      {/if}
 
-        {#if videoMetadata.videoWidth && videoMetadata.videoHeight}
-          <span>Dimensions</span>
-          <span>{`${videoMetadata.videoWidth}x${videoMetadata.videoHeight}`}</span>
-        {/if}
+      {#if videoWidth && videoHeight}
+        <span>Dimensions</span>
+        <span>{`${videoWidth}x${videoHeight}`}</span>
       {/if}
 
       {#if metadata.len !== undefined}

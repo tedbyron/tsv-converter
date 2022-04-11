@@ -1,6 +1,6 @@
 //! Tauri commands.
 
-use std::io::{self, Read};
+use std::io::Read;
 use std::path::{Path, PathBuf};
 use std::process::{Command, Stdio};
 use std::time::Instant;
@@ -22,7 +22,7 @@ pub struct Metadata {
 }
 
 #[tauri::command]
-pub async fn metadata(path: String) -> Metadata {
+pub fn metadata(path: String) -> Metadata {
     let path = Path::new(&path);
 
     let name = path.file_name().map(|s| s.to_string_lossy().to_string());
@@ -58,7 +58,7 @@ pub async fn watch(path: String, window: tauri::Window) {
             match res {
                 Ok(event) => match event.kind {
                     EventKind::Modify(_) | EventKind::Remove(_) => {
-                        tx.blocking_send("fs-change").unwrap()
+                        tx.blocking_send(event.kind).unwrap()
                     }
                     _ => (),
                 },
@@ -69,8 +69,8 @@ pub async fn watch(path: String, window: tauri::Window) {
     watcher.configure(Config::PreciseEvents(true)).unwrap();
     watcher.watch(&path, RecursiveMode::NonRecursive).unwrap();
 
-    while let Some(msg) = rx.recv().await {
-        window.emit(msg, ()).unwrap();
+    while let Some(event_kind) = rx.recv().await {
+        window.emit("fs-change", event_kind).unwrap();
         watcher.unwatch(&path).unwrap();
         break;
     }
@@ -81,17 +81,16 @@ pub async fn watch(path: String, window: tauri::Window) {
 #[serde(rename_all = "camelCase")]
 pub struct Options {
     path: String,
-    duration: u64,
-    total_frames: u64,
     scale: String,
 
     // Video
     frame_rate: String,
-    video_frame_bytes: u16,
+    video_frame_bytes: usize,
 
     // Audio
+    sample_bit_depth: u8,
     sample_rate: String,
-    audio_frame_bytes: u16,
+    audio_frame_bytes: usize,
 }
 
 #[tauri::command]
@@ -106,7 +105,7 @@ pub async fn convert(options: Options) {
     let timer = Instant::now();
 
     #[rustfmt::skip]
-    let child = Command::new(&ffmpeg_path)
+    let mut video_cmd = Command::new(&ffmpeg_path)
         .args([
             "-i", &options.path,
             "-f", "image2pipe",
@@ -117,15 +116,16 @@ pub async fn convert(options: Options) {
             "-f", "rawvideo",
             "-",
         ])
+        .stdin(Stdio::null())
         .stdout(Stdio::piped())
         .stderr(Stdio::null())
         .spawn()
         .unwrap();
-    let mut video_stdout = child.stdout.unwrap();
-    let mut frame = vec![0_u8; usize::from(options.video_frame_bytes)];
+    let mut video_stdout = video_cmd.stdout.take().unwrap();
+    let mut video_frame = vec![0; options.video_frame_bytes];
 
     #[rustfmt::skip]
-    let child = Command::new(&ffmpeg_path)
+    let mut audio_cmd = Command::new(&ffmpeg_path)
         .args([
             "-i", &options.path,
             "-f", "s16le",
@@ -134,23 +134,45 @@ pub async fn convert(options: Options) {
             "-ac", "1",
             "-"
         ])
+        .stdin(Stdio::null())
         .stdout(Stdio::piped())
         .stderr(Stdio::null())
         .spawn()
         .unwrap();
-    let mut audio_stdout = child.stdout.unwrap();
-    let mut sample = vec![0_u8; usize::from(options.audio_frame_bytes)];
+    let mut audio_stdout = audio_cmd.stdout.take().unwrap();
+    let mut audio_frame = vec![0; options.audio_frame_bytes];
 
-    // TODO: parallelize these loops and hopefully zip them
-    while let Ok(_) = video_stdout.read_exact(&mut frame) {
-        // write frame to output
+    // TODO: parallelize these loops
+    while let Ok(_) = video_stdout.read_exact(&mut video_frame) {
+        // Write video here.
+
+        if let Ok(_) = audio_stdout.read_exact(&mut audio_frame) {
+            for i in 0..options.audio_frame_bytes / 2 {
+                let sample = (0x8000
+                    + ((audio_frame[i * 2 + 1] as i32) << 8 | (audio_frame[i * 2] as i32))
+                    >> (16 - (options.sample_bit_depth as i32)))
+                    & (0xFFFF >> (16 - (options.sample_bit_depth as i32)));
+
+                audio_frame[i * 2] = (sample & 0xFF) as u8;
+                audio_frame[i * 2 + 1] = (sample >> 8) as u8;
+            }
+        } else {
+            audio_frame.fill(0);
+        }
+
+        // Write audio here.
     }
 
     let elapsed = timer.elapsed();
+    dbg!(elapsed);
+
+    // No more stdout, just wait for command to finish.
+    video_cmd.wait().unwrap();
+    audio_cmd.wait().unwrap();
 }
 
-/// File name must be < 50 bytes, so the file stem is truncated to a valid unicode character
-/// boundary if necessary.
+/// Output file name with its extension must be < 50 bytes, so the file stem is truncated to a
+/// valid unicode character boundary if necessary.
 fn limit_file_stem(path: &Path) -> Option<&str> {
     let stem = path.file_stem()?.to_str()?;
     if stem.len() < 47 {

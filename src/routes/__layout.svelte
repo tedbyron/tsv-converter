@@ -1,6 +1,7 @@
 <script lang="ts" context="module">
   import '@fontsource/inter'
   import '@fontsource/press-start-2p'
+  import '../app.css'
 </script>
 
 <script lang="ts">
@@ -14,7 +15,3 @@
 </svelte:head>
 
 <slot />
-
-<style global>
-  @import url('../app.css');
-</style>

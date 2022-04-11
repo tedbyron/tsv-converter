@@ -13,7 +13,7 @@
 
 <script lang="ts">
   import { open } from '@tauri-apps/api/dialog'
-  import { filePath, ffprobeError } from '$stores'
+  import { filePath, fileError } from '$stores'
   import { ffprobe } from '$lib/util'
   import LoadingIcon from '$lib/assets/LoadingIcon.svelte'
 
@@ -33,11 +33,11 @@
       if (Array.isArray(selection)) throw new Error('Only one video file may be selected.')
 
       if (await ffprobe(selection)) {
-        $ffprobeError = undefined
+        $fileError = undefined
         $filePath = selection
       } else {
         $filePath = undefined
-        $ffprobeError = "Couldn't read the file's metadata \u{1f626}"
+        $fileError = "Couldn't read the file metadata \u{1f626}"
       }
     } catch (error: unknown) {
       console.error(error)
