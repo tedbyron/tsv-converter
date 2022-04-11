@@ -11,7 +11,7 @@
 <script lang="ts">
   import { convertFileSrc } from '@tauri-apps/api/tauri'
   import { fade } from 'svelte/transition'
-  import { crop } from '$stores/options'
+  import { crop, duration } from '$stores/options'
   import { filePath, ffprobeError } from '$stores'
   import FileInput from '$lib/FileInput.svelte'
   import FileStatTable, { type VideoMetadata } from '$lib/FileMetadata.svelte'
@@ -21,6 +21,8 @@
   let videoMetadata: VideoMetadata | undefined
 
   const getVideoMetadata = (): void => {
+    $duration = videoElement.duration
+
     videoMetadata = {
       duration: videoElement.duration,
       videoWidth: videoElement.videoWidth,
