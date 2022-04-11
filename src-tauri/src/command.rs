@@ -1,11 +1,11 @@
 //! Tauri commands.
 
-use std::ffi::OsStr;
+use std::io::{self, Read};
 use std::path::{Path, PathBuf};
+use std::process::{Command, Stdio};
 use std::time::Instant;
 
 use notify::{Config, EventKind, RecursiveMode, Watcher};
-use tauri::api::process::{Command, CommandEvent};
 use time::OffsetDateTime;
 
 // Corresponds to the `Metadata` type in `src/lib/FileStatTable.svelte`.
@@ -76,12 +76,22 @@ pub async fn watch(path: String, window: tauri::Window) {
     }
 }
 
+// Corresponds to the `Options` type in `src/stores/options.ts`.
 #[derive(serde::Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Options {
     path: String,
-    frame_rate: String,
+    duration: u64,
+    total_frames: u64,
     scale: String,
+
+    // Video
+    frame_rate: String,
+    video_frame_bytes: u16,
+
+    // Audio
+    sample_rate: String,
+    audio_frame_bytes: u16,
 }
 
 #[tauri::command]
@@ -92,11 +102,11 @@ pub async fn convert(options: Options) {
         None => "out",
     };
     let output_path = path.with_file_name(file_stem).with_extension("tsv");
+    let ffmpeg_path = sidecar_path("ffmpeg");
     let timer = Instant::now();
 
     #[rustfmt::skip]
-    let (mut rx, mut child) = Command::new_sidecar("bin/ffmpeg")
-        .unwrap()
+    let child = Command::new(&ffmpeg_path)
         .args([
             "-i", &options.path,
             "-f", "image2pipe",
@@ -107,20 +117,40 @@ pub async fn convert(options: Options) {
             "-f", "rawvideo",
             "-",
         ])
+        .stdout(Stdio::piped())
+        .stderr(Stdio::null())
         .spawn()
         .unwrap();
+    let mut video_stdout = child.stdout.unwrap();
+    let mut frame = vec![0_u8; usize::from(options.video_frame_bytes)];
 
-    tauri::async_runtime::spawn(async move {
-        while let Some(event) = rx.recv().await {
-            if let CommandEvent::Stdout(line) = event {
-                // TODO: tauri converts all stdio to `String`s so I guess we just give up here.
-            }
-        }
-    });
+    #[rustfmt::skip]
+    let child = Command::new(&ffmpeg_path)
+        .args([
+            "-i", &options.path,
+            "-f", "s16le",
+            "-acodec", "pcm_s16le",
+            "-ar", &options.sample_rate,
+            "-ac", "1",
+            "-"
+        ])
+        .stdout(Stdio::piped())
+        .stderr(Stdio::null())
+        .spawn()
+        .unwrap();
+    let mut audio_stdout = child.stdout.unwrap();
+    let mut sample = vec![0_u8; usize::from(options.audio_frame_bytes)];
+
+    // TODO: parallelize these loops and hopefully zip them
+    while let Ok(_) = video_stdout.read_exact(&mut frame) {
+        // write frame to output
+    }
+
+    let elapsed = timer.elapsed();
 }
 
-/// File name must be < 50 bytes, so the file stem is truncated if necessary to a valid unicode
-/// character boundary.
+/// File name must be < 50 bytes, so the file stem is truncated to a valid unicode character
+/// boundary if necessary.
 fn limit_file_stem(path: &Path) -> Option<&str> {
     let stem = path.file_stem()?.to_str()?;
     if stem.len() < 47 {
@@ -133,4 +163,16 @@ fn limit_file_stem(path: &Path) -> Option<&str> {
     }
 
     Some(&stem[..idx])
+}
+
+/// Find a sidecar executable's path.
+fn sidecar_path(name: &str) -> PathBuf {
+    let path = tauri::utils::platform::current_exe()
+        .unwrap()
+        .with_file_name(name);
+
+    #[cfg(windows)]
+    return path.with_extension("exe");
+    #[cfg(not(windows))]
+    return path;
 }
