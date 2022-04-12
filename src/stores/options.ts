@@ -2,9 +2,9 @@ import { derived, writable } from 'svelte/store'
 
 /** Video scaling options */
 export enum Crop {
-  Letterbox = 'Letterbox (Contain)',
-  Zoom = 'Zoom (Cover)',
-  Fill = 'Fill (Scale)'
+  Contain = 'Contain (Letterbox)',
+  Cover = 'Cover (Zoom)',
+  Fill = 'Fill (Stretch)'
 }
 
 // Corresponds to the `Options` type in `src-tauri/src/command.rs`.
@@ -36,16 +36,16 @@ export const sampleCountPerFrame = 2 * 512
 export const sampleRate = frameRate * sampleCountPerFrame
 export const audioFrameBytes = 2 * sampleCountPerFrame
 
-export const crop = writable(Crop.Letterbox)
+export const crop = writable(Crop.Contain)
 
 export const totalFrames = derived([duration], ([$duration]) => {
   return $duration * frameRate
 })
 export const scale = derived([crop], ([$crop]) => {
   switch ($crop) {
-    case Crop.Letterbox:
+    case Crop.Contain:
       return `scale=${width}:${height}`
-    case Crop.Zoom:
+    case Crop.Cover:
       return `scale=${width}:${height}:force_original_aspect_ratio=increase,crop=${width}:${height}`
     case Crop.Fill:
       return `scale=${width}:${height}:force_original_aspect_ratio=decrease,pad=${width}:${height}:(ow-iw)/2:(oh-ih)/2`
