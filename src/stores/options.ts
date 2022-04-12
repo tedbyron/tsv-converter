@@ -1,5 +1,6 @@
 import { derived, writable } from 'svelte/store'
 
+/** Video scaling options */
 export enum Crop {
   Letterbox = 'Letterbox (Contain)',
   Zoom = 'Zoom (Cover)',
@@ -9,6 +10,7 @@ export enum Crop {
 // Corresponds to the `Options` type in `src-tauri/src/command.rs`.
 export interface Options {
   path: string
+  outputName: string
   scale: string
 
   frameRate: string

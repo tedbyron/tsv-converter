@@ -11,8 +11,8 @@
 <script lang="ts">
   import { convertFileSrc } from '@tauri-apps/api/tauri'
   import { fade } from 'svelte/transition'
-  import { crop, duration } from '$stores/options'
   import { filePath, fileError } from '$stores'
+  import { crop, duration } from '$stores/options'
   import FileInput from '$lib/FileInput.svelte'
   import FileStatTable from '$lib/FileMetadata.svelte'
   import EditForm from '$lib/EditForm.svelte'

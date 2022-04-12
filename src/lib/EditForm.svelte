@@ -1,8 +1,41 @@
 <script lang="ts">
+  import octicons from '@primer/octicons'
+  import { ogOutputFileName, outputFileName } from '$stores'
   import { Crop, crop } from '$stores/options'
+
+  const iterationsIcon = octicons.iterations.toSVG({
+    'aria-label': 'Reset',
+    fill: 'currentColor'
+  })
 </script>
 
 <form on:submit|preventDefault={() => {}} class="space-y-2">
+  <!-- Output file name -->
+  <fieldset>
+    <legend> Output name </legend>
+
+    <input
+      type="text"
+      name="output-name"
+      autocorrect="off"
+      autocomplete="off"
+      spellcheck="false"
+      minlength="1"
+      maxlength="46"
+      pattern={`\p{ASCII}+`}
+      bind:value={$outputFileName}
+    />
+    <button
+      type="button"
+      on:click={() => {
+        $outputFileName = $ogOutputFileName
+      }}
+      class="button hover-focus"
+    >
+      {@html iterationsIcon}
+    </button>
+  </fieldset>
+
   <!-- Crop radio group -->
   <fieldset
     class="group p-2 pt-1 border-2 border-stone-600 focus-within:border-sky-300 focus-within:bg-stone-800 rounded-lg"

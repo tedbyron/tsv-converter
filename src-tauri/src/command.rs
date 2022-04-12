@@ -76,11 +76,48 @@ pub async fn watch(path: String, window: tauri::Window) {
     }
 }
 
+/// Output file name with extension must be C char[] < 50 bytes.
+fn limit_file_stem(path: &Path) -> Option<&str> {
+    let stem = path.file_stem()?.to_str()?;
+
+    if stem.is_ascii() {
+        if stem.len() < 47 {
+            Some(stem)
+        } else {
+            Some(&stem[..47])
+        }
+    } else {
+        None
+    }
+}
+
+#[tauri::command]
+pub fn output_name(path: String) -> String {
+    let path = Path::new(&path);
+    match limit_file_stem(&path) {
+        Some(stem) => stem.to_string(),
+        None => "out".to_string(),
+    }
+}
+
+/// Find a sidecar executable's path.
+fn sidecar_path(name: &str) -> PathBuf {
+    let path = tauri::utils::platform::current_exe()
+        .unwrap()
+        .with_file_name(name);
+
+    #[cfg(windows)]
+    return path.with_extension("exe");
+    #[cfg(not(windows))]
+    return path;
+}
+
 // Corresponds to the `Options` type in `src/stores/options.ts`.
 #[derive(serde::Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Options {
     path: String,
+    output_name: String,
     scale: String,
 
     // Video
@@ -96,11 +133,9 @@ pub struct Options {
 #[tauri::command]
 pub async fn convert(options: Options) {
     let path = Path::new(&options.path);
-    let file_stem = match limit_file_stem(path) {
-        Some(stem) => stem,
-        None => "out",
-    };
-    let output_path = path.with_file_name(file_stem).with_extension("tsv");
+    let output_path = path
+        .with_file_name(&options.output_name)
+        .with_extension("tsv");
     let ffmpeg_path = sidecar_path("ffmpeg");
     let timer = Instant::now();
 
@@ -169,32 +204,4 @@ pub async fn convert(options: Options) {
     // No more stdout, just wait for command to finish.
     video_cmd.wait().unwrap();
     audio_cmd.wait().unwrap();
-}
-
-/// Output file name with its extension must be < 50 bytes, so the file stem is truncated to a
-/// valid unicode character boundary if necessary.
-fn limit_file_stem(path: &Path) -> Option<&str> {
-    let stem = path.file_stem()?.to_str()?;
-    if stem.len() < 47 {
-        return Some(stem);
-    }
-
-    let mut idx = 47;
-    while !stem.is_char_boundary(idx) {
-        idx -= 1;
-    }
-
-    Some(&stem[..idx])
-}
-
-/// Find a sidecar executable's path.
-fn sidecar_path(name: &str) -> PathBuf {
-    let path = tauri::utils::platform::current_exe()
-        .unwrap()
-        .with_file_name(name);
-
-    #[cfg(windows)]
-    return path.with_extension("exe");
-    #[cfg(not(windows))]
-    return path;
 }
