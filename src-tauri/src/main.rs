@@ -14,6 +14,7 @@ fn main() {
         .invoke_handler(tauri::generate_handler![
             command::metadata,
             command::watch,
+            command::output_name,
             command::convert,
         ])
         .run(tauri::generate_context!())
