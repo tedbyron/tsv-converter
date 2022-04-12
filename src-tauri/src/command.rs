@@ -8,7 +8,7 @@ use std::time::Instant;
 use notify::{Config, EventKind, RecursiveMode, Watcher};
 use time::OffsetDateTime;
 
-// Corresponds to the `Metadata` type in `src/lib/FileStatTable.svelte`.
+/// Corresponds to the `Metadata` type in `src/lib/FileStatTable.svelte`.
 #[derive(serde::Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Metadata {
@@ -21,6 +21,7 @@ pub struct Metadata {
     modified: Option<OffsetDateTime>,
 }
 
+/// Get file metadata from a path.
 #[tauri::command]
 pub fn metadata(path: String) -> Metadata {
     let path = Path::new(&path);
@@ -48,6 +49,7 @@ pub fn metadata(path: String) -> Metadata {
     }
 }
 
+/// Watches a file path for modify/remove events, and forwards the event to the frontend.
 #[tauri::command]
 pub async fn watch(path: String, window: tauri::Window) {
     let path = PathBuf::from(path);
@@ -76,7 +78,18 @@ pub async fn watch(path: String, window: tauri::Window) {
     }
 }
 
-/// Output file name with extension must be C char[] < 50 bytes.
+/// Calculate a possible output file stem from a file path.
+#[tauri::command]
+pub fn output_name(path: String) -> String {
+    let path = Path::new(&path);
+    match limit_file_stem(&path) {
+        Some(stem) => stem.to_string(),
+        None => "out".to_string(),
+    }
+}
+
+/// Limit a file stem to 46 bytes of ASCII (Output file name with `.tsv` extension must be a C
+/// char[] < 50 bytes).
 fn limit_file_stem(path: &Path) -> Option<&str> {
     let stem = path.file_stem()?.to_str()?;
 
@@ -88,15 +101,6 @@ fn limit_file_stem(path: &Path) -> Option<&str> {
         }
     } else {
         None
-    }
-}
-
-#[tauri::command]
-pub fn output_name(path: String) -> String {
-    let path = Path::new(&path);
-    match limit_file_stem(&path) {
-        Some(stem) => stem.to_string(),
-        None => "out".to_string(),
     }
 }
 
@@ -112,7 +116,7 @@ fn sidecar_path(name: &str) -> PathBuf {
     return path;
 }
 
-// Corresponds to the `Options` type in `src/stores/options.ts`.
+/// Corresponds to the `Options` type in `src/stores/options.ts`.
 #[derive(serde::Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Options {
@@ -130,10 +134,11 @@ pub struct Options {
     audio_frame_bytes: usize,
 }
 
+/// Convert the source video to something displayable on the TinyScreen.
 #[tauri::command]
 pub async fn convert(options: Options) {
     let path = Path::new(&options.path);
-    let output_path = path
+    let _output_path = path
         .with_file_name(&options.output_name)
         .with_extension("tsv");
     let ffmpeg_path = sidecar_path("ffmpeg");
@@ -201,7 +206,6 @@ pub async fn convert(options: Options) {
     let elapsed = timer.elapsed();
     dbg!(elapsed);
 
-    // No more stdout, just wait for command to finish.
     video_cmd.wait().unwrap();
     audio_cmd.wait().unwrap();
 }

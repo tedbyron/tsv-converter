@@ -11,10 +11,10 @@
 
 <script lang="ts">
   import { invoke } from '@tauri-apps/api'
-  import { duration } from '$stores/options'
   import { fileSize, secondsToHHMMSS } from '$lib/util'
 
   export let path: string
+  export let duration: number
   export let videoWidth: number
   export let videoHeight: number
 
@@ -29,7 +29,7 @@
 
 {#if metadata}
   <div class="w-[var(--w-video)] h-[var(--h-metadata)] border-2 border-stone-600 rounded-lg">
-    <div class="bg-stone-700 rounded-t-md text-center">
+    <div class="bg-stone-800 rounded-t-md text-center">
       {#if metadata.name !== undefined}
         <code aria-label="File Name">{metadata.name}</code>
       {:else}
@@ -40,12 +40,12 @@
     <div class="grid grid-cols-[auto_1fr] justify-items-start px-3 py-2 gap-x-3 gap-y-1">
       {#if metadata.mimes.length > 0}
         <span>Type</span>
-        <code class="px-1 bg-stone-700 rounded-md">{metadata.mimes.join(', ')}</code>
+        <code class="px-1 bg-stone-800 rounded-md">{metadata.mimes.join(', ')}</code>
       {/if}
 
-      {#if $duration}
+      {#if duration}
         <span>Duration</span>
-        <span>{secondsToHHMMSS($duration)}</span>
+        <span>{secondsToHHMMSS(duration)}</span>
       {/if}
 
       {#if videoWidth && videoHeight}

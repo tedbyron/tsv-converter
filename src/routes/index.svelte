@@ -2,8 +2,8 @@
   import { Crop } from '$stores/options'
 
   const objectFit = {
-    [Crop.Letterbox]: 'object-contain',
-    [Crop.Zoom]: 'object-cover',
+    [Crop.Contain]: 'object-contain',
+    [Crop.Cover]: 'object-cover',
     [Crop.Fill]: 'object-fill'
   }
 </script>
@@ -12,13 +12,14 @@
   import { convertFileSrc } from '@tauri-apps/api/tauri'
   import { fade } from 'svelte/transition'
   import { filePath, fileError } from '$stores'
-  import { crop, duration } from '$stores/options'
+  import { crop } from '$stores/options'
   import FileInput from '$lib/FileInput.svelte'
   import FileStatTable from '$lib/FileMetadata.svelte'
   import EditForm from '$lib/EditForm.svelte'
 
-  let videoWidth = NaN
-  let videoHeight = NaN
+  let duration: number
+  let videoWidth: number
+  let videoHeight: number
 </script>
 
 <svelte:head>
@@ -47,23 +48,26 @@
     >
       <div class="space-y-2">
         <div
-          class="flex justify-center items-center w-[var(--w-video)] h-[var(--h-video)] bg-black rounded-lg border border-transparent"
+          class="flex justify-center items-center w-[var(--w-video)] h-[var(--h-video)] bg-black
+          rounded-lg border border-transparent"
         >
           <!-- svelte-ignore a11y-media-has-caption -->
           <video
             src={convertFileSrc($filePath)}
             controls
-            bind:duration={$duration}
+            bind:duration
             bind:videoWidth
             bind:videoHeight
             class="block w-full h-full rounded-md {objectFit[$crop]}"
           />
         </div>
 
-        <FileStatTable {videoWidth} {videoHeight} path={$filePath} />
+        <FileStatTable {duration} {videoWidth} {videoHeight} path={$filePath} />
       </div>
 
-      <div class="flex flex-col space-y-2 items-start max-h-[var(--h-edit)] overflow-y-scroll">
+      <div
+        class="flex flex-col space-y-2 items-start w-full max-h-[var(--h-edit)] overflow-y-scroll"
+      >
         <FileInput />
         <EditForm />
       </div>
