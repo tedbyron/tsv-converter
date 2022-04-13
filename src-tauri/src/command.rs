@@ -1,6 +1,7 @@
 //! Tauri commands.
 
-use std::io::Read;
+use std::fs::OpenOptions;
+use std::io::{BufWriter, Read, Write};
 use std::path::{Path, PathBuf};
 use std::process::{Command, Stdio};
 use std::time::Instant;
@@ -138,9 +139,19 @@ pub struct Options {
 #[tauri::command]
 pub async fn convert(options: Options) {
     let path = Path::new(&options.path);
-    let _output_path = path
+    let output_path = path
         .with_file_name(&options.output_name)
         .with_extension("tsv");
+    let output_file = OpenOptions::new()
+        .create(true)
+        .truncate(true)
+        .write(true)
+        .open(&output_path)
+        .unwrap();
+    let mut writer = BufWriter::with_capacity(
+        options.video_frame_bytes.max(options.audio_frame_bytes),
+        output_file,
+    );
     let ffmpeg_path = sidecar_path("ffmpeg");
     let timer = Instant::now();
 
@@ -182,16 +193,27 @@ pub async fn convert(options: Options) {
     let mut audio_stdout = audio_cmd.stdout.take().unwrap();
     let mut audio_frame = vec![0; options.audio_frame_bytes];
 
-    // TODO: parallelize these loops
     while let Ok(_) = video_stdout.read_exact(&mut video_frame) {
-        // Write video here.
+        writer.write_all(&video_frame).unwrap();
 
         if let Ok(_) = audio_stdout.read_exact(&mut audio_frame) {
+            // This doesn't speed anything up, reading frames from ffmpeg is probably slower.
+            // Maybe try https://doc.rust-lang.org/std/io/trait.Read.html#method.take
+
+            // audio_frame.par_chunks_exact_mut(2).for_each(|chunk| {
+            //     let sample = (0x8000 + ((chunk[1] as u32) << 8 | (chunk[0] as u32))
+            //         >> (16 - (options.sample_bit_depth as u32)))
+            //         & (0xFFFF >> (16 - (options.sample_bit_depth as u32)));
+
+            //     chunk[0] = (sample & 0xFF) as u8;
+            //     chunk[1] = (sample >> 8) as u8;
+            // });
+
             for i in 0..options.audio_frame_bytes / 2 {
                 let sample = (0x8000
-                    + ((audio_frame[i * 2 + 1] as i32) << 8 | (audio_frame[i * 2] as i32))
-                    >> (16 - (options.sample_bit_depth as i32)))
-                    & (0xFFFF >> (16 - (options.sample_bit_depth as i32)));
+                    + ((audio_frame[i * 2 + 1] as u32) << 8 | (audio_frame[i * 2] as u32))
+                    >> (16 - (options.sample_bit_depth as u32)))
+                    & (0xFFFF >> (16 - (options.sample_bit_depth as u32)));
 
                 audio_frame[i * 2] = (sample & 0xFF) as u8;
                 audio_frame[i * 2 + 1] = (sample >> 8) as u8;
@@ -200,12 +222,14 @@ pub async fn convert(options: Options) {
             audio_frame.fill(0);
         }
 
-        // Write audio here.
+        writer.write_all(&audio_frame).unwrap();
     }
-
-    let elapsed = timer.elapsed();
-    dbg!(elapsed);
 
     video_cmd.wait().unwrap();
     audio_cmd.wait().unwrap();
+
+    let conversion = timer.elapsed();
+    dbg!(conversion);
+
+    writer.flush().unwrap();
 }

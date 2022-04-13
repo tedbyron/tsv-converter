@@ -16,15 +16,23 @@ features = []
 
 [dependencies]
 mime_guess = "2.0.4"
+notify = { version = "5.0.0-pre.14", features = ["serde"] }
 serde_json = "1.0.79"
 serde = { version = "1.0.136", features = ["derive"] }
 time = { version = "0.3.9", features = ["serde"] }
-notify = { version = "5.0.0-pre.14", features = ["serde"] }
-rayon = "1.5.1"
+
+# rayon = "1.5.1"
 
 [dependencies.tauri]
 version = "1.0.0-rc.6"
-features = ["dialog-open", "dialog-save", "global-shortcut-all", "protocol-asset", "shell-open", "shell-sidecar"]
+features = [
+    "dialog-open",
+    "dialog-save",
+    "global-shortcut-all",
+    "protocol-asset",
+    "shell-open",
+    "shell-sidecar"
+]
 
 [features]
 default = ["custom-protocol"]
@@ -33,5 +41,6 @@ custom-protocol = ["tauri/custom-protocol"]
 [profile.release]
 codegen-units = 1
 lto = "fat"
-opt-level = "s"
+opt-level = 3
 panic = "abort"
+strip = "symbols"
