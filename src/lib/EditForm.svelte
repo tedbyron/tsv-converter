@@ -1,11 +1,41 @@
 <script lang="ts">
   import octicons from '@primer/octicons'
-  import { ogOutputFileName, outputFileName } from '$stores'
-  import { Crop, crop } from '$stores/options'
+  import { invoke } from '@tauri-apps/api'
+  import { filePath, ogOutputFileName, outputFileName } from '$stores'
+  import {
+    Crop,
+    crop,
+    scale,
+    frameRate,
+    videoFrameBytes,
+    sampleBitDepth,
+    sampleRate,
+    audioFrameBytes,
+    type Options
+  } from '$stores/options'
 
   let valid = true
   let nameElement: HTMLInputElement
   let resetClicked = false
+
+  const convert = async (): Promise<void> => {
+    if ($filePath === undefined || $outputFileName === undefined) return
+
+    const options: Options = {
+      path: $filePath,
+      outputName: $outputFileName,
+      scale: $scale,
+
+      frameRate: frameRate.toString(),
+      videoFrameBytes: videoFrameBytes,
+
+      sampleBitDepth: sampleBitDepth,
+      sampleRate: sampleRate.toString(),
+      audioFrameBytes: audioFrameBytes
+    }
+
+    await invoke('convert', { options })
+  }
 
   $: syncIcon = octicons.sync.toSVG({
     'aria-label': 'Reset',
@@ -14,7 +44,7 @@
   })
 </script>
 
-<form on:submit|preventDefault={() => {}} class="w-full flex flex-col items-start space-y-2">
+<form on:submit|preventDefault={convert} class="w-full flex flex-col items-start space-y-2">
   <!-- Crop radio group -->
   <fieldset class="form-fieldset group">
     <legend class="form-legend">Crop</legend>
@@ -52,8 +82,11 @@
 
   <!-- Output file name -->
   <fieldset
-    on:click={() => nameElement.focus()}
-    class="form-fieldset group w-full group-invalid:border-orange-300"
+    on:click={() => {
+      // TODO: fix this garbage
+      if (document.activeElement !== nameElement) nameElement.focus()
+    }}
+    class="form-fieldset group w-full invalid:border-orange-300"
   >
     <legend class="form-legend group-invalid:border-orange-300">Output name</legend>
 
@@ -82,10 +115,10 @@
           }, 600)
           $outputFileName = $ogOutputFileName
         }}
-        class="p-2 border-2 border-stone-600 rounded-lg hover:border-sky-300
-hover:disabled:border-stone-600 focus-visible:border-sky-300 disabled:cursor-default
-disabled:border-stone-600 hover:disabled:bg-stone-900 group-focus-within:hover:disabled:bg-stone-800 disabled:text-stone-600
-hover:disabled:text-stone-600 hover-focus"
+        class="hover-focus p-2 border-2 border-stone-600 rounded-lg hover:border-sky-300
+        hover:disabled:border-stone-600 focus-visible:border-sky-300 disabled:cursor-default
+        disabled:border-stone-600 hover:disabled:bg-stone-900 disabled:text-stone-600
+        group-focus-within:hover:disabled:bg-stone-800 hover:disabled:text-stone-600"
       >
         {@html syncIcon}
       </button>

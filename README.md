@@ -16,8 +16,8 @@ FIXME:
 
 TODO:
 
-- Crop zoom gravity (and extent?)
-- Crop letterbox background color
+- Crop cover (zoom) gravity (and extent?)
+- Crop contain (letterbox) background color
 - Drag and drop file
 - ffmpeg log
 - keyboard shortcuts
