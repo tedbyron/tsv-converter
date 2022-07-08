@@ -1,0 +1,46 @@
+[package]
+name = "app"
+version = "0.1.0"
+description = "TinyCircuits TinyScreen Video (TSV) converter."
+authors = ["Teddy Byron <ted@tedbyron.com>"]
+license-file = "../LICENSE"
+repository = "https://github.com/tedbyron/tsv-converter"
+default-run = "app"
+edition = "2021"
+rust-version = "1.57"
+publish = false
+
+[build-dependencies.tauri-build]
+version = "1.0.0-rc.5"
+features = []
+
+[dependencies]
+mime_guess = "2.0.4"
+notify = { version = "5.0.0-pre.14", features = ["serde"] }
+serde_json = "1.0.79"
+serde = { version = "1.0.136", features = ["derive"] }
+time = { version = "0.3.9", features = ["serde"] }
+
+# rayon = "1.5.1"
+
+[dependencies.tauri]
+version = "1.0.0-rc.6"
+features = [
+    "dialog-open",
+    "dialog-save",
+    "global-shortcut-all",
+    "protocol-asset",
+    "shell-open",
+    "shell-sidecar"
+]
+
+[features]
+default = ["custom-protocol"]
+custom-protocol = ["tauri/custom-protocol"]
+
+[profile.release]
+codegen-units = 1
+lto = "fat"
+opt-level = 3
+panic = "abort"
+strip = "symbols"

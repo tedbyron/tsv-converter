@@ -7,7 +7,7 @@ export enum Crop {
   Fill = 'Fill (Stretch)'
 }
 
-// Corresponds to the `Options` type in `src-tauri/src/command.rs`.
+// corresponds to the `Options` type in `src-tauri/src/command.rs`
 export interface Options {
   path: string
   outputName: string
@@ -24,13 +24,13 @@ export interface Options {
 /** Video duration in seconds. */
 export const duration = writable(NaN)
 
-// Video
+// video
 export const frameRate = 30
 export const width = 96
 export const height = 64
 export const videoFrameBytes = 2 * width * height
 
-// Audio
+// audio
 export const sampleBitDepth = 10
 export const sampleCountPerFrame = 2 * 512
 export const sampleRate = frameRate * sampleCountPerFrame
@@ -41,6 +41,7 @@ export const crop = writable(Crop.Contain)
 export const totalFrames = derived([duration], ([$duration]) => {
   return $duration * frameRate
 })
+
 export const scale = derived([crop], ([$crop]) => {
   switch ($crop) {
     case Crop.Contain:

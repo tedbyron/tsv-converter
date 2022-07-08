@@ -1,26 +1,17 @@
-import path from 'path'
-
 import adapter from '@sveltejs/adapter-static'
 import preprocess from 'svelte-preprocess'
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
-  preprocess: preprocess(),
+  preprocess: preprocess({ postcss: true }),
   kit: {
-    adapter: adapter({
-      fallback: path.resolve('src', 'routes', 'index.html')
-    }),
-    prerender: {
-      default: false
+    adapter: adapter(),
+    alias: {
+      $components: 'src/components',
+      $stores: 'src/stores'
     },
-    vite: {
-      envPrefix: 'TSV_CONVERTER_',
-      resolve: {
-        alias: {
-          $routes: path.resolve('src', 'routes'),
-          $stores: path.resolve('src', 'stores')
-        }
-      }
+    prerender: {
+      default: true
     }
   }
 }

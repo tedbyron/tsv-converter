@@ -1,8 +1,12 @@
 {
-  "css.validate": false,
   "editor.quickSuggestions": {
-    "other": true,
-    "comments": false,
     "strings": true
-  }
+  },
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
+  "prettier.documentSelectors": ["**/*.svelte"],
+  "eslint.validate": ["svelte"],
+  "eslint.packageManager": "yarn",
+  "npm.packageManager": "yarn"
 }

@@ -1,21 +1,17 @@
-<script lang="ts" context="module">
-  import { Crop } from '$stores/options'
+<script lang="ts">
+  import EditForm from '$components/EditForm.svelte'
+  import FileInput from '$components/FileInput.svelte'
+  import FileStatTable from '$components/FileMetadata.svelte'
+  import { fileError, filePath } from '$stores'
+  import { crop, Crop } from '$stores/options'
+  import { convertFileSrc } from '@tauri-apps/api/tauri'
+  import { fade } from 'svelte/transition'
 
   const objectFit = {
     [Crop.Contain]: 'object-contain',
     [Crop.Cover]: 'object-cover',
     [Crop.Fill]: 'object-fill'
   }
-</script>
-
-<script lang="ts">
-  import { convertFileSrc } from '@tauri-apps/api/tauri'
-  import { fade } from 'svelte/transition'
-  import { filePath, fileError } from '$stores'
-  import { crop } from '$stores/options'
-  import FileInput from '$lib/FileInput.svelte'
-  import FileStatTable from '$lib/FileMetadata.svelte'
-  import EditForm from '$lib/EditForm.svelte'
 
   let duration: number
   let videoWidth: number
@@ -44,12 +40,12 @@
     <div
       in:fade={{ delay: 300, duration: 300 }}
       out:fade={{ duration: 300 }}
-      class="h-full flex space-x-2"
+      class="flex h-full space-x-2"
     >
       <div class="space-y-2">
         <div
-          class="flex justify-center items-center w-[var(--w-video)] h-[var(--h-video)] bg-black
-          rounded-lg border border-transparent"
+          class="flex h-[var(--h-video)] w-[var(--w-video)] items-center justify-center rounded-lg
+          border border-transparent bg-black"
         >
           <!-- svelte-ignore a11y-media-has-caption -->
           <video
@@ -58,7 +54,7 @@
             bind:duration
             bind:videoWidth
             bind:videoHeight
-            class="block w-full h-full rounded-md {objectFit[$crop]}"
+            class="block h-full w-full rounded-md {objectFit[$crop]}"
           />
         </div>
 
@@ -66,7 +62,7 @@
       </div>
 
       <div
-        class="flex flex-col space-y-2 items-start w-full max-h-[var(--h-edit)] overflow-y-scroll"
+        class="flex max-h-[var(--h-edit)] w-full flex-col items-start space-y-2 overflow-y-scroll"
       >
         <FileInput />
         <EditForm />
