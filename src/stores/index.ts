@@ -8,7 +8,7 @@ export const fileError = writable<string | undefined>()
 export const ogOutputFileName = writable<string | undefined>()
 export const outputFileName = writable<string | undefined>()
 
-// Watch the filePath for filesystem events; see the `watch` function in `src-tauri/src/command.rs`.
+// watch the filePath for filesystem events; see the `watch` function in `src-tauri/src/command.rs`
 filePath.subscribe((self) => {
   if (self === undefined) return
 
@@ -21,9 +21,9 @@ filePath.subscribe((self) => {
     .catch(console.error)
 })
 
-// Listen for filesystem modify/remove events and unset filePath (we can't get detailed
-// cross-platform event information).
+// listen for filesystem modify/remove events and unset filePath (we can't get detailed
+// cross-platform event information)
 listen('fs-change', () => {
   filePath.set(undefined)
-  fileError.set('The active file was modified/removed 😦')
+  fileError.set('The active file was modified/removed')
 }).catch(console.error)

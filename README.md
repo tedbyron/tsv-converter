@@ -22,16 +22,16 @@ TODO:
 - ffmpeg log
 - keyboard shortcuts
 
-# Dev
+# Development
 
 1. Follow the [tauri prerequisites documentation](https://tauri.studio/docs/getting-started/prerequisites).
-   Use node LTS gallium (v16) and enable corepack for yarn.
+   Use node LTS gallium (v16) and enable yarn with corepack.
 
    ```sh
    nvm install --lts=gallium # or install node v16 manually
    nvm use --lts=gallium
 
-   corepack enable
+   corepack enable yarn
    ```
 
 2. Install dependencies.
@@ -44,11 +44,11 @@ TODO:
 
    ```sh
    yarn dev
-   # open a new terminal tab/window, and:
+   # in another terminal:
    yarn tauri dev
    ```
 
-# Build
+## Build
 
 ```sh
 yarn tauri build

@@ -197,8 +197,8 @@ pub async fn convert(options: Options) {
         writer.write_all(&video_frame).unwrap();
 
         if let Ok(_) = audio_stdout.read_exact(&mut audio_frame) {
-            // This doesn't speed anything up, reading frames from ffmpeg is probably slower.
-            // Maybe try https://doc.rust-lang.org/std/io/trait.Read.html#method.take
+            // this doesn't speed anything up, reading frames from ffmpeg is probably slower
+            // maybe try https://doc.rust-lang.org/std/io/trait.Read.html#method.take
 
             // audio_frame.par_chunks_exact_mut(2).for_each(|chunk| {
             //     let sample = (0x8000 + ((chunk[1] as u32) << 8 | (chunk[0] as u32))

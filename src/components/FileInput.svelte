@@ -1,5 +1,9 @@
-<script lang="ts" context="module">
-  import type { OpenDialogOptions, DialogFilter } from '@tauri-apps/api/dialog'
+<script lang="ts">
+  import LoadingIcon from '$components/LoadingIcon.svelte'
+  import { ffprobe } from '$lib/fileUtils'
+  import { fileError, filePath } from '$stores'
+  import type { DialogFilter, OpenDialogOptions } from '@tauri-apps/api/dialog'
+  import { open } from '@tauri-apps/api/dialog'
 
   const videoFilter: DialogFilter = {
     name: 'Videos',
@@ -9,17 +13,9 @@
   const openDialogOptions: OpenDialogOptions = {
     filters: [videoFilter]
   }
-</script>
-
-<script lang="ts">
-  import { open } from '@tauri-apps/api/dialog'
-  import { filePath, fileError } from '$stores'
-  import { ffprobe } from '$lib/util'
-  import LoadingIcon from '$lib/assets/LoadingIcon.svelte'
 
   let className = ''
   export { className as class }
-
   let loading = false
 
   const openDialog = async (): Promise<void> => {
@@ -27,7 +23,7 @@
 
     try {
       loading = true
-      let selection = await open(openDialogOptions)
+      const selection = await open(openDialogOptions)
 
       if (selection === null || selection === undefined) return
       if (Array.isArray(selection)) throw new Error('Only one video file may be selected.')
@@ -42,7 +38,7 @@
     } catch (error: unknown) {
       console.error(error)
     } finally {
-      // Keep loading icon when transitioning views.
+      // keep loading icon when transitioning views
       if (
         (ogFilePath !== undefined && $filePath !== undefined) ||
         (ogFilePath === undefined && $filePath === undefined)
@@ -57,11 +53,11 @@
   type="button"
   disabled={loading}
   on:click={openDialog}
-  class="relative button hover-focus min-w-[135px] min-h-[52px] {className}"
+  class="button hover-focus relative min-h-[52px] min-w-[135px] {className}"
 >
   {#if loading}
     <LoadingIcon
-      class="absolute top-[var(--loading-offset)] left-[var(--loading-offset)] w-5 h-5"
+      class="absolute top-[var(--loading-offset)] left-[var(--loading-offset)] h-5 w-5"
     />
   {:else}
     <span>Select a video</span>

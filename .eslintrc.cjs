@@ -11,11 +11,17 @@ module.exports = {
   parserOptions: {
     project: './tsconfig.json',
     sourceType: 'module',
-    ecmaVersion: 2020
+    ecmaVersion: 'latest',
+    ecmaFeatures: {
+      impliedStrict: true
+    },
+    extraFileExtensions: ['.svelte']
   },
   env: {
     browser: true,
-    es2017: true,
-    node: true
+    es2022: true
+  },
+  rules: {
+    'import/first': 'off'
   }
 }

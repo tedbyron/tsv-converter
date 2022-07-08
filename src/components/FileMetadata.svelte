@@ -1,5 +1,8 @@
-<script lang="ts" context="module">
-  // Corresponds to the `Metadata` struct in `src-tauri/src/command.rs`.
+<script lang="ts">
+  import { fileSize, secondsToHHMMSS } from '$lib/fileUtils'
+  import { invoke } from '@tauri-apps/api'
+
+  // corresponds to the `Metadata` struct in `src-tauri/src/command.rs`
   type Metadata = Readonly<{
     name?: string
     mimes: string[]
@@ -7,11 +10,6 @@
     created?: number
     modified?: number
   }>
-</script>
-
-<script lang="ts">
-  import { invoke } from '@tauri-apps/api'
-  import { fileSize, secondsToHHMMSS } from '$lib/util'
 
   export let path: string
   export let duration: number
@@ -28,8 +26,8 @@
 </script>
 
 {#if metadata}
-  <div class="w-[var(--w-video)] h-[var(--h-metadata)] border-2 border-stone-600 rounded-lg">
-    <div class="bg-stone-800 rounded-t-md text-center">
+  <div class="h-[var(--h-metadata)] w-[var(--w-video)] rounded-lg border-2 border-stone-600">
+    <div class="rounded-t-md bg-stone-800 text-center">
       {#if metadata.name !== undefined}
         <code aria-label="File Name">{metadata.name}</code>
       {:else}
@@ -37,10 +35,10 @@
       {/if}
     </div>
 
-    <div class="grid grid-cols-[auto_1fr] justify-items-start px-3 py-2 gap-x-3 gap-y-1">
+    <div class="grid grid-cols-[auto_1fr] justify-items-start gap-x-3 gap-y-1 px-3 py-2">
       {#if metadata.mimes.length > 0}
         <span>Type</span>
-        <code class="px-1 bg-stone-800 rounded-md">{metadata.mimes.join(', ')}</code>
+        <code class="rounded-md bg-stone-800 px-1">{metadata.mimes.join(', ')}</code>
       {/if}
 
       {#if duration}
