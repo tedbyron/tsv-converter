@@ -2,7 +2,6 @@
   import { fileSize, secondsToHHMMSS } from '$lib/fileUtils'
   import { invoke } from '@tauri-apps/api'
 
-  // corresponds to the `Metadata` struct in `src-tauri/src/command.rs`
   type Metadata = Readonly<{
     name?: string
     mimes: string[]
@@ -26,8 +25,8 @@
 </script>
 
 {#if metadata}
-  <div class="h-[var(--h-metadata)] w-[var(--w-video)] rounded-lg border-2 border-stone-600">
-    <div class="rounded-t-md bg-stone-800 text-center">
+  <div class="h-[var(--h-metadata)] w-[var(--w-video)] rounded-lg border">
+    <div class="rounded-t-md bg-gray-200 text-center">
       {#if metadata.name !== undefined}
         <code aria-label="File Name">{metadata.name}</code>
       {:else}
@@ -38,7 +37,7 @@
     <div class="grid grid-cols-[auto_1fr] justify-items-start gap-x-3 gap-y-1 px-3 py-2">
       {#if metadata.mimes.length > 0}
         <span>Type</span>
-        <code class="rounded-md bg-stone-800 px-1">{metadata.mimes.join(', ')}</code>
+        <code class="rounded-md bg-gray-200 px-1">{metadata.mimes.join(', ')}</code>
       {/if}
 
       {#if duration}

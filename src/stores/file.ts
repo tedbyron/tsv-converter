@@ -8,12 +8,12 @@ export const fileError = writable<string | undefined>()
 export const ogOutputFileName = writable<string | undefined>()
 export const outputFileName = writable<string | undefined>()
 
-// watch the filePath for filesystem events; see the `watch` function in `src-tauri/src/command.rs`
-filePath.subscribe((self) => {
-  if (self === undefined) return
+// watch the filePath for filesystem events; see the `watch` tauri command
+filePath.subscribe((inputPath) => {
+  if (inputPath === undefined) return
 
-  invoke('watch', { path: self }).catch(console.error)
-  invoke('output_name', { path: self })
+  invoke('watch', { path: inputPath }).catch(console.error)
+  invoke('output_name', { path: inputPath })
     .then((path) => {
       ogOutputFileName.set(path as string)
       outputFileName.set(path as string)

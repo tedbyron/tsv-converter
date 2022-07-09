@@ -1,2 +1,2 @@
-/src-tauri/bin/ffmpeg-x86_64-apple-darwin filter=lfs diff=lfs merge=lfs -text
-/src-tauri/bin/ffprobe-x86_64-apple-darwin filter=lfs diff=lfs merge=lfs -text
+/crate/bin/ffmpeg-x86_64-apple-darwin filter=lfs diff=lfs merge=lfs -text
+/crate/bin/ffprobe-x86_64-apple-darwin filter=lfs diff=lfs merge=lfs -text

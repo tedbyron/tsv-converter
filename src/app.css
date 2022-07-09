@@ -3,62 +3,33 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
-    --w-video: calc(50vw - 0.5rem);
-    --h-video: calc(var(--w-video) * 2 / 3);
-    --h-metadata: calc(100vh - var(--h-video) - 1.5rem);
-    --h-edit: calc(100vh - 1.5rem);
-    --loading-offset: calc(50% - 0.625rem);
-    @apply overflow-hidden bg-stone-900 text-white;
-  }
-
   :root,
   body,
   main {
     @apply h-full;
   }
 
-  a:focus-visible,
-  button:focus-visible,
-  input:focus-visible {
-    @apply outline-none;
-  }
-
-  [type='text'] {
-    @apply bg-stone-900;
+  code {
+    @apply font-mono;
   }
 
   [type='radio'] {
-    @apply accent-sky-300;
-  }
-
-  code {
-    @apply font-mono;
+    @apply focus-visible:outline-offset-8;
   }
 }
 
 @layer components {
+  .button-primary {
+    @apply bg-blue-500 text-white hover:bg-blue-600;
+  }
+
   .button {
-    @apply rounded-lg border-2 border-stone-600 p-3 hover:border-sky-300
-    focus-visible:border-sky-300 disabled:cursor-default disabled:border-stone-600
-    disabled:text-stone-600 hover:disabled:border-stone-600 hover:disabled:bg-stone-900
-    hover:disabled:text-stone-600;
-  }
-
-  .form-fieldset {
-    @apply rounded-lg border-2 border-stone-600 focus-within:border-sky-300
-    focus-within:bg-stone-800;
-  }
-
-  .form-legend {
-    @apply ml-3 rounded-md border-2 border-stone-600 bg-stone-800 px-2
-    group-focus-within:border-sky-300 group-focus-within:bg-stone-800;
+    @apply rounded-lg px-4 py-2 disabled:bg-gray-200 disabled:text-gray-400;
   }
 }
 
 @layer utilities {
-  .hover-focus {
-    @apply transition-colors hover:bg-stone-800 hover:text-sky-300 focus-visible:bg-stone-800
-    focus-visible:text-sky-300;
+  .absolute-center {
+    @apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2;
   }
 }

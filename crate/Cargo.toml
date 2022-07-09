@@ -1,30 +1,27 @@
 [package]
-name = "app"
+name = "tsv-converter"
 version = "0.1.0"
-description = "TinyCircuits TinyScreen Video (TSV) converter."
 authors = ["Teddy Byron <ted@tedbyron.com>"]
-license-file = "../LICENSE"
-repository = "https://github.com/tedbyron/tsv-converter"
-default-run = "app"
 edition = "2021"
-rust-version = "1.57"
+rust-version = "1.62"
+description = "TinyCircuits TinyScreen Video (TSV) converter"
+readme = "../README.md"
+repository = "https://github.com/tedbyron/tsv-converter"
+license-file = "../LICENSE"
 publish = false
 
 [build-dependencies.tauri-build]
-version = "1.0.0-rc.5"
+version = "1.0.3"
 features = []
 
 [dependencies]
 mime_guess = "2.0.4"
-notify = { version = "5.0.0-pre.14", features = ["serde"] }
-serde_json = "1.0.79"
-serde = { version = "1.0.136", features = ["derive"] }
-time = { version = "0.3.9", features = ["serde"] }
-
-# rayon = "1.5.1"
+notify = { version = "5.0.0-pre.15", features = ["serde"] }
+serde = { version = "1.0.138", features = ["derive"] }
+time = { version = "0.3.11", features = ["serde"] }
 
 [dependencies.tauri]
-version = "1.0.0-rc.6"
+version = "1.0.3"
 features = [
     "dialog-open",
     "dialog-save",
@@ -40,7 +37,7 @@ custom-protocol = ["tauri/custom-protocol"]
 
 [profile.release]
 codegen-units = 1
-lto = "fat"
+lto = true
 opt-level = 3
-panic = "abort"
-strip = "symbols"
+# panic = "abort"
+strip = true

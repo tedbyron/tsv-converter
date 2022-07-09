@@ -6,14 +6,14 @@
   "build": {
     "distDir": "../build",
     "devPath": "http://localhost:3000",
-    "beforeDevCommand": "",
-    "beforeBuildCommand": "yarn build"
+    "beforeDevCommand": "yarn vite",
+    "beforeBuildCommand": "yarn vite build"
   },
   "tauri": {
     "bundle": {
       "active": true,
       "targets": "all",
-      "identifier": "com.tauri.dev",
+      "identifier": "com.tedbyron.tsv-converter",
       "icon": [
         "icons/32x32.png",
         "icons/128x128.png",
@@ -24,7 +24,7 @@
       "resources": [],
       "externalBin": ["bin/ffmpeg", "bin/ffprobe"],
       "copyright": "",
-      "category": "DeveloperTool",
+      "category": "Utility",
       "shortDescription": "TinyCircuits TinyScreen Video (TSV) converter.",
       "longDescription": "TinyCircuits TinyScreen Video (TSV) converter.",
       "deb": {
@@ -78,10 +78,10 @@
     },
     "windows": [
       {
-        "title": "TSV Converter 😎📺",
+        "title": "TSV Converter",
         "width": 800,
         "height": 600,
-        "resizable": false,
+        "resizable": true,
         "fullscreen": false
       }
     ],

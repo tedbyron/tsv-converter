@@ -1,13 +1,13 @@
 import { derived, writable } from 'svelte/store'
 
-/** Video scaling options */
+/** Video scaling options. Values are CSS `object-fit` with alternate terminology in parentheses. */
 export enum Crop {
   Contain = 'Contain (Letterbox)',
   Cover = 'Cover (Zoom)',
   Fill = 'Fill (Stretch)'
 }
 
-// corresponds to the `Options` type in `src-tauri/src/command.rs`
+/** Video conversion options. */
 export interface Options {
   path: string
   outputName: string

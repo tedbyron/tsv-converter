@@ -2,12 +2,12 @@
   import EditForm from '$components/EditForm.svelte'
   import FileInput from '$components/FileInput.svelte'
   import FileStatTable from '$components/FileMetadata.svelte'
-  import { fileError, filePath } from '$stores'
+  import { fileError, filePath } from '$stores/file'
   import { crop, Crop } from '$stores/options'
   import { convertFileSrc } from '@tauri-apps/api/tauri'
   import { fade } from 'svelte/transition'
 
-  const objectFit = {
+  const videoObjectFit = {
     [Crop.Contain]: 'object-contain',
     [Crop.Cover]: 'object-cover',
     [Crop.Fill]: 'object-fill'
@@ -27,11 +27,11 @@
     <div
       in:fade={{ delay: 300, duration: 300 }}
       out:fade={{ duration: 300 }}
-      class="relative h-full"
+      class="flex h-full items-center justify-center"
     >
-      <FileInput class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+      <FileInput />
       {#if $fileError !== undefined}
-        <p class="absolute top-[60%] left-1/2 -translate-x-1/2 -translate-y-1/2">
+        <p>
           {$fileError}
         </p>
       {/if}
@@ -44,26 +44,25 @@
     >
       <div class="space-y-2">
         <div
-          class="flex h-[var(--h-video)] w-[var(--w-video)] items-center justify-center rounded-lg
-          border border-transparent bg-black"
+          class="flex aspect-[3/2] items-center justify-center rounded-lg border border-white
+          bg-gray-200"
         >
           <!-- svelte-ignore a11y-media-has-caption -->
           <video
             src={convertFileSrc($filePath)}
             controls
+            loop
             bind:duration
             bind:videoWidth
             bind:videoHeight
-            class="block h-full w-full rounded-md {objectFit[$crop]}"
+            class="h-full w-full rounded-md {videoObjectFit[$crop]}"
           />
         </div>
 
         <FileStatTable {duration} {videoWidth} {videoHeight} path={$filePath} />
       </div>
 
-      <div
-        class="flex max-h-[var(--h-edit)] w-full flex-col items-start space-y-2 overflow-y-scroll"
-      >
+      <div class="flex w-full flex-col items-start space-y-2">
         <FileInput />
         <EditForm />
       </div>

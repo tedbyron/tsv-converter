@@ -4,14 +4,14 @@ use std::fs::OpenOptions;
 use std::io::{BufWriter, Read, Write};
 use std::path::{Path, PathBuf};
 use std::process::{Command, Stdio};
+#[cfg(debug_assertions)]
 use std::time::Instant;
 
 use notify::{Config, EventKind, RecursiveMode, Watcher};
 use time::OffsetDateTime;
 
-/// Corresponds to the `Metadata` type in `src/lib/FileStatTable.svelte`.
+/// File metadata.
 #[derive(serde::Serialize)]
-#[serde(rename_all = "camelCase")]
 pub struct Metadata {
     name: Option<String>,
     mimes: Vec<String>,
@@ -26,15 +26,15 @@ pub struct Metadata {
 #[tauri::command]
 pub fn metadata(path: String) -> Metadata {
     let path = Path::new(&path);
-
     let name = path.file_name().map(|s| s.to_string_lossy().to_string());
-
     let mimes = mime_guess::from_path(path)
         .iter_raw()
         .map(String::from)
         .collect();
+    let mut len = None;
+    let mut created = None;
+    let mut modified = None;
 
-    let (mut len, mut created, mut modified) = (None, None, None);
     if let Ok(meta) = path.metadata() {
         len = Some(meta.len());
         created = meta.created().ok().map(OffsetDateTime::from);
@@ -61,7 +61,7 @@ pub async fn watch(path: String, window: tauri::Window) {
             match res {
                 Ok(event) => match event.kind {
                     EventKind::Modify(_) | EventKind::Remove(_) => {
-                        tx.blocking_send(event.kind).unwrap()
+                        tx.blocking_send(event.kind).unwrap();
                     }
                     _ => (),
                 },
@@ -72,10 +72,9 @@ pub async fn watch(path: String, window: tauri::Window) {
     watcher.configure(Config::PreciseEvents(true)).unwrap();
     watcher.watch(&path, RecursiveMode::NonRecursive).unwrap();
 
-    while let Some(event_kind) = rx.recv().await {
+    if let Some(event_kind) = rx.recv().await {
         window.emit("fs-change", event_kind).unwrap();
         watcher.unwatch(&path).unwrap();
-        break;
     }
 }
 
@@ -83,25 +82,31 @@ pub async fn watch(path: String, window: tauri::Window) {
 #[tauri::command]
 pub fn output_name(path: String) -> String {
     let path = Path::new(&path);
-    match limit_file_stem(&path) {
-        Some(stem) => stem.to_string(),
+    match limit_file_stem(path) {
+        Some(stem) => stem,
         None => "out".to_string(),
     }
 }
 
 /// Limit a file stem to 46 bytes of ASCII (Output file name with `.tsv` extension must be a C
-/// char[] < 50 bytes).
-fn limit_file_stem(path: &Path) -> Option<&str> {
-    let stem = path.file_stem()?.to_str()?;
-
-    if stem.is_ascii() {
-        if stem.len() < 47 {
-            Some(stem)
-        } else {
-            Some(&stem[..47])
-        }
-    } else {
+/// `char[]` < 50 bytes).
+fn limit_file_stem(path: &Path) -> Option<String> {
+    let stem = path
+        .file_stem()?
+        .to_str()?
+        .chars()
+        .filter(|c| match c {
+            // TODO: is this all the supported characters?
+            c if c.is_ascii_alphanumeric() => true,
+            '_' | '-' | '.' => true,
+            _ => false,
+        })
+        .take(46)
+        .collect::<String>();
+    if stem.is_empty() {
         None
+    } else {
+        Some(stem)
     }
 }
 
@@ -110,14 +115,14 @@ fn sidecar_path(name: &str) -> PathBuf {
     let path = tauri::utils::platform::current_exe()
         .unwrap()
         .with_file_name(name);
-
-    #[cfg(windows)]
-    return path.with_extension("exe");
-    #[cfg(not(windows))]
-    return path;
+    if cfg!(windows) {
+        path.with_extension("exe")
+    } else {
+        path
+    }
 }
 
-/// Corresponds to the `Options` type in `src/stores/options.ts`.
+/// Video conversion options.
 #[derive(serde::Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Options {
@@ -137,7 +142,7 @@ pub struct Options {
 
 /// Convert the source video to something displayable on the TinyScreen.
 #[tauri::command]
-pub async fn convert(options: Options) {
+pub fn convert(options: Options) {
     let path = Path::new(&options.path);
     let output_path = path
         .with_file_name(&options.output_name)
@@ -153,6 +158,7 @@ pub async fn convert(options: Options) {
         output_file,
     );
     let ffmpeg_path = sidecar_path("ffmpeg");
+    #[cfg(debug_assertions)]
     let timer = Instant::now();
 
     #[rustfmt::skip]
@@ -193,27 +199,15 @@ pub async fn convert(options: Options) {
     let mut audio_stdout = audio_cmd.stdout.take().unwrap();
     let mut audio_frame = vec![0; options.audio_frame_bytes];
 
-    while let Ok(_) = video_stdout.read_exact(&mut video_frame) {
+    while video_stdout.read_exact(&mut video_frame).is_ok() {
         writer.write_all(&video_frame).unwrap();
 
-        if let Ok(_) = audio_stdout.read_exact(&mut audio_frame) {
-            // this doesn't speed anything up, reading frames from ffmpeg is probably slower
-            // maybe try https://doc.rust-lang.org/std/io/trait.Read.html#method.take
-
-            // audio_frame.par_chunks_exact_mut(2).for_each(|chunk| {
-            //     let sample = (0x8000 + ((chunk[1] as u32) << 8 | (chunk[0] as u32))
-            //         >> (16 - (options.sample_bit_depth as u32)))
-            //         & (0xFFFF >> (16 - (options.sample_bit_depth as u32)));
-
-            //     chunk[0] = (sample & 0xFF) as u8;
-            //     chunk[1] = (sample >> 8) as u8;
-            // });
-
+        if audio_stdout.read_exact(&mut audio_frame).is_ok() {
             for i in 0..options.audio_frame_bytes / 2 {
-                let sample = (0x8000
-                    + ((audio_frame[i * 2 + 1] as u32) << 8 | (audio_frame[i * 2] as u32))
-                    >> (16 - (options.sample_bit_depth as u32)))
-                    & (0xFFFF >> (16 - (options.sample_bit_depth as u32)));
+                let sample = ((0x8000
+                    + (u32::from(audio_frame[i * 2 + 1]) << 8 | u32::from(audio_frame[i * 2])))
+                    >> (16 - u32::from(options.sample_bit_depth)))
+                    & (0xFFFF >> (16 - u32::from(options.sample_bit_depth)));
 
                 audio_frame[i * 2] = (sample & 0xFF) as u8;
                 audio_frame[i * 2 + 1] = (sample >> 8) as u8;
@@ -228,7 +222,9 @@ pub async fn convert(options: Options) {
     video_cmd.wait().unwrap();
     audio_cmd.wait().unwrap();
 
+    #[cfg(debug_assertions)]
     let conversion = timer.elapsed();
+    #[cfg(debug_assertions)]
     dbg!(conversion);
 
     writer.flush().unwrap();
