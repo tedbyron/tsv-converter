@@ -1,7 +1,6 @@
 <script lang="ts">
   import { page } from '$app/stores'
   import '@fontsource/inter'
-  import '@fontsource/press-start-2p'
   import '../app.css'
 </script>
 

@@ -1,26 +1,27 @@
 <div align="center">
   <h1><code>tsv-converter</code></h1>
-  <p><strong>TinyCircuits TinyScreen Video (TSV) converter.</strong></p>
+  <p><strong>TinyCircuits TinyScreen Video (TSV) converter</strong></p>
 </div>
 
 # Features
 
 - Video preview (source resolution, TinyScreen aspect ratio)
 
-FIXME:
+issues:
 
 - webkit2gtk video issue: https://github.com/tauri-apps/tauri/issues/3725
 - `asset://` protocol does not release memory:
   - https://github.com/tauri-apps/tauri/issues/2952
   - https://github.com/MicrosoftEdge/WebView2Feedback/issues/2171
 
-TODO:
+todo:
 
 - Crop cover (zoom) gravity (and extent?)
 - Crop contain (letterbox) background color
-- Drag and drop file
+- Drag and drop file or copy paste file
 - ffmpeg log
 - keyboard shortcuts
+- cli interface
 
 # Development
 
