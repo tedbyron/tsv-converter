@@ -13,6 +13,9 @@ publish = false
 [build-dependencies]
 tauri-build = { version = "1.0.3", features = [] }
 
+[target.'cfg(target_os = "macos")'.dependencies]
+cocoa = "0.24.0"
+
 [dependencies]
 mime_guess = "2.0.4"
 notify = { version = "5.0.0-pre.15", features = ["serde"] }
@@ -22,6 +25,7 @@ time = { version = "0.3.11", features = ["serde"] }
 [dependencies.tauri]
 version = "1.0.3"
 features = [
+    "window-show",
     "dialog-open",
     "dialog-save",
     "global-shortcut-all",

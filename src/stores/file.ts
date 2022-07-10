@@ -2,28 +2,27 @@ import { invoke } from '@tauri-apps/api'
 import { listen } from '@tauri-apps/api/event'
 import { writable } from 'svelte/store'
 
-export const filePath = writable<string | undefined>()
-export const fileError = writable<string | undefined>()
+export const inputPath = writable<string | undefined>()
+export const inputError = writable<string | undefined>()
 
-export const ogOutputFileName = writable<string | undefined>()
-export const outputFileName = writable<string | undefined>()
+export const inputName = writable<string | undefined>()
+export const outputName = writable<string | undefined>()
 
 // watch the filePath for filesystem events; see the `watch` tauri command
-filePath.subscribe((inputPath) => {
-  if (inputPath === undefined) return
+inputPath.subscribe((path) => {
+  if (path === undefined) return
 
-  invoke('watch', { path: inputPath }).catch(console.error)
-  invoke('output_name', { path: inputPath })
+  invoke('watch', { path }).catch(console.error)
+  invoke('output_name', { path })
     .then((path) => {
-      ogOutputFileName.set(path as string)
-      outputFileName.set(path as string)
+      inputName.set(path as string)
+      outputName.set(path as string)
     })
     .catch(console.error)
 })
 
-// listen for filesystem modify/remove events and unset filePath (we can't get detailed
-// cross-platform event information)
+// listen for filesystem modify/remove events and unset filePath
 listen('fs-change', () => {
-  filePath.set(undefined)
-  fileError.set('The active file was modified/removed')
+  inputPath.set(undefined)
+  inputError.set('The active file was modified/removed')
 }).catch(console.error)

@@ -3,6 +3,10 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    @apply bg-zinc-50 dark:bg-zinc-800 dark:text-zinc-100;
+  }
+
   :root,
   body,
   main {
@@ -15,28 +19,32 @@
 
   input:not([type]),
   [type='text'] {
-    @apply rounded-md px-1.5 py-0.5;
+    @apply rounded-md bg-zinc-50 px-1.5 py-0.5 dark:bg-zinc-800;
   }
 
   [type='radio'] {
-    @apply h-4 w-4 appearance-none rounded-full border border-blue-300;
+    @apply h-4 w-4 appearance-none rounded-full border border-blue-300 dark:border-blue-600;
 
     &:checked {
-      @apply bg-blue-500 ring-2 ring-inset ring-white;
+      @apply bg-blue-500 ring-2 ring-inset ring-zinc-50 dark:ring-zinc-800;
     }
   }
 }
 
 @layer components {
   .button {
-    @apply rounded-md border px-2 py-1 text-sm font-medium hover:bg-gray-100 active:translate-y-px;
+    @apply rounded-md border border-zinc-300 px-2 py-1 text-sm font-medium hover:bg-zinc-200 dark:border-zinc-600 dark:hover:bg-zinc-700;
 
     &-primary {
-      @apply border-none bg-blue-500 px-4 py-2 font-semibold text-white hover:bg-blue-600;
+      @apply border-none bg-blue-500 px-4 py-2 font-semibold text-white hover:bg-blue-600 dark:bg-blue-700 dark:hover:bg-blue-600;
     }
 
     &:disabled {
-      @apply border-transparent bg-gray-200 text-gray-400;
+      @apply border-transparent bg-zinc-200 text-zinc-400 dark:bg-zinc-700 dark:text-zinc-500;
+    }
+
+    &:active:not(:disabled) {
+      @apply translate-y-px;
     }
   }
 
@@ -46,7 +54,7 @@
 
   .form {
     &-fieldset {
-      @apply rounded-md border px-2 pb-2;
+      @apply rounded-md border border-zinc-300 px-2 pb-2 dark:border-zinc-600;
     }
 
     &-legend {

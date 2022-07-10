@@ -18,17 +18,17 @@
 
   let metadata: Metadata | undefined
 
-  $: invoke('metadata', { path })
-    .then((res) => {
-      metadata = res as Metadata
-    })
-    .catch(console.error)
+  $: (async () => {
+    metadata = await invoke('metadata', { path })
+  })()
 </script>
 
 <!-- TODO: use a table -->
 {#if metadata}
-  <div class="rounded-md border">
-    <div class="max-w-full overflow-x-auto rounded-t-md bg-gray-200 px-2 text-center">
+  <div class="rounded-md border border-zinc-300 dark:border-zinc-600">
+    <div
+      class="max-w-full overflow-x-auto rounded-t-md bg-zinc-300 px-2 text-center dark:bg-zinc-600"
+    >
       {#if metadata.name !== undefined}
         <code class="break-all line-clamp-1">{metadata.name}</code>
       {:else}
@@ -39,7 +39,7 @@
     <div class="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 p-2">
       {#if metadata.mimes.length > 0}
         <span class="metadata-child">Type</span>
-        <code class="metadata-child overflow-x-auto rounded-md bg-gray-200 px-2"
+        <code class="metadata-child overflow-x-auto rounded-md bg-zinc-300 px-2 dark:bg-zinc-600"
           >{metadata.mimes.join(', ')}</code
         >
       {/if}
