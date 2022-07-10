@@ -2977,6 +2977,7 @@ dependencies = [
 name = "tsv-converter"
 version = "0.1.0"
 dependencies = [
+ "cocoa",
  "mime_guess",
  "notify",
  "serde",

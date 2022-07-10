@@ -26,25 +26,24 @@ pub struct Metadata {
 /// Video conversion options.
 #[derive(serde::Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct Options {
-    path: String,
-    output_name: String,
-    scale: String,
+pub struct Options<'a> {
+    path: &'a str,
+    output_name: &'a str,
+    scale: &'a str,
 
     // Video
-    frame_rate: String,
+    frame_rate: &'a str,
     video_frame_bytes: usize,
 
     // Audio
     sample_bit_depth: u8,
-    sample_rate: String,
+    sample_rate: &'a str,
     audio_frame_bytes: usize,
 }
 
 /// Get file metadata from a path.
 #[tauri::command]
-pub fn metadata(path: String) -> Metadata {
-    let path = Path::new(&path);
+pub fn metadata(path: &Path) -> Metadata {
     let name = path.file_name().map(|s| s.to_string_lossy().to_string());
     let mimes = mime_guess::from_path(path)
         .iter_raw()
@@ -71,8 +70,7 @@ pub fn metadata(path: String) -> Metadata {
 
 /// Watches a file path for modify/remove events, and forwards the event to the frontend.
 #[tauri::command]
-pub async fn watch(path: String, window: tauri::Window) {
-    let path = PathBuf::from(path);
+pub async fn watch(path: PathBuf, window: tauri::Window) {
     let (tx, mut rx) = async_runtime::channel(1);
 
     let mut watcher =
@@ -99,8 +97,7 @@ pub async fn watch(path: String, window: tauri::Window) {
 
 /// Calculate a possible output file stem from a file path.
 #[tauri::command]
-pub fn output_name(path: String) -> String {
-    let path = Path::new(&path);
+pub fn output_name(path: &Path) -> String {
     match limit_file_stem(path) {
         Some(stem) => stem,
         None => "out".to_string(),
@@ -115,13 +112,14 @@ fn limit_file_stem(path: &Path) -> Option<String> {
         .to_str()?
         .chars()
         .filter(|c| match c {
-            // TODO: is this all the supported characters?
+            // FIXME: is this all the supported characters?
             c if c.is_ascii_alphanumeric() => true,
             '_' | '-' | '.' => true,
             _ => false,
         })
         .take(46)
         .collect::<String>();
+
     if stem.is_empty() {
         None
     } else {
@@ -134,6 +132,7 @@ fn sidecar_path(name: &str) -> PathBuf {
     let path = tauri::utils::platform::current_exe()
         .unwrap()
         .with_file_name(name);
+
     if cfg!(windows) {
         path.with_extension("exe")
     } else {
@@ -143,7 +142,7 @@ fn sidecar_path(name: &str) -> PathBuf {
 
 /// Convert the source video to something displayable on the TinyScreen.
 #[tauri::command]
-pub fn convert(options: Options) {
+pub fn convert(options: Options<'_>) {
     let path = Path::new(&options.path);
     let output_path = path
         .with_file_name(&options.output_name)
@@ -165,10 +164,10 @@ pub fn convert(options: Options) {
     #[rustfmt::skip]
     let mut video_cmd = Command::new(&ffmpeg_path)
         .args([
-            "-i", &options.path,
+            "-i", options.path,
             "-f", "image2pipe",
-            "-r", &options.frame_rate,
-            "-vf", &options.scale,
+            "-r", options.frame_rate,
+            "-vf", options.scale,
             "-vcodec", "rawvideo",
             "-pix_fmt", "bgr565be",
             "-f", "rawvideo",
@@ -185,10 +184,10 @@ pub fn convert(options: Options) {
     #[rustfmt::skip]
     let mut audio_cmd = Command::new(&ffmpeg_path)
         .args([
-            "-i", &options.path,
+            "-i", options.path,
             "-f", "s16le",
             "-acodec", "pcm_s16le",
-            "-ar", &options.sample_rate,
+            "-ar", options.sample_rate,
             "-ac", "1",
             "-"
         ])

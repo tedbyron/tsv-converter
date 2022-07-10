@@ -1,7 +1,7 @@
 <script lang="ts">
   import { invoke } from '@tauri-apps/api'
 
-  import { filePath, ogOutputFileName, outputFileName } from '$stores/file'
+  import { inputName, inputPath, outputName } from '$stores/file'
   import {
     audioFrameBytes,
     Crop,
@@ -17,11 +17,11 @@
   const valid = true
 
   const convert = async (): Promise<void> => {
-    if ($filePath === undefined || $outputFileName === undefined) return
+    if ($inputPath === undefined || $outputName === undefined) return
 
     const options: Options = {
-      path: $filePath,
-      outputName: $outputFileName,
+      path: $inputPath,
+      outputName: $outputName,
       scale: $scale,
 
       frameRate: frameRate.toString(),
@@ -42,7 +42,9 @@
     <legend class="form-legend">Crop</legend>
 
     {#each Object.values(Crop) as opt}
-      <label class="flex items-center rounded-md px-2 py-0.5 hover:bg-gray-100">
+      <label
+        class="flex items-center rounded-md px-2 py-0.5 hover:bg-zinc-200 dark:hover:bg-zinc-700"
+      >
         <input
           type="radio"
           name="crop"
@@ -79,14 +81,14 @@
         minlength="1"
         maxlength="46"
         pattern="[\w\.-]+"
-        bind:value={$outputFileName}
+        bind:value={$outputName}
         class="grow"
       />
       <button
         type="button"
-        disabled={$outputFileName === $ogOutputFileName}
+        disabled={$outputName === $inputName}
         on:click={() => {
-          $outputFileName = $ogOutputFileName
+          $outputName = $inputName
         }}
         class="button"
       >
@@ -95,5 +97,6 @@
     </div>
   </fieldset>
 
-  <button disabled={!valid} class="button button-primary hover-focus">Convert</button>
+  <!-- convert button -->
+  <button disabled={!valid} class="button button-primary">Convert</button>
 </form>

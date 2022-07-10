@@ -75,6 +75,9 @@
             "args": true
           }
         ]
+      },
+      "window": {
+        "show": true
       }
     },
     "windows": [
@@ -82,7 +85,8 @@
         "title": "TSV Converter",
         "width": 800,
         "height": 600,
-        "resizable": true,
+        "visible": false,
+        "resizable": false,
         "fullscreen": false
       }
     ],

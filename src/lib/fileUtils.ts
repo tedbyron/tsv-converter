@@ -2,7 +2,7 @@ import { Command } from '@tauri-apps/api/shell'
 
 /**
  * Read file metadata from `path` with ffprobe.
- * @returns True if ffprobe exited successfully.
+ * @returns `true` if ffprobe exited successfully.
  */
 export const ffprobe = async (path: string): Promise<boolean> => {
   const { code } = await Command.sidecar('bin/ffprobe', path).execute()

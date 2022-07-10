@@ -2,9 +2,16 @@
   import type { DialogFilter, OpenDialogOptions } from '@tauri-apps/api/dialog'
   import { open } from '@tauri-apps/api/dialog'
   import Loading from '~icons/tabler/loader-2'
+  import { onMount } from 'svelte'
 
   import { ffprobe } from '$lib/fileUtils'
-  import { fileError, filePath } from '$stores/file'
+  import { inputError, inputPath } from '$stores/file'
+
+  onMount(() => {
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur()
+    }
+  })
 
   const videoFilter: DialogFilter = {
     name: 'Videos',
@@ -21,31 +28,33 @@
 
   const openFileDialog = async (): Promise<void> => {
     loading = true
-    const ogFilePath = $filePath
+    const originalPath = $inputPath
+    const path = await open(openDialogOptions)
 
-    try {
-      const path = await open(openDialogOptions)
+    if (path === null) {
+      loading = false
+      return
+    }
+    if (Array.isArray(path)) {
+      $inputError = 'Please select only one file'
+      loading = false
+      return
+    }
 
-      if (path === null || path === undefined) return
-      if (Array.isArray(path)) throw new Error('Only one video file may be selected.')
+    if (await ffprobe(path)) {
+      $inputError = undefined
+      $inputPath = path
+    } else {
+      $inputPath = undefined
+      $inputError = "Couldn't read the file's metadata"
+    }
 
-      if (await ffprobe(path)) {
-        $fileError = undefined
-        $filePath = path
-      } else {
-        $filePath = undefined
-        $fileError = "Couldn't read the file's metadata"
-      }
-    } catch (error: unknown) {
-      console.error(error)
-    } finally {
-      // keep loading icon when transitioning views
-      if (
-        (ogFilePath !== undefined && $filePath !== undefined) ||
-        (ogFilePath === undefined && $filePath === undefined)
-      ) {
-        loading = false
-      }
+    // keep loading icon when transitioning views
+    if (
+      (originalPath !== undefined && $inputPath !== undefined) ||
+      (originalPath === undefined && $inputPath === undefined)
+    ) {
+      loading = false
     }
   }
 </script>
