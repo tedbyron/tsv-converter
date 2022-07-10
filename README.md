@@ -25,32 +25,30 @@ todo:
 
 # Development
 
-1. Follow the [tauri prerequisites documentation](https://tauri.studio/docs/getting-started/prerequisites).
-   Use node LTS gallium (v16) and enable yarn with corepack.
+1. Follow the [tauri prerequisites](https://tauri.app/v1/guides/getting-started/prerequisites) to
+   install Rust, then install node LTS gallium (v16) and enable yarn with corepack:
 
    ```sh
-   nvm install --lts=gallium # or install node v16 manually
+   nvm install --lts=gallium # use your favorite node version manager, or install manually
    nvm use --lts=gallium
 
    corepack enable yarn
    ```
 
-2. Install dependencies.
+2. Install dependencies:
 
    ```sh
    yarn
    ```
 
-3. Run the frontend and the app in dev mode.
+3. Run the svelte frontend and tauri app in dev mode:
 
    ```sh
    yarn dev
-   # in another terminal:
-   yarn tauri dev
    ```
 
-## Build
+4. View other available scripts:
 
-```sh
-yarn tauri build
-```
+   ```sh
+   yarn run
+   ```

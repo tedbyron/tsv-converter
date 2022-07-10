@@ -1,6 +1,7 @@
 <script lang="ts">
-  import { fileSize, secondsToHHMMSS } from '$lib/fileUtils'
   import { invoke } from '@tauri-apps/api'
+
+  import { fileSize, secondsToHHMMSS } from '$lib/fileUtils'
 
   type Metadata = Readonly<{
     name?: string
@@ -24,45 +25,48 @@
     .catch(console.error)
 </script>
 
+<!-- TODO: use a table -->
 {#if metadata}
-  <div class="h-[var(--h-metadata)] w-[var(--w-video)] rounded-lg border">
-    <div class="rounded-t-md bg-gray-200 text-center">
+  <div class="rounded-md border">
+    <div class="max-w-full overflow-x-auto rounded-t-md bg-gray-200 px-2 text-center">
       {#if metadata.name !== undefined}
-        <code aria-label="File Name">{metadata.name}</code>
+        <code class="break-all line-clamp-1">{metadata.name}</code>
       {:else}
         <code>Video</code>
       {/if}
     </div>
 
-    <div class="grid grid-cols-[auto_1fr] justify-items-start gap-x-3 gap-y-1 px-3 py-2">
+    <div class="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 p-2">
       {#if metadata.mimes.length > 0}
-        <span>Type</span>
-        <code class="rounded-md bg-gray-200 px-1">{metadata.mimes.join(', ')}</code>
+        <span class="metadata-child">Type</span>
+        <code class="metadata-child overflow-x-auto rounded-md bg-gray-200 px-2"
+          >{metadata.mimes.join(', ')}</code
+        >
       {/if}
 
       {#if duration}
-        <span>Duration</span>
-        <span>{secondsToHHMMSS(duration)}</span>
+        <span class="metadata-child">Duration</span>
+        <span class="metadata-child">{secondsToHHMMSS(duration)}</span>
       {/if}
 
       {#if videoWidth && videoHeight}
-        <span>Dimensions</span>
-        <span>{`${videoWidth}x${videoHeight}`}</span>
+        <span class="metadata-child">Dimensions</span>
+        <span class="metadata-child">{`${videoWidth}x${videoHeight}`}</span>
       {/if}
 
       {#if metadata.len !== undefined}
-        <span>Size</span>
-        <span>{fileSize(metadata.len)}</span>
+        <span class="metadata-child">Size</span>
+        <span class="metadata-child">{fileSize(metadata.len)}</span>
       {/if}
 
       {#if metadata.modified !== undefined}
-        <span>Modified</span>
-        <span>{new Date(metadata.modified * 1000).toLocaleString()}</span>
+        <span class="metadata-child">Modified</span>
+        <span class="metadata-child">{new Date(metadata.modified * 1000).toLocaleString()}</span>
       {/if}
 
       {#if metadata.created !== undefined}
-        <span>Created</span>
-        <span>{new Date(metadata.created * 1000).toLocaleString()}</span>
+        <span class="metadata-child">Created</span>
+        <span class="metadata-child">{new Date(metadata.created * 1000).toLocaleString()}</span>
       {/if}
     </div>
   </div>

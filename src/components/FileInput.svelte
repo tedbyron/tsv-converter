@@ -1,9 +1,10 @@
 <script lang="ts">
-  import { ffprobe } from '$lib/fileUtils'
-  import { fileError, filePath } from '$stores/file'
   import type { DialogFilter, OpenDialogOptions } from '@tauri-apps/api/dialog'
   import { open } from '@tauri-apps/api/dialog'
   import Loading from '~icons/tabler/loader-2'
+
+  import { ffprobe } from '$lib/fileUtils'
+  import { fileError, filePath } from '$stores/file'
 
   const videoFilter: DialogFilter = {
     name: 'Videos',
@@ -56,7 +57,7 @@
   class="button-primary button relative {className}"
 >
   <Loading
-    aria-hidden
+    aria-label="loading"
     class="absolute top-[calc(50%-.75rem)] left-[calc(50%-.75rem)] h-6 w-6 {loading
       ? 'animate-spin'
       : 'hidden'}"

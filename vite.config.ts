@@ -1,13 +1,20 @@
 import { sveltekit } from '@sveltejs/kit/vite'
-import autoprefixer from 'autoprefixer'
-import cssnano from 'cssnano'
-import advancedPreset from 'cssnano-preset-advanced'
-import type { Plugin } from 'postcss'
-import tailwindcss from 'tailwindcss'
 import icons from 'unplugin-icons/vite'
 import { defineConfig } from 'vite'
 
+// postcss plugins
+import autoprefixer from 'autoprefixer'
+import cssnano from 'cssnano'
+import advancedPreset from 'cssnano-preset-advanced'
+import tailwindcss from 'tailwindcss'
+import nesting from 'tailwindcss/nesting/index.js'
+
 export default defineConfig(({ mode }) => ({
+  clearScreen: false,
+  envPrefix: 'TSV_CONVERTER_',
+  build: {
+    cssCodeSplit: false
+  },
   plugins: [
     sveltekit(),
     icons({
@@ -19,7 +26,8 @@ export default defineConfig(({ mode }) => ({
   css: {
     postcss: {
       plugins: [
-        tailwindcss() as Plugin,
+        nesting(),
+        tailwindcss() as any,
         ...(mode === 'production'
           ? [
               cssnano({
@@ -30,9 +38,8 @@ export default defineConfig(({ mode }) => ({
                 })
               })
             ]
-          : [autoprefixer()])
+          : [autoprefixer()]) // cssnano-preset-advanced has autoprefixer built-in
       ]
     }
-  },
-  clearScreen: false
+  }
 }))

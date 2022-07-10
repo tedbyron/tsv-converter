@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "postinstall": "svelte-kit sync",
+    "info": "tauri info",
     "dev": "tauri dev",
     "build": "tauri build",
     "check": "svelte-check --tsconfig ./tsconfig.json",
@@ -19,6 +20,7 @@
     "@iconify-json/tabler": "^1.1.18",
     "@sveltejs/adapter-static": "^1.0.0-next.35",
     "@sveltejs/kit": "^1.0.0-next.367",
+    "@tailwindcss/line-clamp": "^0.4.0",
     "@tauri-apps/cli": "^1.0.3",
     "@typescript-eslint/eslint-plugin": "^5.30.5",
     "@typescript-eslint/parser": "^5.30.5",

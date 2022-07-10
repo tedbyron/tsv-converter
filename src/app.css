@@ -13,18 +13,45 @@
     @apply font-mono;
   }
 
+  input:not([type]),
+  [type='text'] {
+    @apply rounded-md px-1.5 py-0.5;
+  }
+
   [type='radio'] {
-    @apply focus-visible:outline-offset-8;
+    @apply h-4 w-4 appearance-none rounded-full border border-blue-300;
+
+    &:checked {
+      @apply bg-blue-500 ring-2 ring-inset ring-white;
+    }
   }
 }
 
 @layer components {
-  .button-primary {
-    @apply bg-blue-500 text-white hover:bg-blue-600;
+  .button {
+    @apply rounded-md border px-2 py-1 text-sm font-medium hover:bg-gray-100 active:translate-y-px;
+
+    &-primary {
+      @apply border-none bg-blue-500 px-4 py-2 font-semibold text-white hover:bg-blue-600;
+    }
+
+    &:disabled {
+      @apply border-transparent bg-gray-200 text-gray-400;
+    }
   }
 
-  .button {
-    @apply rounded-lg px-4 py-2 disabled:bg-gray-200 disabled:text-gray-400;
+  .metadata-child {
+    @apply odd:justify-self-end even:justify-self-start;
+  }
+
+  .form {
+    &-fieldset {
+      @apply rounded-md border px-2 pb-2;
+    }
+
+    &-legend {
+      @apply px-2 font-medium;
+    }
   }
 }
 

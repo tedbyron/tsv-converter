@@ -23,7 +23,7 @@
       ],
       "resources": [],
       "externalBin": ["bin/ffmpeg", "bin/ffprobe"],
-      "copyright": "",
+      "copyright": "© Copyright 2022 Teddy Byron",
       "category": "Utility",
       "shortDescription": "TinyCircuits TinyScreen Video (TSV) converter.",
       "longDescription": "TinyCircuits TinyScreen Video (TSV) converter.",
@@ -31,6 +31,7 @@
         "depends": []
       },
       "macOS": {
+        "license": "../LICENSE",
         "frameworks": [],
         "exceptionDomain": "",
         "signingIdentity": null,

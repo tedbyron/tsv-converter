@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 const defaultTheme = require('tailwindcss/defaultTheme')
 
 module.exports = {
@@ -12,5 +14,6 @@ module.exports = {
     container: {
       center: true
     }
-  }
+  },
+  plugins: [require('@tailwindcss/line-clamp')]
 }
