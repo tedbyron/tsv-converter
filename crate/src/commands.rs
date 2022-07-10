@@ -8,6 +8,7 @@ use std::process::{Command, Stdio};
 use std::time::Instant;
 
 use notify::{Config, EventKind, RecursiveMode, Watcher};
+use tauri::async_runtime;
 use time::OffsetDateTime;
 
 /// File metadata.
@@ -20,6 +21,24 @@ pub struct Metadata {
     created: Option<OffsetDateTime>,
     #[serde(with = "time::serde::timestamp::option")]
     modified: Option<OffsetDateTime>,
+}
+
+/// Video conversion options.
+#[derive(serde::Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Options {
+    path: String,
+    output_name: String,
+    scale: String,
+
+    // Video
+    frame_rate: String,
+    video_frame_bytes: usize,
+
+    // Audio
+    sample_bit_depth: u8,
+    sample_rate: String,
+    audio_frame_bytes: usize,
 }
 
 /// Get file metadata from a path.
@@ -54,7 +73,7 @@ pub fn metadata(path: String) -> Metadata {
 #[tauri::command]
 pub async fn watch(path: String, window: tauri::Window) {
     let path = PathBuf::from(path);
-    let (tx, mut rx) = tauri::async_runtime::channel(1);
+    let (tx, mut rx) = async_runtime::channel(1);
 
     let mut watcher =
         notify::recommended_watcher(move |res: Result<notify::Event, notify::Error>| {
@@ -120,24 +139,6 @@ fn sidecar_path(name: &str) -> PathBuf {
     } else {
         path
     }
-}
-
-/// Video conversion options.
-#[derive(serde::Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct Options {
-    path: String,
-    output_name: String,
-    scale: String,
-
-    // Video
-    frame_rate: String,
-    video_frame_bytes: usize,
-
-    // Audio
-    sample_bit_depth: u8,
-    sample_rate: String,
-    audio_frame_bytes: usize,
 }
 
 /// Convert the source video to something displayable on the TinyScreen.
@@ -223,9 +224,10 @@ pub fn convert(options: Options) {
     audio_cmd.wait().unwrap();
 
     #[cfg(debug_assertions)]
-    let conversion = timer.elapsed();
-    #[cfg(debug_assertions)]
-    dbg!(conversion);
+    {
+        let conversion = timer.elapsed();
+        dbg!(conversion);
+    }
 
     writer.flush().unwrap();
 }

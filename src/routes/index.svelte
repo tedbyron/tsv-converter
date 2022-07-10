@@ -1,11 +1,12 @@
 <script lang="ts">
+  import { convertFileSrc } from '@tauri-apps/api/tauri'
+  import { fade } from 'svelte/transition'
+
   import EditForm from '$components/EditForm.svelte'
   import FileInput from '$components/FileInput.svelte'
   import FileStatTable from '$components/FileMetadata.svelte'
   import { fileError, filePath } from '$stores/file'
   import { crop, Crop } from '$stores/options'
-  import { convertFileSrc } from '@tauri-apps/api/tauri'
-  import { fade } from 'svelte/transition'
 
   const videoObjectFit = {
     [Crop.Contain]: 'object-contain',
@@ -42,9 +43,10 @@
       out:fade={{ duration: 300 }}
       class="flex h-full space-x-2"
     >
-      <div class="space-y-2">
+      <!-- left group -->
+      <div class="w-1/2 space-y-2">
         <div
-          class="flex aspect-[3/2] items-center justify-center rounded-lg border border-white
+          class="flex aspect-[3/2] items-center justify-center rounded-md border border-white
           bg-gray-200"
         >
           <!-- svelte-ignore a11y-media-has-caption -->
@@ -62,7 +64,8 @@
         <FileStatTable {duration} {videoWidth} {videoHeight} path={$filePath} />
       </div>
 
-      <div class="flex w-full flex-col items-start space-y-2">
+      <!-- right group -->
+      <div class="w-1/2 space-y-2">
         <FileInput />
         <EditForm />
       </div>

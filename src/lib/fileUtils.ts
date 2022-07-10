@@ -1,5 +1,14 @@
 import { Command } from '@tauri-apps/api/shell'
 
+/**
+ * Read file metadata from `path` with ffprobe.
+ * @returns True if ffprobe exited successfully.
+ */
+export const ffprobe = async (path: string): Promise<boolean> => {
+  const { code } = await Command.sidecar('bin/ffprobe', path).execute()
+  return code === 0
+}
+
 /** Convert file size in bytes to a human readable size. */
 export const fileSize = (size: number): string => {
   const unitsSi = ['B', 'KB', 'MB', 'GB', 'TB']
@@ -34,13 +43,4 @@ export const secondsToHHMMSS = (seconds: number): string => {
     `:${m.toString().padStart(2, '0')}` +
     `:${s.toString().padStart(2, '0')}`
   )
-}
-
-/**
- * Read file metadata from `path` with ffprobe.
- * @returns True if ffprobe exited successfully.
- */
-export const ffprobe = async (path: string): Promise<boolean> => {
-  const { code } = await Command.sidecar('bin/ffprobe', path).execute()
-  return code === 0
 }

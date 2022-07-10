@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { invoke } from '@tauri-apps/api'
+
   import { filePath, ogOutputFileName, outputFileName } from '$stores/file'
   import {
     audioFrameBytes,
@@ -11,7 +13,6 @@
     videoFrameBytes,
     type Options
   } from '$stores/options'
-  import { invoke } from '@tauri-apps/api'
 
   const valid = true
 
@@ -35,31 +36,25 @@
   }
 </script>
 
-<form on:submit|preventDefault={convert} class="flex w-full flex-col items-start space-y-2">
+<form on:submit|preventDefault={convert} class="flex flex-col items-start space-y-2">
   <!-- crop radio group -->
-  <fieldset class="form-fieldset group">
+  <fieldset class="form-fieldset flex flex-col items-start">
     <legend class="form-legend">Crop</legend>
 
-    <ul class="px-2 pt-1 pb-2">
-      {#each Object.values(Crop) as opt}
-        <li>
-          <label
-            class="flex items-center rounded-md px-2 py-1 transition-colors hover:bg-gray-200 focus-visible:bg-gray-200"
-          >
-            <input
-              type="radio"
-              name="crop"
-              checked={$crop === opt}
-              on:change={() => {
-                $crop = opt
-              }}
-              class="mr-1"
-            />
-            {opt}
-          </label>
-        </li>
-      {/each}
-    </ul>
+    {#each Object.values(Crop) as opt}
+      <label class="flex items-center rounded-md px-2 py-0.5 hover:bg-gray-100">
+        <input
+          type="radio"
+          name="crop"
+          checked={$crop === opt}
+          on:change={() => {
+            $crop = opt
+          }}
+          class="mr-2"
+        />
+        <span>{opt}</span>
+      </label>
+    {/each}
   </fieldset>
 
   <!-- TODO: background color for letterbox crop
@@ -71,10 +66,10 @@
   -->
 
   <!-- output file name -->
-  <fieldset class="form-fieldset group w-full">
-    <legend class="form-legend group-invalid:border-orange-300">Output name</legend>
+  <fieldset class="form-fieldset">
+    <legend class="form-legend">Output Name</legend>
 
-    <div class="flex w-full space-x-2 px-3 pt-1 pb-2">
+    <div class="flex items-center space-x-2">
       <input
         name="output-name"
         required
@@ -83,9 +78,9 @@
         spellcheck="false"
         minlength="1"
         maxlength="46"
-        pattern={'\\p{ASCII}+'}
+        pattern="[\w\.-]+"
         bind:value={$outputFileName}
-        class="grow rounded-md px-1"
+        class="grow"
       />
       <button
         type="button"
@@ -93,11 +88,12 @@
         on:click={() => {
           $outputFileName = $ogOutputFileName
         }}
+        class="button"
       >
         Reset
       </button>
     </div>
   </fieldset>
 
-  <button disabled={!valid} class="button hover-focus">Convert</button>
+  <button disabled={!valid} class="button button-primary hover-focus">Convert</button>
 </form>

@@ -1,0 +1,12 @@
+[workspace]
+members = ["crate"]
+default-members = ["crate"]
+
+[profile.dev]
+debug = false
+
+[profile.release]
+codegen-units = 1
+lto = true
+# panic = "abort"
+strip = true
