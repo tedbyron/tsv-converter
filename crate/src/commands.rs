@@ -114,7 +114,7 @@ fn limit_file_stem(path: &Path) -> Option<String> {
         .filter(|c| match c {
             // FIXME: is this all the supported characters?
             c if c.is_ascii_alphanumeric() => true,
-            '_' | '-' | '.' => true,
+            '_' | '-' | '.' | ' ' => true,
             _ => false,
         })
         .take(46)

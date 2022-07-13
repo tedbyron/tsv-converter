@@ -37,6 +37,18 @@
 </script>
 
 <form on:submit|preventDefault={convert} class="flex flex-col items-start space-y-2">
+  <!-- Homemade html dropdown -->
+  <fieldset class="form-fieldset flex flex-col items-start">
+    <legend class="form-legend">Output Type:</legend>
+    <div>
+        <select name="TV-Type" id="video-dimension-select" type='text' class="flex items-center rounded-md px-2 py-0.5 hover:bg-zinc-200 dark:hover:bg-zinc-700">
+            <option value="">-- Please select --</option>
+            <option value="TSV">TinyTV - 96x64</option>
+            <option value="AVI">NewTV - 240x135</option> 
+        </select>
+    </div>
+  </fieldset>
+  
   <!-- crop radio group -->
   <fieldset class="form-fieldset flex flex-col items-start">
     <legend class="form-legend">Crop</legend>
@@ -80,7 +92,7 @@
         spellcheck="false"
         minlength="1"
         maxlength="46"
-        pattern="[\w\.-]+"
+        pattern="[\w\.- ]+"
         bind:value={$outputName}
         class="grow"
       />

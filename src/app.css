@@ -23,20 +23,20 @@
   }
 
   [type='radio'] {
-    @apply h-4 w-4 appearance-none rounded-full border border-blue-300 dark:border-blue-600;
+    @apply h-4 w-4 appearance-none rounded-full border border-tc-blue dark:border-tc-blue;
 
     &:checked {
-      @apply bg-blue-500 ring-2 ring-inset ring-zinc-50 dark:ring-zinc-800;
+      @apply bg-tc-blue ring-2 ring-inset ring-zinc-50 dark:ring-zinc-800;
     }
   }
 }
 
 @layer components {
   .button {
-    @apply rounded-md border border-zinc-300 px-2 py-1 text-sm font-medium hover:bg-zinc-200 dark:border-zinc-600 dark:hover:bg-zinc-700;
+    @apply rounded-md border border-zinc-600 px-2 py-1 text-sm font-medium hover:bg-zinc-300 dark:border-zinc-600 dark:hover:bg-zinc-700;
 
     &-primary {
-      @apply border-none bg-blue-500 px-4 py-2 font-semibold text-white hover:bg-blue-600 dark:bg-blue-700 dark:hover:bg-blue-600;
+      @apply border-none bg-tc-blue px-4 py-2 font-bold text-black hover:bg-tc-orange dark:bg-tc-blue dark:hover:bg-tc-orange;
     }
 
     &:disabled {
@@ -54,7 +54,7 @@
 
   .form {
     &-fieldset {
-      @apply rounded-md border border-zinc-300 px-2 pb-2 dark:border-zinc-600;
+      @apply rounded-md border border-zinc-400 px-2 pb-2 dark:border-zinc-600;
     }
 
     &-legend {
