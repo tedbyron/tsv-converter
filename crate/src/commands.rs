@@ -140,7 +140,7 @@ fn sidecar_path(name: &str) -> PathBuf {
     }
 }
 
-/// Convert the source video to something displayable on the TinyScreen.
+/// Convert to Tiny Screen Video .TSV filetype
 #[tauri::command]
 pub fn convert(options: Options<'_>) {
     let path = Path::new(&options.path);
@@ -171,6 +171,7 @@ pub fn convert(options: Options<'_>) {
             "-vcodec", "rawvideo",
             "-pix_fmt", "bgr565be",
             "-f", "rawvideo",
+            "-nodisp", // avoid popup terminal when converting because it looks like malware
             "-",
         ])
         .stdin(Stdio::null())
@@ -189,7 +190,8 @@ pub fn convert(options: Options<'_>) {
             "-acodec", "pcm_s16le",
             "-ar", options.sample_rate,
             "-ac", "1",
-            "-"
+            "-nodisp", 
+            "-",
         ])
         .stdin(Stdio::null())
         .stdout(Stdio::piped())
@@ -230,3 +232,117 @@ pub fn convert(options: Options<'_>) {
 
     writer.flush().unwrap();
 }
+
+/*
+
+
+/// Convert to .AVI file type fixed to the resolution of the 240x135 TV
+/// Convert to Tiny Screen Video .TSV filetype
+#[tauri::command]
+pub fn convert_avi(options: Options<'_>) {
+    let path = Path::new(&options.path);
+    let output_path = path
+        .with_file_name(&options.output_name)
+        .with_extension("avi");
+    let output_file = OpenOptions::new()
+        .create(true)
+        .truncate(true)
+        .write(true)
+        .open(&output_path)
+        .unwrap();
+    let mut writer_avi = BufWriter::with_capacity(
+        options.video_frame_bytes.max(options.audio_frame_bytes),
+        output_file,
+    );
+    let ffmpeg_path = sidecar_path("ffmpeg");
+    #[cfg(debug_assertions)]
+    let timer = Instant::now();
+
+    // ffmpeg -i "videofile.mp4" -r 30 -vf "scale=240:135,hqdn3d" -b:v 800k -maxrate 800k 
+    //-bufsize 48k -c:v mjpeg -acodec pcm_u8 -ar 8000 -ac 1 in.avi
+
+    #[rustfmt::skip]
+    let mut video_cmd = Command::new(&ffmpeg_path)
+        .args([
+            "-i", options.path,
+            // "-f", "image2pipe",
+            "-r", options.frame_rate, // should be 30
+            // "-vf", options.scale, // string of: "scale=240:135,hqdn3d"
+            "-vf", "\"scale=240:135,hqdn3d\"",
+            // "-vcodec", "rawvideo",
+            // "-pix_fmt", "bgr565be",
+            // "-f", "rawvideo",
+            // "-",
+            "-b:v", "800k",
+            "-maxrate", "800k",
+            "-bufsize", "48k", // would ideally be 800k or 1600k for checking quality every 1 to 2 seconds
+            "-c:v", "mpeg",
+            "-acodec", "pcm_u8",
+            "-ar", options.sample_rate, // sample rate is 8000
+            "-ac", "1",
+            "-nodisp", // avoid popup terminal when converting because it looks like malware
+            "-", 
+        ])
+        .stdin(Stdio::null())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::null())
+        .spawn()
+        .unwrap();
+    let mut video_stdout = video_cmd.stdout.take().unwrap();
+    let mut video_frame = vec![0; options.video_frame_bytes];
+
+    // #[rustfmt::skip]
+    // let mut audio_cmd = Command::new(&ffmpeg_path)
+    //     .args([
+    //         "-i", options.path,
+    //         "-f", "s16le",
+    //         "-acodec", "pcm_u8",
+    //         "-ar", options.sample_rate,
+    //         "-ac", "1",
+    //         "-"
+    //     ])
+    //     .stdin(Stdio::null())
+    //     .stdout(Stdio::piped())
+    //     .stderr(Stdio::null())
+    //     .spawn()
+    //     .unwrap();
+
+
+
+    // let mut audio_stdout = audio_cmd.stdout.take().unwrap();
+    // let mut audio_frame = vec![0; options.audio_frame_bytes];
+
+    // while video_stdout.read_exact(&mut video_frame).is_ok() {
+    //     writer_avi.write_all(&video_frame).unwrap();
+
+    //     if audio_stdout.read_exact(&mut audio_frame).is_ok() {
+    //         for i in 0..options.audio_frame_bytes / 2 {
+    //             let sample = ((0x8000
+    //                 + (u32::from(audio_frame[i * 2 + 1]) << 8 | u32::from(audio_frame[i * 2])))
+    //                 >> (16 - u32::from(options.sample_bit_depth)))
+    //                 & (0xFFFF >> (16 - u32::from(options.sample_bit_depth)));
+
+    //             audio_frame[i * 2] = (sample & 0xFF) as u8;
+    //             audio_frame[i * 2 + 1] = (sample >> 8) as u8;
+    //         }
+    //     } else {
+    //         audio_frame.fill(0);
+    //     }
+
+    //     writer_avi.write_all(&audio_frame).unwrap();
+    // }
+
+    // video_cmd.wait().unwrap();
+    // // audio_cmd.wait().unwrap();
+
+    // #[cfg(debug_assertions)]
+    // {
+    //     let conversion = timer.elapsed();
+    //     dbg!(conversion);
+    // }
+
+    // writer_avi.flush().unwrap();
+}
+
+
+*/

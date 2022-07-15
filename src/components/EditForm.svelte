@@ -34,6 +34,10 @@
 
     await invoke('convert', { options })
   }
+
+// TODO: Import the AVI TV variables here to pass to the backend
+
+
 </script>
 
 <form on:submit|preventDefault={convert} class="flex flex-col items-start space-y-2">

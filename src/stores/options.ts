@@ -36,6 +36,27 @@ export const sampleCountPerFrame = 2 * 512
 export const sampleRate = frameRate * sampleCountPerFrame
 export const audioFrameBytes = 2 * sampleCountPerFrame
 
+
+
+
+
+// /** New TV .avi variables */
+// // video
+// export const frameRateAVI = 30
+// export const widthAVI = 240
+// export const heightAVI = 135
+// export const videoFrameBytesAVI = 2 * widthAVI * heightAVI
+
+// // audio
+// export const sampleBitDepthAVI = 8
+// export const sampleCountPerFrameAVI = 2 * 267 // inconsistent, but approx 267 per frame at 30fps
+// export const sampleRateAVI = frameRateAVI * sampleCountPerFrameAVI
+// export const audioFrameBytesAVI = 2 * sampleCountPerFrameAVI
+
+
+
+
+
 export const crop = writable(Crop.Contain)
 
 export const totalFrames = derived([duration], ([$duration]) => {
