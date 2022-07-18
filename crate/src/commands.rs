@@ -33,12 +33,12 @@ pub struct Options<'a> {
 
     // Video
     frame_rate: &'a str,
-    video_frame_bytes: usize,
+    video_frame_bytes: usize, //
 
     // Audio
     sample_bit_depth: u8,
-    sample_rate: &'a str,
-    audio_frame_bytes: usize,
+    sample_rate: &'a str, //
+    audio_frame_bytes: usize, //
 }
 
 /// Get file metadata from a path.
@@ -233,8 +233,8 @@ pub fn convert(options: Options<'_>) {
     writer.flush().unwrap();
 }
 
-/*
 
+/*
 
 /// Convert to .AVI file type fixed to the resolution of the 240x135 TV
 /// Convert to Tiny Screen Video .TSV filetype

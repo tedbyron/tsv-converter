@@ -7,6 +7,12 @@ export enum Crop {
   Fill = 'Fill (Stretch)'
 }
 
+/** Tv model versions that determine method of conversion to use*/
+export enum Model {
+  Tv96x64 = 'TinyTV - 96x64',
+  Tv240x135 = 'TV - 240x135'
+}
+
 /** Video conversion options. */
 export interface Options {
   path: string
@@ -24,22 +30,6 @@ export interface Options {
 /** Video duration in seconds. */
 export const duration = writable(NaN)
 
-// video
-export const frameRate = 30
-export const width = 96
-export const height = 64
-export const videoFrameBytes = 2 * width * height
-
-// audio
-export const sampleBitDepth = 10
-export const sampleCountPerFrame = 2 * 512
-export const sampleRate = frameRate * sampleCountPerFrame
-export const audioFrameBytes = 2 * sampleCountPerFrame
-
-
-
-
-
 // /** New TV .avi variables */
 // // video
 // export const frameRateAVI = 30
@@ -54,7 +44,37 @@ export const audioFrameBytes = 2 * sampleCountPerFrame
 // export const audioFrameBytesAVI = 2 * sampleCountPerFrameAVI
 
 
+/** TV variables */
+export const model = writable(Model.Tv96x64)
 
+export const width = derived([model], ([$model]) => {
+  switch ($model) {
+    case Model.Tv96x64: return 96
+    case Model.Tv240x135: return 240
+  }
+})
+export const height = derived([model], ([$model]) => {
+  switch ($model) {
+    case Model.Tv96x64: return 64
+    case Model.Tv240x135: return 135
+  }
+})
+export const sampleBitDepth = derived([model], ([$model]) => {
+  switch ($model) {
+    case Model.Tv96x64: return 10
+    case Model.Tv240x135: return 8
+  }
+})
+
+// Since these don't differ between TV options, this lil section could be implemented in rust
+// video
+export const frameRate = 30
+export const videoFrameBytes = 2 * Number(width) * Number(height)
+
+// audio
+export const sampleCountPerFrame = 2 * 512
+export const sampleRate = frameRate * sampleCountPerFrame
+export const audioFrameBytes = 2 * sampleCountPerFrame
 
 
 export const crop = writable(Crop.Contain)
