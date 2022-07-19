@@ -27,7 +27,7 @@
       scale: $scale,
 
       frameRate: frameRate.toString(),
-      videoFrameBytes,
+      videoFrameBytes: $videoFrameBytes,
 
       sampleBitDepth: $sampleBitDepth,
       sampleRate: sampleRate.toString(),
@@ -36,9 +36,6 @@
 
     await invoke('convert', { options })
   }
-
-
-
 </script>
 
 <form on:submit|preventDefault={convert} class="flex flex-col items-start space-y-2">
@@ -54,9 +51,9 @@
         </select>
     </div>
   </fieldset> -->
+
   <fieldset class="form-fieldset flex flex-col items-start">
     <legend class="form-legend">TV Option</legend>
-
     {#each Object.values(Model) as opt}
       <label
         class="flex items-center rounded-md px-2 py-0.5 hover:bg-zinc-200 dark:hover:bg-zinc-700"

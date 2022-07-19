@@ -171,7 +171,7 @@ pub fn convert(options: Options<'_>) {
             "-vcodec", "rawvideo",
             "-pix_fmt", "bgr565be",
             "-f", "rawvideo",
-            "-nodisp", // avoid popup terminal when converting because it looks like malware
+            // "-nodisp", // avoid popup terminal when converting because it looks like malware
             "-",
         ])
         .stdin(Stdio::null())
@@ -190,7 +190,7 @@ pub fn convert(options: Options<'_>) {
             "-acodec", "pcm_s16le",
             "-ar", options.sample_rate,
             "-ac", "1",
-            "-nodisp", 
+            // "-nodisp", 
             "-",
         ])
         .stdin(Stdio::null())
