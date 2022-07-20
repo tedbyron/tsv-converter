@@ -17,7 +17,8 @@
   } from '$stores/options'
 
   const valid = true
-
+  
+  // Send all the data needed for conversion when the "Convert" button is pressed
   const convert = async (): Promise<void> => {
     if ($inputPath === undefined || $outputName === undefined) return
 
@@ -31,27 +32,19 @@
 
       sampleBitDepth: $sampleBitDepth,
       sampleRate: sampleRate.toString(),
-      audioFrameBytes
+      audioFrameBytes,
+
+      // [key in Model]: $model
     }
 
-    await invoke('convert', { options })
+    if($model === Model.Tv96x64) await invoke('convert', { options })
+    if($model === Model.Tv240x135) await invoke('convert_avi', { options })
+
   }
 </script>
 
 <form on:submit|preventDefault={convert} class="flex flex-col items-start space-y-2">
-  <!-- Homemade html dropdown -->
-  <!-- <fieldset class="form-fieldset flex flex-col items-start">
-    <legend class="form-legend">Output Type:</legend>
-    <div>
-        <select name="TV-Type" id="video-dimension-select" type='text' class="flex items-center rounded-md px-2 py-0.5 hover:bg-zinc-200 dark:hover:bg-zinc-700">
-            <option value="">-- Please select --</option>
-            <option 
-              bind:value={$Model}>TinyTV - 96x64</option>
-            <option value="AVI">NewTV - 240x135</option> 
-        </select>
-    </div>
-  </fieldset> -->
-
+<!-- TV model selection -->
   <fieldset class="form-fieldset flex flex-col items-start">
     <legend class="form-legend">TV Option</legend>
     {#each Object.values(Model) as opt}

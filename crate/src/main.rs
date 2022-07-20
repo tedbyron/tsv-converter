@@ -24,6 +24,7 @@ fn main() {
             commands::watch,
             commands::output_name,
             commands::convert,
+            commands::convert_avi,
         ])
         .run(tauri::generate_context!())
         .expect("Error running the application");

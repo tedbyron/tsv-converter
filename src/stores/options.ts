@@ -25,6 +25,8 @@ export interface Options {
   sampleBitDepth: number
   sampleRate: string
   audioFrameBytes: number
+
+  // [key in Model]: string
 }
 
 /** Video duration in seconds. */
