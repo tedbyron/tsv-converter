@@ -165,7 +165,7 @@ pub fn convert(options: Options<'_>) {
     let mut video_cmd = Command::new(&ffmpeg_path)
         .args([
             "-i", options.path,
-            "-loglevel", "quiet",
+            // "-loglevel", "quiet",
             "-f", "image2pipe",
             "-r", options.frame_rate,
             "-vf", options.scale,
@@ -187,7 +187,7 @@ pub fn convert(options: Options<'_>) {
     let mut audio_cmd = Command::new(&ffmpeg_path)
         .args([
             "-i", options.path,
-            "-loglevel", "quiet",
+            // "-loglevel", "quiet",
             "-f", "s16le",
             "-acodec", "pcm_s16le",
             "-ar", options.sample_rate,
@@ -270,27 +270,22 @@ pub fn convert_avi(options: Options<'_>) {
             "-r", options.frame_rate, // should be 30
             // "-vf", options.scale, // string of: "scale=240:135,hqdn3d"
             "-vf", "scale=240:135,hqdn3d",
-            // "-vcodec", "rawvideo",
-            // "-pix_fmt", "bgr565be",
-            // "-f", "rawvideo",
-            // "-",
             "-b:v", "800k",
             "-maxrate", "800k",
             "-bufsize", "48k", // would ideally be 800k or 1600k for checking quality every 1 to 2 seconds
             "-c:v", "mjpeg",
             "-acodec", "pcm_u8",
-            // "-ar", options.sample_rate, // sample rate is 8000
             "-ar", "8000",
             "-ac", "1",
             // "-nodisp", // avoid popup terminal when converting because it looks like malware
             "-", 
         ])
         .stdin(Stdio::null())
-        // .stdout(Stdio::piped())
+        .stdout(Stdio::piped())
         .stderr(Stdio::null())
         .spawn()
         .unwrap();
-    // let mut video_stdout = video_cmd.stdout.take().unwrap();
+    let mut video_stdout = video_cmd.stdout.take().unwrap();
     let mut video_frame = vec![0; options.video_frame_bytes];
 
     // #[rustfmt::skip]
@@ -314,8 +309,8 @@ pub fn convert_avi(options: Options<'_>) {
     // let mut audio_stdout = video_cmd.stdout.take().unwrap(); //swapped audio_cmd with video_cmd since we don't need a separate commant for audio?
     // let mut audio_frame = vec![0; options.audio_frame_bytes];
 
-    // while video_stdout.read_exact(&mut video_frame).is_ok() {
-    //     writer.write_all(&video_frame).unwrap();
+    while video_stdout.read_exact(&mut video_frame).is_ok() {
+        writer.write_all(&video_frame).unwrap();
 
         // if audio_stdout.read_exact(&mut audio_frame).is_ok() {
         //     for i in 0..options.audio_frame_bytes / 2 {
@@ -333,7 +328,7 @@ pub fn convert_avi(options: Options<'_>) {
     
 
         // writer.write_all(&audio_frame).unwrap();
-    // }
+    }
 
     video_cmd.wait().unwrap();
     // audio_cmd.wait().unwrap();
