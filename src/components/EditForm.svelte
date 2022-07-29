@@ -17,7 +17,7 @@
   } from '$stores/options'
 
   const valid = true
-  
+
   // Send all the data needed for conversion when the "Convert" button is pressed
   const convert = async (): Promise<void> => {
     if ($inputPath === undefined || $outputName === undefined) return
@@ -27,24 +27,23 @@
       outputName: $outputName,
       scale: $scale,
 
-      frameRate: frameRate.toString(),
+      frameRate: $frameRate.toString(),
       videoFrameBytes: $videoFrameBytes,
 
       sampleBitDepth: $sampleBitDepth,
       sampleRate: sampleRate.toString(),
-      audioFrameBytes,
+      audioFrameBytes
 
       // [key in Model]: $model
     }
 
-    if($model === Model.Tv96x64) await invoke('convert', { options })
-    if($model === Model.Tv240x135) await invoke('convert_avi', { options })
-
+    if ($model === Model.Tv96x64) await invoke('convert', { options })
+    if ($model === Model.Tv240x135) await invoke('convert_avi', { options })
   }
 </script>
 
 <form on:submit|preventDefault={convert} class="flex flex-col items-start space-y-2">
-<!-- TV model selection -->
+  <!-- TV model selection -->
   <fieldset class="form-fieldset flex flex-col items-start">
     <legend class="form-legend">TV Option</legend>
     {#each Object.values(Model) as opt}
@@ -64,7 +63,7 @@
       </label>
     {/each}
   </fieldset>
-  
+
   <!-- crop radio group -->
   <fieldset class="form-fieldset flex flex-col items-start">
     <legend class="form-legend">Crop</legend>

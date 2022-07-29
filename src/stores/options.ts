@@ -45,44 +45,60 @@ export const duration = writable(NaN)
 // export const sampleRateAVI = frameRateAVI * sampleCountPerFrameAVI
 // export const audioFrameBytesAVI = 2 * sampleCountPerFrameAVI
 
-
 /** TV variables */
 export const model = writable(Model.Tv96x64)
 
 export const width = derived(model, ($model) => {
   switch ($model) {
-    case Model.Tv96x64: return 96
-    case Model.Tv240x135: return 240
+    case Model.Tv96x64:
+      return 96
+    case Model.Tv240x135:
+      return 240
   }
 })
 export const height = derived(model, ($model) => {
   switch ($model) {
-    case Model.Tv96x64: return 64
-    case Model.Tv240x135: return 135
+    case Model.Tv96x64:
+      return 64
+    case Model.Tv240x135:
+      return 135
   }
 })
 export const sampleBitDepth = derived(model, ($model) => {
   switch ($model) {
-    case Model.Tv96x64: return 10
-    case Model.Tv240x135: return 8
+    case Model.Tv96x64:
+      return 10
+    case Model.Tv240x135:
+      return 8
+  }
+})
+export const frameRate = derived(model, ($model) => {
+  switch ($model) {
+    case Model.Tv96x64:
+      return 30
+    case Model.Tv240x135:
+      return 24
   }
 })
 
 // Since these don't differ between TV options, this lil section could be implemented in rust
 // video
-export const frameRate = 30
+// export const frameRate = 30
 export const videoFrameBytes = derived([width, height], ([$width, $height]) => 2 * $width * $height)
 
 // audio
 export const sampleCountPerFrame = 2 * 512
-export const sampleRate = frameRate * sampleCountPerFrame
+// export const sampleRate = frameRate * sampleCountPerFrame
+
+export const sampleRate = derived(frameRate, ($frameRate) => {
+  return $frameRate * sampleCountPerFrame
+})
+
 export const audioFrameBytes = 2 * sampleCountPerFrame
-
-
 export const crop = writable(Crop.Contain)
 
-export const totalFrames = derived(duration, ($duration) => {
-  return $duration * frameRate
+export const totalFrames = derived([duration, frameRate], ([$duration, $frameRate]) => {
+  return $duration * $frameRate
 })
 
 export const scale = derived([crop, width, height], ([$crop, $width, $height]) => {
