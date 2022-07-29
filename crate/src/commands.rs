@@ -11,6 +11,9 @@ use notify::{Config, EventKind, RecursiveMode, Watcher};
 use tauri::async_runtime;
 use time::OffsetDateTime;
 
+#[cfg(windows)]
+use std::os::windows::process::CommandExt;
+
 /// File metadata.
 #[derive(serde::Serialize)]
 pub struct Metadata {
@@ -161,42 +164,46 @@ pub fn convert(options: Options<'_>) {
     #[cfg(debug_assertions)]
     let timer = Instant::now();
 
+    let mut video_cmd = Command::new(&ffmpeg_path);
     #[rustfmt::skip]
-    let mut video_cmd = Command::new(&ffmpeg_path)
-        .args([
-            "-i", options.path,
-            "-f", "image2pipe",
-            "-r", options.frame_rate,
-            "-vf", options.scale,
-            "-vcodec", "rawvideo",
-            "-pix_fmt", "bgr565be",
-            "-f", "rawvideo",
-            "-",
-        ])
-        .stdin(Stdio::null())
-        .stdout(Stdio::piped())
-        .stderr(Stdio::null())
-        .spawn()
-        .unwrap();
-    let mut video_stdout = video_cmd.stdout.take().unwrap();
+    video_cmd.args([
+        "-i", options.path,
+        "-f", "image2pipe",
+        "-r", options.frame_rate,
+        "-vf", options.scale,
+        "-vcodec", "rawvideo",
+        "-pix_fmt", "bgr565be",
+        "-f", "rawvideo",
+        "-",
+    ])
+    .stdin(Stdio::null())
+    .stdout(Stdio::piped())
+    .stderr(Stdio::null());
+    #[cfg(windows)] // This gets rid of the malware-looking Windows-exclusive pop up
+    video_cmd.creation_flags(0x08000000); // https://docs.microsoft.com/en-us/windows/win32/procthread/process-creation-flags
+    let mut video_child = video_cmd.spawn().unwrap();
+
+    let mut video_stdout = video_child.stdout.take().unwrap();
     let mut video_frame = vec![0; options.video_frame_bytes];
 
+    let mut audio_cmd = Command::new(&ffmpeg_path);
     #[rustfmt::skip]
-    let mut audio_cmd = Command::new(&ffmpeg_path)
-        .args([
-            "-i", options.path,
-            "-f", "s16le",
-            "-acodec", "pcm_s16le",
-            "-ar", options.sample_rate,
-            "-ac", "1",
-            "-",
-        ])
-        .stdin(Stdio::null())
-        .stdout(Stdio::piped())
-        .stderr(Stdio::null())
-        .spawn()
-        .unwrap();
-    let mut audio_stdout = audio_cmd.stdout.take().unwrap();
+    audio_cmd.args([
+        "-i", options.path,
+        "-f", "s16le",
+        "-acodec", "pcm_s16le",
+        "-ar", options.sample_rate,
+        "-ac", "1",
+        "-",
+    ])
+    .stdin(Stdio::null())
+    .stdout(Stdio::piped())
+    .stderr(Stdio::null());
+    #[cfg(windows)]
+    audio_cmd.creation_flags(0x08000000);
+    let mut audio_child = audio_cmd.spawn().unwrap();
+
+    let mut audio_stdout = audio_child.stdout.take().unwrap();
     let mut audio_frame = vec![0; options.audio_frame_bytes];
 
     while video_stdout.read_exact(&mut video_frame).is_ok() {
@@ -219,13 +226,13 @@ pub fn convert(options: Options<'_>) {
         writer.write_all(&audio_frame).unwrap();
     }
 
-    video_cmd.wait().unwrap();
-    audio_cmd.wait().unwrap();
+    video_child.wait().unwrap();
+    audio_child.wait().unwrap();
 
     #[cfg(debug_assertions)]
     {
-        let conversion = timer.elapsed();
-        dbg!(conversion);
+        let elapsed = timer.elapsed();
+        dbg!(elapsed);
     }
 
     writer.flush().unwrap();
@@ -243,43 +250,42 @@ pub fn convert_avi(options: Options<'_>) {
     #[cfg(debug_assertions)]
     let timer = Instant::now();
 
-    // ffmpeg -i "videofile.mp4" -r 30 -vf "scale=240:135,hqdn3d" -b:v 800k -maxrate 800k
-    //-bufsize 48k -c:v mjpeg -acodec pcm_u8 -ar 8000 -ac 1 in.avi
-
+    let mut cmd = Command::new(&ffmpeg_path);
     #[rustfmt::skip]
-    let mut cmd = Command::new(&ffmpeg_path)
-        .args([
-            "-i", options.path,
-            "-r", options.frame_rate, // should be 24
-            // // "-vf", options.scale, // string of: "scale=240:135,hqdn3d"
-            "-vf", "scale=216:135,hqdn3d",
-            "-b:v", "1500k",
-            "-maxrate", "1500k",
-            "-bufsize", "64k", // would ideally be 800k or 1600k for checking quality every 1 to 2 seconds
-            "-c:v", "mjpeg",
-            "-acodec", "pcm_u8",
-            "-ar", "10000",
-            "-ac", "1",
-            // // "-nodisp", // avoid popup terminal when converting because it looks like malware
-            &output_path.to_string_lossy(),
-        ])
-        .stdin(Stdio::null())
-        .stdout(Stdio::null())
-        .stderr(Stdio::piped())
-        .spawn()
-        .unwrap();
-    let mut stderr_buf = String::new();
-    cmd.stderr
+    cmd.args([
+        "-i", options.path,
+        "-r", options.frame_rate,
+        // "-vf", options.scale,
+        "-vf", "scale=216:135,hqdn3d",
+        "-b:v", "1500k",
+        "-maxrate", "1500k",
+        "-bufsize", "64k",
+        "-c:v", "mjpeg",
+        "-acodec", "pcm_u8",
+        "-ar", "10000",
+        "-ac", "1",
+        &output_path.to_string_lossy(),
+    ])
+    .stdin(Stdio::null())
+    .stdout(Stdio::null())
+    .stderr(Stdio::piped());
+    #[cfg(windows)]
+    cmd.creation_flags(0x08000000);
+    let mut child = cmd.spawn().unwrap();
+
+    let mut child_stderr = String::new();
+    child
+        .stderr
         .take()
         .unwrap()
-        .read_to_string(&mut stderr_buf)
+        .read_to_string(&mut child_stderr)
         .unwrap();
-    cmd.wait().unwrap();
+    child.wait().unwrap();
 
     #[cfg(debug_assertions)]
     {
-        dbg!(stderr_buf);
-        let conversion = timer.elapsed();
-        dbg!(conversion);
+        dbg!(child_stderr);
+        let elapsed = timer.elapsed();
+        dbg!(elapsed);
     }
 }
