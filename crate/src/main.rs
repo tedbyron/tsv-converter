@@ -1,5 +1,10 @@
+#![cfg_attr(
+    all(not(debug_assertions), target_os = "windows"),
+    windows_subsystem = "windows"
+)]
 #![warn(clippy::all, clippy::nursery, rust_2018_idioms)]
-#![windows_subsystem = "windows"]
+// #![windows_subsystem = "windows"]
+
 
 mod commands;
 #[cfg(target_os = "macos")]
