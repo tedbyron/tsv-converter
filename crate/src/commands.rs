@@ -255,8 +255,7 @@ pub fn convert_avi(options: Options<'_>) {
     cmd.args([
         "-i", options.path,
         "-r", options.frame_rate,
-        // "-vf", options.scale,
-        "-vf", "scale=216:135,hqdn3d",
+        "-vf", options.scale,
         "-b:v", "1500k",
         "-maxrate", "1500k",
         "-bufsize", "64k",
