@@ -7,6 +7,8 @@
     Crop,
     crop,
     frameRate,
+    Model,
+    model,
     sampleBitDepth,
     sampleRate,
     scale,
@@ -16,6 +18,7 @@
 
   const valid = true
 
+  // Send all the data needed for conversion when the "Convert" button is pressed
   const convert = async (): Promise<void> => {
     if ($inputPath === undefined || $outputName === undefined) return
 
@@ -24,19 +27,43 @@
       outputName: $outputName,
       scale: $scale,
 
-      frameRate: frameRate.toString(),
-      videoFrameBytes,
+      frameRate: $frameRate.toString(),
+      videoFrameBytes: $videoFrameBytes,
 
-      sampleBitDepth,
+      sampleBitDepth: $sampleBitDepth,
       sampleRate: sampleRate.toString(),
       audioFrameBytes
+
+      // [key in Model]: $model
     }
 
-    await invoke('convert', { options })
+    if ($model === Model.Tv96x64) await invoke('convert', { options })
+    if ($model === Model.Tv240x135) await invoke('convert_avi', { options })
   }
 </script>
 
 <form on:submit|preventDefault={convert} class="flex flex-col items-start space-y-2">
+  <!-- TV model selection -->
+  <fieldset class="form-fieldset flex flex-col items-start">
+    <legend class="form-legend">TV Option</legend>
+    {#each Object.values(Model) as opt}
+      <label
+        class="flex items-center rounded-md px-2 py-0.5 hover:bg-zinc-200 dark:hover:bg-zinc-700"
+      >
+        <input
+          type="radio"
+          name="model"
+          checked={$model === opt}
+          on:change={() => {
+            $model = opt
+          }}
+          class="mr-2"
+        />
+        <span>{opt}</span>
+      </label>
+    {/each}
+  </fieldset>
+
   <!-- crop radio group -->
   <fieldset class="form-fieldset flex flex-col items-start">
     <legend class="form-legend">Crop</legend>
@@ -80,7 +107,7 @@
         spellcheck="false"
         minlength="1"
         maxlength="46"
-        pattern="[\w\.-]+"
+        pattern="[\w\.- ]+"
         bind:value={$outputName}
         class="grow"
       />

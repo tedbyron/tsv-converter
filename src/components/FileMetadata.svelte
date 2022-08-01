@@ -25,7 +25,7 @@
 
 <!-- TODO: use a table -->
 {#if metadata}
-  <div class="rounded-md border border-zinc-300 dark:border-zinc-600">
+  <div class="rounded-md border border-zinc-400 dark:border-zinc-600">
     <div
       class="max-w-full overflow-x-auto rounded-t-md bg-zinc-300 px-2 text-center dark:bg-zinc-600"
     >
