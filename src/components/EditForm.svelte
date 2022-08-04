@@ -1,5 +1,6 @@
 <script lang="ts">
   import { invoke } from '@tauri-apps/api'
+  import Loading from '~icons/tabler/loader-2'
 
   import { inputName, inputPath, outputName } from '$stores/file'
   import {
@@ -17,9 +18,12 @@
   } from '$stores/options'
 
   const valid = true
+  let loading = false
 
   // Send all the data needed for conversion when the "Convert" button is pressed
   const convert = async (): Promise<void> => {
+    loading = true
+
     if ($inputPath === undefined || $outputName === undefined) return
 
     const options: Options = {
@@ -39,6 +43,7 @@
 
     if ($model === Model.Tv96x64) await invoke('convert', { options })
     if ($model === Model.Tv240x135) await invoke('convert_avi', { options })
+    loading = false
   }
 </script>
 
@@ -125,5 +130,14 @@
   </fieldset>
 
   <!-- convert button -->
-  <button disabled={!valid} class="button button-primary">Convert</button>
+  <button disabled={!valid || loading} class="button button-primary">
+    <Loading
+      aria-label="loading"
+      class="absolute top-[calc(50%-.75rem)] left-[calc(50%-.75rem)] h-6 w-6 {loading
+        ? 'animate-spin'
+        : 'hidden'}"
+    />
+
+    Convert</button
+  >
 </form>

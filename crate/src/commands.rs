@@ -36,12 +36,12 @@ pub struct Options<'a> {
 
     // Video
     frame_rate: &'a str,
-    video_frame_bytes: usize, //
+    video_frame_bytes: usize,
 
     // Audio
     sample_bit_depth: u8,
-    sample_rate: &'a str,     //
-    audio_frame_bytes: usize, //
+    sample_rate: &'a str,
+    audio_frame_bytes: usize,
 }
 
 /// Get file metadata from a path.
@@ -74,7 +74,7 @@ pub fn metadata(path: &Path) -> Metadata {
 /// Watches a file path for modify/remove events, and forwards the event to the frontend.
 #[tauri::command]
 pub async fn watch(path: PathBuf, window: tauri::Window) {
-    let (tx, mut rx) = async_runtime::channel(1);
+    let (tx, mut rx) = async_runtime::channel(1); // Channel for modified/removed file
 
     let mut watcher =
         notify::recommended_watcher(move |res: Result<notify::Event, notify::Error>| {
