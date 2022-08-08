@@ -1,5 +1,7 @@
 <script lang="ts">
   import { invoke } from '@tauri-apps/api'
+  import Loading from '~icons/tabler/loader-2'
+  import { save } from '@tauri-apps/api/dialog'
 
   import { inputName, inputPath, outputName } from '$stores/file'
   import {
@@ -7,6 +9,8 @@
     Crop,
     crop,
     frameRate,
+    Model,
+    model,
     sampleBitDepth,
     sampleRate,
     scale,
@@ -15,8 +19,12 @@
   } from '$stores/options'
 
   const valid = true
+  let loading = false
 
+  // Send all the data needed for conversion when the "Convert" button is pressed
   const convert = async (): Promise<void> => {
+    loading = true
+
     if ($inputPath === undefined || $outputName === undefined) return
 
     const options: Options = {
@@ -24,19 +32,56 @@
       outputName: $outputName,
       scale: $scale,
 
-      frameRate: frameRate.toString(),
-      videoFrameBytes,
+      frameRate: $frameRate.toString(),
+      videoFrameBytes: $videoFrameBytes,
 
-      sampleBitDepth,
+      sampleBitDepth: $sampleBitDepth,
       sampleRate: sampleRate.toString(),
       audioFrameBytes
+
+      // [key in Model]: $model
     }
 
-    await invoke('convert', { options })
+    if ($model === Model.Tv96x64) await invoke('convert', { options })
+
+    if ($model === Model.Tv240x135) await invoke('convert_avi', { options })
+    loading = false
+
+    // Trigger save dialog after a successful video conversion
+    $inputPath = await save({
+      defaultPath: `${$outputName}`,
+      filters: [
+        {
+          name: `.${$model === Model.Tv96x64 ? 'tsv' : 'avi'}`,
+          extensions: ['stronghold']
+        }
+      ]
+    })
   }
 </script>
 
 <form on:submit|preventDefault={convert} class="flex flex-col items-start space-y-2">
+  <!-- TV model selection -->
+  <fieldset class="form-fieldset flex flex-col items-start">
+    <legend class="form-legend">TV Option</legend>
+    {#each Object.values(Model) as opt}
+      <label
+        class="flex items-center rounded-md px-2 py-0.5 hover:bg-zinc-200 dark:hover:bg-zinc-700"
+      >
+        <input
+          type="radio"
+          name="model"
+          checked={$model === opt}
+          on:change={() => {
+            $model = opt
+          }}
+          class="mr-2"
+        />
+        <span>{opt}</span>
+      </label>
+    {/each}
+  </fieldset>
+
   <!-- crop radio group -->
   <fieldset class="form-fieldset flex flex-col items-start">
     <legend class="form-legend">Crop</legend>
@@ -80,7 +125,7 @@
         spellcheck="false"
         minlength="1"
         maxlength="46"
-        pattern="[\w\.-]+"
+        pattern="[\w\.- ]+"
         bind:value={$outputName}
         class="grow"
       />
@@ -98,5 +143,13 @@
   </fieldset>
 
   <!-- convert button -->
-  <button disabled={!valid} class="button button-primary">Convert</button>
+  <button disabled={!valid || loading} class="button button-primary">
+    <Loading
+      aria-label="loading"
+      class="absolute top-[calc(50%-.75rem)] left-[calc(50%-.75rem)] h-6 w-6 {loading
+        ? 'animate-spin'
+        : 'hidden'}"
+    />
+    Convert</button
+  >
 </form>

@@ -1,6 +1,6 @@
 //! Tauri commands.
 
-use std::fs::OpenOptions;
+use std::fs::{self, OpenOptions};
 use std::io::{BufWriter, Read, Write};
 use std::path::{Path, PathBuf};
 use std::process::{Command, Stdio};
@@ -10,6 +10,9 @@ use std::time::Instant;
 use notify::{Config, EventKind, RecursiveMode, Watcher};
 use tauri::async_runtime;
 use time::OffsetDateTime;
+
+#[cfg(windows)]
+use std::os::windows::process::CommandExt;
 
 /// File metadata.
 #[derive(serde::Serialize)]
@@ -71,7 +74,7 @@ pub fn metadata(path: &Path) -> Metadata {
 /// Watches a file path for modify/remove events, and forwards the event to the frontend.
 #[tauri::command]
 pub async fn watch(path: PathBuf, window: tauri::Window) {
-    let (tx, mut rx) = async_runtime::channel(1);
+    let (tx, mut rx) = async_runtime::channel(1); // Channel for modified/removed file
 
     let mut watcher =
         notify::recommended_watcher(move |res: Result<notify::Event, notify::Error>| {
@@ -114,7 +117,7 @@ fn limit_file_stem(path: &Path) -> Option<String> {
         .filter(|c| match c {
             // FIXME: is this all the supported characters?
             c if c.is_ascii_alphanumeric() => true,
-            '_' | '-' | '.' => true,
+            '_' | '-' | '.' | ' ' => true,
             _ => false,
         })
         .take(46)
@@ -140,7 +143,7 @@ fn sidecar_path(name: &str) -> PathBuf {
     }
 }
 
-/// Convert the source video to something displayable on the TinyScreen.
+/// Convert to Tiny Screen Video .TSV filetype
 #[tauri::command]
 pub fn convert(options: Options<'_>) {
     let path = Path::new(&options.path);
@@ -161,42 +164,46 @@ pub fn convert(options: Options<'_>) {
     #[cfg(debug_assertions)]
     let timer = Instant::now();
 
+    let mut video_cmd = Command::new(&ffmpeg_path);
     #[rustfmt::skip]
-    let mut video_cmd = Command::new(&ffmpeg_path)
-        .args([
-            "-i", options.path,
-            "-f", "image2pipe",
-            "-r", options.frame_rate,
-            "-vf", options.scale,
-            "-vcodec", "rawvideo",
-            "-pix_fmt", "bgr565be",
-            "-f", "rawvideo",
-            "-",
-        ])
-        .stdin(Stdio::null())
-        .stdout(Stdio::piped())
-        .stderr(Stdio::null())
-        .spawn()
-        .unwrap();
-    let mut video_stdout = video_cmd.stdout.take().unwrap();
+    video_cmd.args([
+        "-i", options.path,
+        "-f", "image2pipe",
+        "-r", options.frame_rate,
+        "-vf", options.scale,
+        "-vcodec", "rawvideo",
+        "-pix_fmt", "bgr565be",
+        "-f", "rawvideo",
+        "-",
+    ])
+    .stdin(Stdio::null())
+    .stdout(Stdio::piped())
+    .stderr(Stdio::null());
+    #[cfg(windows)] // This gets rid of the malware-looking Windows-exclusive pop up
+    video_cmd.creation_flags(0x08000000); // https://docs.microsoft.com/en-us/windows/win32/procthread/process-creation-flags
+    let mut video_child = video_cmd.spawn().unwrap();
+
+    let mut video_stdout = video_child.stdout.take().unwrap();
     let mut video_frame = vec![0; options.video_frame_bytes];
 
+    let mut audio_cmd = Command::new(&ffmpeg_path);
     #[rustfmt::skip]
-    let mut audio_cmd = Command::new(&ffmpeg_path)
-        .args([
-            "-i", options.path,
-            "-f", "s16le",
-            "-acodec", "pcm_s16le",
-            "-ar", options.sample_rate,
-            "-ac", "1",
-            "-"
-        ])
-        .stdin(Stdio::null())
-        .stdout(Stdio::piped())
-        .stderr(Stdio::null())
-        .spawn()
-        .unwrap();
-    let mut audio_stdout = audio_cmd.stdout.take().unwrap();
+    audio_cmd.args([
+        "-i", options.path,
+        "-f", "s16le",
+        "-acodec", "pcm_s16le",
+        "-ar", options.sample_rate,
+        "-ac", "1",
+        "-",
+    ])
+    .stdin(Stdio::null())
+    .stdout(Stdio::piped())
+    .stderr(Stdio::null());
+    #[cfg(windows)]
+    audio_cmd.creation_flags(0x08000000);
+    let mut audio_child = audio_cmd.spawn().unwrap();
+
+    let mut audio_stdout = audio_child.stdout.take().unwrap();
     let mut audio_frame = vec![0; options.audio_frame_bytes];
 
     while video_stdout.read_exact(&mut video_frame).is_ok() {
@@ -219,14 +226,65 @@ pub fn convert(options: Options<'_>) {
         writer.write_all(&audio_frame).unwrap();
     }
 
-    video_cmd.wait().unwrap();
-    audio_cmd.wait().unwrap();
+    video_child.wait().unwrap();
+    audio_child.wait().unwrap();
 
     #[cfg(debug_assertions)]
     {
-        let conversion = timer.elapsed();
-        dbg!(conversion);
+        let elapsed = timer.elapsed();
+        dbg!(elapsed);
     }
 
     writer.flush().unwrap();
+}
+
+/// Convert to .AVI file type fixed to the resolution of the 240x135 TV.
+#[tauri::command]
+pub fn convert_avi(options: Options<'_>) {
+    let path = Path::new(&options.path);
+    let output_path = path
+        .with_file_name(&options.output_name)
+        .with_extension("avi");
+    let _ = fs::remove_file(&output_path);
+    let ffmpeg_path = sidecar_path("ffmpeg");
+    #[cfg(debug_assertions)]
+    let timer = Instant::now();
+
+    let mut cmd = Command::new(&ffmpeg_path);
+    #[rustfmt::skip]
+    cmd.args([
+        "-i", options.path,
+        "-r", options.frame_rate,
+        "-vf", options.scale,
+        "-b:v", "1500k",
+        "-maxrate", "1500k",
+        "-bufsize", "64k",
+        "-c:v", "mjpeg",
+        "-acodec", "pcm_u8",
+        "-ar", "10000",
+        "-ac", "1",
+        &output_path.to_string_lossy(),
+    ])
+    .stdin(Stdio::null())
+    .stdout(Stdio::null())
+    .stderr(Stdio::piped());
+    #[cfg(windows)]
+    cmd.creation_flags(0x08000000);
+    let mut child = cmd.spawn().unwrap();
+
+    let mut child_stderr = String::new();
+    child
+        .stderr
+        .take()
+        .unwrap()
+        .read_to_string(&mut child_stderr)
+        .unwrap();
+    child.wait().unwrap();
+
+    #[cfg(debug_assertions)]
+    {
+        dbg!(child_stderr);
+        let elapsed = timer.elapsed();
+        dbg!(elapsed);
+    }
 }
